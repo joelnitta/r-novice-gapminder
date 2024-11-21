@@ -1,5 +1,5 @@
 ---
-title: Data Frame Manipulation with tidyr
+title: tidyr を使用したデータフレームの操作
 teaching: 30
 exercises: 15
 source: Rmd
@@ -7,45 +7,34 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- To understand the concepts of 'longer' and 'wider' data frame formats and be able to convert between them with `tidyr`.
+- '長い'データフレーム形式と'広い'データフレーム形式の概念を理解し、`tidyr` を使ってそれらを変換できるようになる。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I change the layout of a data frame?
+- データフレームのレイアウトをどのように変更できますか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-Researchers often want to reshape their data frames from 'wide' to 'longer'
-layouts, or vice-versa. The 'long' layout or format is where:
+研究者はしばしば、データフレームの形式を「広い」レイアウトから「長い」レイアウトに変換したり、その逆を行ったりします。「長い」レイアウトまたは形式では以下のような特徴があります：
 
-- each column is a variable
-- each row is an observation
+- 各列が変数
+- 各行が観測値
 
-In the purely 'long' (or 'longest') format, you usually have 1 column for the observed variable and the other columns are ID variables.
+純粋な「長い」形式では、通常、1列が観測値の変数であり、他の列がID変数です。
 
-For the 'wide' format each row is often a site/subject/patient and you have
-multiple observation variables containing the same type of data. These can be
-either repeated observations over time, or observation of multiple variables (or
-a mix of both). You may find data input may be simpler or some other
-applications may prefer the 'wide' format. However, many of `R`'s functions have
-been designed assuming you have 'longer' formatted data. This tutorial will help you
-efficiently transform your data shape regardless of original format.
+「広い」形式では、各行がサイト/被験者/患者を表し、同じ種類のデータを含む複数の観測変数があります。これには、時間経過での繰り返し観測や複数の変数の観測（またはその両方の混合）が含まれます。「広い」形式のほうがデータ入力が簡単である場合や、一部のアプリケーションが「広い」形式を好む場合があります。ただし、`R` の多くの関数は「長い」形式のデータを想定して設計されています。このチュートリアルでは、元の形式に関係なく、データの形状を効率的に変換する方法を学びます。
 
-![](fig/14-tidyr-fig1.png){alt='Diagram illustrating the difference between a wide versus long layout of a data frame'}
+![](fig/14-tidyr-fig1.png){alt='データフレームの「広い」形式と「長い」形式の違いを示す図'}
 
-Long and wide data frame layouts mainly affect readability. For humans, the wide format is often more intuitive since we can often see more of the data on the screen due
-to its shape. However, the long format is more machine readable and is closer
-to the formatting of databases. The ID variables in our data frames are similar to
-the fields in a database and observed variables are like the database values.
+長いデータフレームと広いデータフレームのレイアウトは主に可読性に影響します。人間にとって「広い」形式は、形状のために画面上でより多くのデータを確認できるため、より直感的な場合があります。しかし、「長い」形式は機械可読性が高く、データベースの形式に近いです。データフレームのID変数はデータベースのフィールドに、観測変数はデータベースの値に似ています。
 
-## Getting started
+## 開始方法
 
-First install the packages if you haven't already done so (you probably
-installed dplyr in the previous lesson):
+まず、まだインストールしていない場合は以下を実行してください（前回のレッスンで`dplyr`をインストールした可能性があります）：
 
 
 ``` r
@@ -53,7 +42,7 @@ installed dplyr in the previous lesson):
 #install.packages("dplyr")
 ```
 
-Load the packages
+パッケージをロードします：
 
 
 ``` r
@@ -61,7 +50,7 @@ library("tidyr")
 library("dplyr")
 ```
 
-First, lets look at the structure of our original gapminder data frame:
+まず、元の`gapminder`データフレームの構造を見てみましょう：
 
 
 ``` r
@@ -80,52 +69,33 @@ str(gapminder)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 1
+## チャレンジ 1
 
-Is gapminder a purely long, purely wide, or some intermediate format?
+`gapminder` は純粋に「長い」形式、「広い」形式、または中間形式のどれですか？
 
 :::::::::::::::  solution
 
-## Solution to Challenge 1
+## チャレンジ 1 の解答
 
-The original gapminder data.frame is in an intermediate format. It is not
-purely long since it had multiple observation variables
-(`pop`,`lifeExp`,`gdpPercap`).
+元の `gapminder` データフレームは中間形式です。純粋に「長い」形式ではなく、複数の観測変数
+（`pop`、`lifeExp`、`gdpPercap`）を持っています。
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Sometimes, as with the gapminder dataset, we have multiple types of observed
-data. It is somewhere in between the purely 'long' and 'wide' data formats. We
-have 3 "ID variables" (`continent`, `country`, `year`) and 3 "Observation
-variables" (`pop`,`lifeExp`,`gdpPercap`). This intermediate format can be
-preferred despite not having ALL observations in 1 column given that all 3
-observation variables have different units. There are few operations that would
-need us to make this data frame any longer (i.e. 4 ID variables and 1
-Observation variable).
+時々、`gapminder`データセットのように、複数種類の観測データを持つことがあります。これは純粋な「長い」形式と「広い」形式の間のどこかに位置します。このデータセットには3つの「ID変数」
+（`continent`、`country`、`year`）と3つの「観測変数」(`pop`、`lifeExp`、`gdpPercap`)があります。この中間形式は、すべての観測値を1列にする純粋に「長い」形式ではありませんが、それでも好まれる場合があります。これは、すべての観測変数が異なる単位を持っているためです。
 
-While using many of the functions in R, which are often vector based, you
-usually do not want to do mathematical operations on values with different
-units. For example, using the purely long format, a single mean for all of the
-values of population, life expectancy, and GDP would not be meaningful since it
-would return the mean of values with 3 incompatible units. The solution is that
-we first manipulate the data either by grouping (see the lesson on `dplyr`), or
-we change the structure of the data frame.  **Note:** Some plotting functions in
-R actually work better in the wide format data.
+多くのRの関数は「長い」形式を想定していますが、**注意：** 一部のプロット関数は「広い」形式のほうがうまく機能する場合があります。
 
-## From wide to long format with pivot\_longer()
+## pivot\_longer() を使用して「広い」形式から「長い」形式に変換
 
-Until now, we've been using the nicely formatted original gapminder dataset, but
-'real' data (i.e. our own research data) will never be so well organized. Here
-let's start with the wide formatted version of the gapminder dataset.
+これまで、適切にフォーマットされた元の`gapminder`データセットを使用していましたが、「実際」のデータ（例：自分の研究データ）は通常、これほど整理されていません。ここでは、「広い」形式の`gapminder`データセットを使用します。
 
-> Download the wide version of the gapminder data from [this link to a csv file](data/gapminder_wide.csv)
-> and save it in your data folder.
+> 「広い」形式の`gapminder`データを[こちらのcsvファイルのリンク](data/gapminder_wide.csv)からダウンロードして、`data`フォルダに保存してください。
 
-We'll load the data file and look at it. Note: we don't want our continent and
-country columns to be factors, so we use the stringsAsFactors argument for
-`read.csv()` to disable that.
+データファイルをロードして確認しましょう。注意：`continent`と`country`列をファクターにしたくないため、`read.csv()`の`stringsAsFactors`引数を使用して無効にします。
 
 
 ``` r
@@ -175,11 +145,11 @@ str(gap_wide)
  $ pop_2007      : int  33333216 12420476 8078314 1639131 14326203 8390505 17696293 4369038 10238807 710960 ...
 ```
 
-![](fig/14-tidyr-fig2.png){alt='Diagram illustrating the wide format of the gapminder data frame'}
+![](fig/14-tidyr-fig2.png){alt='gapminder データフレームの「広い」形式を示す図'}
 
-To change this very wide data frame layout back to our nice, intermediate (or longer) layout, we will use one of the two available `pivot`  functions from the `tidyr` package. To convert from wide to a longer format, we will use the `pivot_longer()` function. `pivot_longer()` makes datasets longer by increasing the number of rows and decreasing the number of columns, or 'lengthening' your observation variables into a single variable.
+この非常に「広い」データフレームを「長い」レイアウトに戻すには、`tidyr`パッケージの`pivot`関数の1つである`pivot_longer()`を使用します。この関数は、行数を増やして列数を減らすことによってデータセットを「長い」形式に変換します。
 
-![](fig/14-tidyr-fig3.png){alt='Diagram illustrating how pivot longer reorganizes a data frame from a wide to long format'}
+![](fig/14-tidyr-fig3.png){alt='pivot_longerがデータフレームを「広い」形式から「長い」形式に再編成する方法を示す図'}
 
 
 ``` r
@@ -199,49 +169,9 @@ tibble [5,112 × 4] (S3: tbl_df/tbl/data.frame)
  $ obs_values  : num [1:5112] 9279525 10270856 11000948 12760499 14760787 ...
 ```
 
-Here we have used piping syntax which is similar to what we were doing in the
-previous lesson with dplyr. In fact, these are compatible and you can use a mix
-of tidyr and dplyr functions by piping them together.
+ここでは、前回の`dplyr`レッスンで学んだパイピング構文を使用しています。実際、`tidyr`と`dplyr`の関数を組み合わせて使用することが可能です。
 
-We first provide to `pivot_longer()` a vector of column names that will be
-pivoted into longer format. We could type out all the observation variables, but
-as in the `select()` function (see `dplyr` lesson), we can use the `starts_with()`
-argument to select all variables that start with the desired character string.
-`pivot_longer()` also allows the alternative syntax of using the `-` symbol to
-identify which variables are not to be pivoted (i.e. ID variables).
-
-The next arguments to `pivot_longer()` are `names_to` for naming the column that
-will contain the new ID variable (`obstype_year`) and `values_to` for naming the
-new amalgamated observation variable (`obs_value`). We supply these new column
-names as strings.
-
-![](fig/14-tidyr-fig4.png){alt='Diagram illustrating the long format of the gapminder data'}
-
-
-``` r
-gap_long <- gap_wide %>%
-  pivot_longer(
-    cols = c(-continent, -country),
-    names_to = "obstype_year", values_to = "obs_values"
-  )
-str(gap_long)
-```
-
-``` output
-tibble [5,112 × 4] (S3: tbl_df/tbl/data.frame)
- $ continent   : chr [1:5112] "Africa" "Africa" "Africa" "Africa" ...
- $ country     : chr [1:5112] "Algeria" "Algeria" "Algeria" "Algeria" ...
- $ obstype_year: chr [1:5112] "gdpPercap_1952" "gdpPercap_1957" "gdpPercap_1962" "gdpPercap_1967" ...
- $ obs_values  : num [1:5112] 2449 3014 2551 3247 4183 ...
-```
-
-That may seem trivial with this particular data frame, but sometimes you have 1
-ID variable and 40 observation variables with irregular variable names. The
-flexibility is a huge time saver!
-
-Now `obstype_year` actually contains 2 pieces of information, the observation
-type (`pop`,`lifeExp`, or `gdpPercap`) and the `year`. We can use the
-`separate()` function to split the character strings into multiple variables
+次に、`separate()`関数を使用して、文字列を複数の変数に分割します：
 
 
 ``` r
@@ -251,14 +181,14 @@ gap_long$year <- as.integer(gap_long$year)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 2
+## チャレンジ 2
 
-Using `gap_long`, calculate the mean life expectancy, population, and gdpPercap for each continent.
-**Hint:** use the `group_by()` and `summarize()` functions we learned in the `dplyr` lesson
+`gap_long` を使用して、大陸ごとの平均寿命、人口、GDP per capitaを計算してください。
+**ヒント：** `dplyr`レッスンで学んだ`group_by()`と`summarize()`関数を使用してください。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 2
+## チャレンジ 2 の解答
 
 
 ``` r
@@ -297,15 +227,13 @@ gap_long %>% group_by(continent, obs_type) %>%
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## From long to intermediate format with pivot\_wider()
+## pivot\_wider() を使用して長い形式から中間形式へ
 
-It is always good to check work. So, let's use the second `pivot` function, `pivot_wider()`, to 'widen' our observation variables back out.  `pivot_wider()` is the opposite of `pivot_longer()`, making a dataset wider by increasing the number of columns and decreasing the number of rows. We can use `pivot_wider()` to pivot or reshape our `gap_long` to the original intermediate format or the widest format. Let's start with the intermediate format.
+作業を確認するのは常に良いことです。それでは、2つ目の `pivot` 関数である `pivot_wider()` を使用して、観測変数を再び「広げ」てみましょう。`pivot_wider()` は `pivot_longer()` の逆で、データセットの列数を増やし、行数を減らすことでデータを「広い」形式に変換します。`pivot_wider()` を使用して、`gap_long` を元の中間形式または最も広い形式に変換できます。まずは中間形式から始めましょう。
 
-The `pivot_wider()` function takes `names_from` and `values_from` arguments.
+`pivot_wider()` 関数には `names_from` と `values_from` 引数があります。
 
-To `names_from` we supply the column name whose contents will be pivoted into new
-output columns in the widened data frame. The corresponding values will be added
-from the column named in the `values_from` argument.
+`names_from` には、広げたデータフレームで新しい出力列としてピボットされる列名を指定します。対応する値は、`values_from` 引数で指定された列から追加されます。
 
 
 ``` r
@@ -331,7 +259,7 @@ names(gap_normal)
 ```
 
 ``` output
-[1] "continent" "country"   "year"      "gdpPercap" "lifeExp"   "pop"      
+[1] "continent" "country"   "year"      "pop"       "lifeExp"   "gdpPercap"
 ```
 
 ``` r
@@ -342,9 +270,7 @@ names(gapminder)
 [1] "country"   "year"      "pop"       "continent" "lifeExp"   "gdpPercap"
 ```
 
-Now we've got an intermediate data frame `gap_normal` with the same dimensions as
-the original `gapminder`, but the order of the variables is different. Let's fix
-that before checking if they are `all.equal()`.
+これで、元の`gapminder`と同じ次元を持つ中間形式のデータフレーム`gap_normal`ができましたが、変数の順序が異なります。これを修正してから、`all.equal()` でチェックします。
 
 
 ``` r
@@ -392,8 +318,7 @@ head(gapminder)
 6 Afghanistan 1977 14880372      Asia  38.438  786.1134
 ```
 
-We're almost there, the original was sorted by `country`, then
-`year`.
+ほとんど完成ですが、元のデータは`country`と`year`でソートされています。
 
 
 ``` r
@@ -406,15 +331,9 @@ all.equal(gap_normal, gapminder)
 [2] "Attributes: < Component \"class\": 1 string mismatch >"                                
 ```
 
-That's great! We've gone from the longest format back to the intermediate and we
-didn't introduce any errors in our code.
+素晴らしいですね！最も長い形式から中間形式に戻り、コードにエラーがないことを確認できました。
 
-Now let's convert the long all the way back to the wide. In the wide format, we
-will keep country and continent as ID variables and pivot the observations
-across the 3 metrics (`pop`,`lifeExp`,`gdpPercap`) and time (`year`). First we
-need to create appropriate labels for all our new variables (time\*metric
-combinations) and we also need to unify our ID variables to simplify the process
-of defining `gap_wide`.
+次に、最も長い形式から最も広い形式まで変換してみましょう。この広い形式では、`country`と`continent`をID変数として保持し、3つのメトリクス（`pop`、`lifeExp`、`gdpPercap`）と時間（`year`）にわたる観測値をピボットします。まず、新しい変数（時間\*メトリクスの組み合わせ）に適切なラベルを作成し、ID変数を統合して`gap_wide`を定義しやすくします。
 
 
 ``` r
@@ -425,9 +344,9 @@ str(gap_temp)
 ``` output
 tibble [5,112 × 4] (S3: tbl_df/tbl/data.frame)
  $ var_ID    : chr [1:5112] "Africa_Algeria" "Africa_Algeria" "Africa_Algeria" "Africa_Algeria" ...
- $ obs_type  : chr [1:5112] "gdpPercap" "gdpPercap" "gdpPercap" "gdpPercap" ...
+ $ obs_type  : chr [1:5112] "pop" "pop" "pop" "pop" ...
  $ year      : int [1:5112] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
- $ obs_values: num [1:5112] 2449 3014 2551 3247 4183 ...
+ $ obs_values: num [1:5112] 9279525 10270856 11000948 12760499 14760787 ...
 ```
 
 ``` r
@@ -440,13 +359,11 @@ str(gap_temp)
 ``` output
 tibble [5,112 × 3] (S3: tbl_df/tbl/data.frame)
  $ ID_var    : chr [1:5112] "Africa_Algeria" "Africa_Algeria" "Africa_Algeria" "Africa_Algeria" ...
- $ var_names : chr [1:5112] "gdpPercap_1952" "gdpPercap_1957" "gdpPercap_1962" "gdpPercap_1967" ...
- $ obs_values: num [1:5112] 2449 3014 2551 3247 4183 ...
+ $ var_names : chr [1:5112] "pop_1952" "pop_1957" "pop_1962" "pop_1967" ...
+ $ obs_values: num [1:5112] 9279525 10270856 11000948 12760499 14760787 ...
 ```
 
-Using `unite()` we now have a single ID variable which is a combination of
-`continent`,`country`,and we have defined variable names. We're now ready to
-pipe in `pivot_wider()`
+`unite()` を使用して、`continent`、`country` を統合した単一のID変数を作成し、変数名を定義しました。これで、`pivot_wider()` に渡す準備が整いました。
 
 
 ``` r
@@ -460,30 +377,6 @@ str(gap_wide_new)
 ``` output
 tibble [142 × 37] (S3: tbl_df/tbl/data.frame)
  $ ID_var        : chr [1:142] "Africa_Algeria" "Africa_Angola" "Africa_Benin" "Africa_Botswana" ...
- $ gdpPercap_1952: num [1:142] 2449 3521 1063 851 543 ...
- $ gdpPercap_1957: num [1:142] 3014 3828 960 918 617 ...
- $ gdpPercap_1962: num [1:142] 2551 4269 949 984 723 ...
- $ gdpPercap_1967: num [1:142] 3247 5523 1036 1215 795 ...
- $ gdpPercap_1972: num [1:142] 4183 5473 1086 2264 855 ...
- $ gdpPercap_1977: num [1:142] 4910 3009 1029 3215 743 ...
- $ gdpPercap_1982: num [1:142] 5745 2757 1278 4551 807 ...
- $ gdpPercap_1987: num [1:142] 5681 2430 1226 6206 912 ...
- $ gdpPercap_1992: num [1:142] 5023 2628 1191 7954 932 ...
- $ gdpPercap_1997: num [1:142] 4797 2277 1233 8647 946 ...
- $ gdpPercap_2002: num [1:142] 5288 2773 1373 11004 1038 ...
- $ gdpPercap_2007: num [1:142] 6223 4797 1441 12570 1217 ...
- $ lifeExp_1952  : num [1:142] 43.1 30 38.2 47.6 32 ...
- $ lifeExp_1957  : num [1:142] 45.7 32 40.4 49.6 34.9 ...
- $ lifeExp_1962  : num [1:142] 48.3 34 42.6 51.5 37.8 ...
- $ lifeExp_1967  : num [1:142] 51.4 36 44.9 53.3 40.7 ...
- $ lifeExp_1972  : num [1:142] 54.5 37.9 47 56 43.6 ...
- $ lifeExp_1977  : num [1:142] 58 39.5 49.2 59.3 46.1 ...
- $ lifeExp_1982  : num [1:142] 61.4 39.9 50.9 61.5 48.1 ...
- $ lifeExp_1987  : num [1:142] 65.8 39.9 52.3 63.6 49.6 ...
- $ lifeExp_1992  : num [1:142] 67.7 40.6 53.9 62.7 50.3 ...
- $ lifeExp_1997  : num [1:142] 69.2 41 54.8 52.6 50.3 ...
- $ lifeExp_2002  : num [1:142] 71 41 54.4 46.6 50.6 ...
- $ lifeExp_2007  : num [1:142] 72.3 42.7 56.7 50.7 52.3 ...
  $ pop_1952      : num [1:142] 9279525 4232095 1738315 442308 4469979 ...
  $ pop_1957      : num [1:142] 10270856 4561361 1925173 474639 4713416 ...
  $ pop_1962      : num [1:142] 11000948 4826015 2151895 512764 4919632 ...
@@ -496,18 +389,42 @@ tibble [142 × 37] (S3: tbl_df/tbl/data.frame)
  $ pop_1997      : num [1:142] 29072015 9875024 6066080 1536536 10352843 ...
  $ pop_2002      : num [1:142] 31287142 10866106 7026113 1630347 12251209 ...
  $ pop_2007      : num [1:142] 33333216 12420476 8078314 1639131 14326203 ...
+ $ lifeExp_1952  : num [1:142] 43.1 30 38.2 47.6 32 ...
+ $ lifeExp_1957  : num [1:142] 45.7 32 40.4 49.6 34.9 ...
+ $ lifeExp_1962  : num [1:142] 48.3 34 42.6 51.5 37.8 ...
+ $ lifeExp_1967  : num [1:142] 51.4 36 44.9 53.3 40.7 ...
+ $ lifeExp_1972  : num [1:142] 54.5 37.9 47 56 43.6 ...
+ $ lifeExp_1977  : num [1:142] 58 39.5 49.2 59.3 46.1 ...
+ $ lifeExp_1982  : num [1:142] 61.4 39.9 50.9 61.5 48.1 ...
+ $ lifeExp_1987  : num [1:142] 65.8 39.9 52.3 63.6 49.6 ...
+ $ lifeExp_1992  : num [1:142] 67.7 40.6 53.9 62.7 50.3 ...
+ $ lifeExp_1997  : num [1:142] 69.2 41 54.8 52.6 50.3 ...
+ $ lifeExp_2002  : num [1:142] 71 41 54.4 46.6 50.6 ...
+ $ lifeExp_2007  : num [1:142] 72.3 42.7 56.7 50.7 52.3 ...
+ $ gdpPercap_1952: num [1:142] 2449 3521 1063 851 543 ...
+ $ gdpPercap_1957: num [1:142] 3014 3828 960 918 617 ...
+ $ gdpPercap_1962: num [1:142] 2551 4269 949 984 723 ...
+ $ gdpPercap_1967: num [1:142] 3247 5523 1036 1215 795 ...
+ $ gdpPercap_1972: num [1:142] 4183 5473 1086 2264 855 ...
+ $ gdpPercap_1977: num [1:142] 4910 3009 1029 3215 743 ...
+ $ gdpPercap_1982: num [1:142] 5745 2757 1278 4551 807 ...
+ $ gdpPercap_1987: num [1:142] 5681 2430 1226 6206 912 ...
+ $ gdpPercap_1992: num [1:142] 5023 2628 1191 7954 932 ...
+ $ gdpPercap_1997: num [1:142] 4797 2277 1233 8647 946 ...
+ $ gdpPercap_2002: num [1:142] 5288 2773 1373 11004 1038 ...
+ $ gdpPercap_2007: num [1:142] 6223 4797 1441 12570 1217 ...
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 3
+## チャレンジ 3
 
-Take this 1 step further and create a `gap_ludicrously_wide` format data by pivoting over countries, year and the 3 metrics?
-**Hint** this new data frame should only have 5 rows.
+これをさらに一歩進めて、国、年、3つのメトリクスに基づいてピボットすることで、`gap_ludicrously_wide` フォーマットデータを作成してください。
+**ヒント:** この新しいデータフレームには5行しかないはずです。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 3
+## チャレンジ 3 の解答
 
 
 ``` r
@@ -520,8 +437,7 @@ gap_ludicrously_wide <- gap_long %>%
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Now we have a great 'wide' format data frame, but the `ID_var` could be more
-usable, let's separate it into 2 variables with `separate()`
+これで素晴らしい「広い」形式のデータフレームができましたが、`ID_var` をより使いやすくするために、`separate()` を使用して2つの変数に分割します。
 
 
 ``` r
@@ -538,30 +454,6 @@ str(gap_wide_betterID)
 tibble [142 × 38] (S3: tbl_df/tbl/data.frame)
  $ continent     : chr [1:142] "Africa" "Africa" "Africa" "Africa" ...
  $ country       : chr [1:142] "Algeria" "Angola" "Benin" "Botswana" ...
- $ gdpPercap_1952: num [1:142] 2449 3521 1063 851 543 ...
- $ gdpPercap_1957: num [1:142] 3014 3828 960 918 617 ...
- $ gdpPercap_1962: num [1:142] 2551 4269 949 984 723 ...
- $ gdpPercap_1967: num [1:142] 3247 5523 1036 1215 795 ...
- $ gdpPercap_1972: num [1:142] 4183 5473 1086 2264 855 ...
- $ gdpPercap_1977: num [1:142] 4910 3009 1029 3215 743 ...
- $ gdpPercap_1982: num [1:142] 5745 2757 1278 4551 807 ...
- $ gdpPercap_1987: num [1:142] 5681 2430 1226 6206 912 ...
- $ gdpPercap_1992: num [1:142] 5023 2628 1191 7954 932 ...
- $ gdpPercap_1997: num [1:142] 4797 2277 1233 8647 946 ...
- $ gdpPercap_2002: num [1:142] 5288 2773 1373 11004 1038 ...
- $ gdpPercap_2007: num [1:142] 6223 4797 1441 12570 1217 ...
- $ lifeExp_1952  : num [1:142] 43.1 30 38.2 47.6 32 ...
- $ lifeExp_1957  : num [1:142] 45.7 32 40.4 49.6 34.9 ...
- $ lifeExp_1962  : num [1:142] 48.3 34 42.6 51.5 37.8 ...
- $ lifeExp_1967  : num [1:142] 51.4 36 44.9 53.3 40.7 ...
- $ lifeExp_1972  : num [1:142] 54.5 37.9 47 56 43.6 ...
- $ lifeExp_1977  : num [1:142] 58 39.5 49.2 59.3 46.1 ...
- $ lifeExp_1982  : num [1:142] 61.4 39.9 50.9 61.5 48.1 ...
- $ lifeExp_1987  : num [1:142] 65.8 39.9 52.3 63.6 49.6 ...
- $ lifeExp_1992  : num [1:142] 67.7 40.6 53.9 62.7 50.3 ...
- $ lifeExp_1997  : num [1:142] 69.2 41 54.8 52.6 50.3 ...
- $ lifeExp_2002  : num [1:142] 71 41 54.4 46.6 50.6 ...
- $ lifeExp_2007  : num [1:142] 72.3 42.7 56.7 50.7 52.3 ...
  $ pop_1952      : num [1:142] 9279525 4232095 1738315 442308 4469979 ...
  $ pop_1957      : num [1:142] 10270856 4561361 1925173 474639 4713416 ...
  $ pop_1962      : num [1:142] 11000948 4826015 2151895 512764 4919632 ...
@@ -574,6 +466,30 @@ tibble [142 × 38] (S3: tbl_df/tbl/data.frame)
  $ pop_1997      : num [1:142] 29072015 9875024 6066080 1536536 10352843 ...
  $ pop_2002      : num [1:142] 31287142 10866106 7026113 1630347 12251209 ...
  $ pop_2007      : num [1:142] 33333216 12420476 8078314 1639131 14326203 ...
+ $ lifeExp_1952  : num [1:142] 43.1 30 38.2 47.6 32 ...
+ $ lifeExp_1957  : num [1:142] 45.7 32 40.4 49.6 34.9 ...
+ $ lifeExp_1962  : num [1:142] 48.3 34 42.6 51.5 37.8 ...
+ $ lifeExp_1967  : num [1:142] 51.4 36 44.9 53.3 40.7 ...
+ $ lifeExp_1972  : num [1:142] 54.5 37.9 47 56 43.6 ...
+ $ lifeExp_1977  : num [1:142] 58 39.5 49.2 59.3 46.1 ...
+ $ lifeExp_1982  : num [1:142] 61.4 39.9 50.9 61.5 48.1 ...
+ $ lifeExp_1987  : num [1:142] 65.8 39.9 52.3 63.6 49.6 ...
+ $ lifeExp_1992  : num [1:142] 67.7 40.6 53.9 62.7 50.3 ...
+ $ lifeExp_1997  : num [1:142] 69.2 41 54.8 52.6 50.3 ...
+ $ lifeExp_2002  : num [1:142] 71 41 54.4 46.6 50.6 ...
+ $ lifeExp_2007  : num [1:142] 72.3 42.7 56.7 50.7 52.3 ...
+ $ gdpPercap_1952: num [1:142] 2449 3521 1063 851 543 ...
+ $ gdpPercap_1957: num [1:142] 3014 3828 960 918 617 ...
+ $ gdpPercap_1962: num [1:142] 2551 4269 949 984 723 ...
+ $ gdpPercap_1967: num [1:142] 3247 5523 1036 1215 795 ...
+ $ gdpPercap_1972: num [1:142] 4183 5473 1086 2264 855 ...
+ $ gdpPercap_1977: num [1:142] 4910 3009 1029 3215 743 ...
+ $ gdpPercap_1982: num [1:142] 5745 2757 1278 4551 807 ...
+ $ gdpPercap_1987: num [1:142] 5681 2430 1226 6206 912 ...
+ $ gdpPercap_1992: num [1:142] 5023 2628 1191 7954 932 ...
+ $ gdpPercap_1997: num [1:142] 4797 2277 1233 8647 946 ...
+ $ gdpPercap_2002: num [1:142] 5288 2773 1373 11004 1038 ...
+ $ gdpPercap_2007: num [1:142] 6223 4797 1441 12570 1217 ...
 ```
 
 ``` r
@@ -581,24 +497,49 @@ all.equal(gap_wide, gap_wide_betterID)
 ```
 
 ``` output
-[1] "Attributes: < Component \"class\": Lengths (1, 3) differ (string compare on first 1) >"
-[2] "Attributes: < Component \"class\": 1 string mismatch >"                                
+ [1] "Names: 24 string mismatches"                                                           
+ [2] "Attributes: < Component \"class\": Lengths (1, 3) differ (string compare on first 1) >"
+ [3] "Attributes: < Component \"class\": 1 string mismatch >"                                
+ [4] "Component 3: Mean relative difference: 4549.106"                                       
+ [5] "Component 4: Mean relative difference: 4363.185"                                       
+ [6] "Component 5: Mean relative difference: 4320.163"                                       
+ [7] "Component 6: Mean relative difference: 4130.972"                                       
+ [8] "Component 7: Mean relative difference: 3719.779"                                       
+ [9] "Component 8: Mean relative difference: 3783.459"                                       
+[10] "Component 9: Mean relative difference: 4016.515"                                       
+[11] "Component 10: Mean relative difference: 4180.611"                                      
+[12] "Component 11: Mean relative difference: 4410.404"                                      
+[13] "Component 12: Mean relative difference: 4271.686"                                      
+[14] "Component 13: Mean relative difference: 4179.099"                                      
+[15] "Component 14: Mean relative difference: 3767.917"                                      
+[16] "Component 27: Mean relative difference: 0.9997802"                                     
+[17] "Component 28: Mean relative difference: 0.9997709"                                     
+[18] "Component 29: Mean relative difference: 0.9997686"                                     
+[19] "Component 30: Mean relative difference: 0.999758"                                      
+[20] "Component 31: Mean relative difference: 0.9997312"                                     
+[21] "Component 32: Mean relative difference: 0.9997358"                                     
+[22] "Component 33: Mean relative difference: 0.9997511"                                     
+[23] "Component 34: Mean relative difference: 0.9997609"                                     
+[24] "Component 35: Mean relative difference: 0.9997733"                                     
+[25] "Component 36: Mean relative difference: 0.999766"                                      
+[26] "Component 37: Mean relative difference: 0.9997608"                                     
+[27] "Component 38: Mean relative difference: 0.9997347"                                     
 ```
 
-There and back again!
+行って戻るプロセスが完了しました！
 
-## Other great resources
+## その他の素晴らしいリソース
 
-- [R for Data Science](https://r4ds.hadley.nz/) (online book)
-- [Data Wrangling Cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) (pdf file)
-- [Introduction to tidyr](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) (online documentation)
-- [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/) (online video)
+- [R for Data Science](https://r4ds.hadley.nz/) （オンライン書籍）
+- [データ整形チートシート](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) （PDFファイル）
+- [tidyr 入門](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) （オンラインドキュメント）
+- [R と RStudio を使用したデータ整形](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/) （オンラインビデオ）
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use the `tidyr` package to change the layout of data frames.
-- Use `pivot_longer()` to go from wide to longer layout.
-- Use `pivot_wider()` to go from long to wider layout.
+- データフレームのレイアウトを変更するために `tidyr` パッケージを使用する。
+- `pivot_longer()` を使用して「広い」レイアウトから「長い」レイアウトに変換する。
+- `pivot_wider()` を使用して「長い」レイアウトから「広い」レイアウトに変換する。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

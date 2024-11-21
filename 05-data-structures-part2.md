@@ -1,5 +1,5 @@
 ---
-title: Exploring Data Frames
+title: データフレームの操作
 teaching: 20
 exercises: 10
 source: Rmd
@@ -7,30 +7,25 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Add and remove rows or columns.
-- Append two data frames.
-- Display basic properties of data frames including size and class of the columns, names, and first few rows.
+- 行や列を追加または削除する。
+- 2 つのデータフレームを結合する。
+- データフレームのサイズ、列のクラス、名前、最初の数行などの基本的なプロパティを表示する。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I manipulate a data frame?
+- データフレームをどのように操作できますか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-At this point, you've seen it all: in the last lesson, we toured all the basic
-data types and data structures in R. Everything you do will be a manipulation of
-those tools. But most of the time, the star of the show is the data frame—the table that we created by loading information from a csv file. In this lesson, we'll learn a few more things
-about working with data frames.
+これまでに、R の基本的なデータ型とデータ構造について学びました。以降の作業は、それらのツールを操作することに集約されます。最も頻繁に登場するのは、CSV ファイルから情報を読み込んで作成するデータフレームです。このレッスンでは、データフレームの操作についてさらに学びます。
 
-## Adding columns and rows in data frames
+## データフレームに列や行を追加する
 
-We already learned that the columns of a data frame are vectors, so that our
-data are consistent in type throughout the columns. As such, if we want to add a
-new column, we can start by making a new vector:
+データフレームの列はベクトルであるため、列全体でデータ型が一貫しています。そのため、新しい列を追加したい場合は、まず新しいベクトルを作成します：
 
 
 
@@ -47,7 +42,7 @@ cats
 3  tabby    3.2            1
 ```
 
-We can then add this as a column via:
+これを列として追加するには、次のようにします：
 
 
 ``` r
@@ -61,7 +56,7 @@ cbind(cats, age)
 3  tabby    3.2            1   5
 ```
 
-Note that if we tried to add a vector of ages with a different number of entries than the number of rows in the data frame, it would fail:
+ただし、データフレームの行数と異なる要素数を持つベクトルを追加しようとすると失敗します：
 
 
 ``` r
@@ -82,8 +77,7 @@ cbind(cats, age)
 Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 3, 2
 ```
 
-Why didn't this work? Of course, R wants to see one element in our new column
-for every row in the table:
+なぜ失敗するのでしょうか？R は、新しい列の各行に 1 つの要素が必要だと考えています：
 
 
 ``` r
@@ -102,7 +96,7 @@ length(age)
 [1] 2
 ```
 
-So for it to work we need to have `nrow(cats)` = `length(age)`. Let's overwrite the content of cats with our new data frame.
+したがって、`nrow(cats)` と `length(age)` が等しい必要があります。新しいデータフレームを作成して、`cats` に上書きしてみましょう。
 
 
 ``` r
@@ -110,8 +104,7 @@ age <- c(2, 3, 5)
 cats <- cbind(cats, age)
 ```
 
-Now how about adding rows? We already know that the rows of a
-data frame are lists:
+次に、行を追加してみましょう。データフレームの行はリストであることを既に学びました：
 
 
 ``` r
@@ -119,7 +112,7 @@ newRow <- list("tortoiseshell", 3.3, TRUE, 9)
 cats <- rbind(cats, newRow)
 ```
 
-Let's confirm that our new row was added correctly. 
+新しい行が正しく追加されたことを確認します。
 
 
 ``` r
@@ -134,10 +127,9 @@ cats
 4 tortoiseshell    3.3            1   9
 ```
 
+## 行を削除する
 
-## Removing rows
-
-We now know how to add rows and columns to our data frame in R. Now let's learn to remove rows. 
+データフレームに行や列を追加する方法を学びました。次に、行を削除する方法を見てみましょう。
 
 
 ``` r
@@ -152,7 +144,7 @@ cats
 4 tortoiseshell    3.3            1   9
 ```
 
-We can ask for a data frame minus the last row:
+最後の行を削除したデータフレームを取得するには：
 
 
 ``` r
@@ -166,15 +158,13 @@ cats[-4, ]
 3  tabby    3.2            1   5
 ```
 
-Notice the comma with nothing after it to indicate that we want to drop the entire fourth row.
+コンマの後に何も指定しないことで、4 行目全体を削除することを示します。
 
-Note: we could also remove several rows at once by putting the row numbers
-inside of a vector, for example: `cats[c(-3,-4), ]`
+複数の行を削除することもできます。たとえば、次のようにベクトル内に行番号を指定します：`cats[c(-3,-4), ]`
 
+## 列を削除する
 
-## Removing columns
-
-We can also remove columns in our data frame. What if we want to remove the column "age". We can remove it in two ways, by variable number or by index.
+データフレームの列を削除することもできます。「age」列を削除する場合、変数番号またはインデックスを使用する方法があります。
 
 
 ``` r
@@ -189,9 +179,9 @@ cats[,-4]
 4 tortoiseshell    3.3            1
 ```
 
-Notice the comma with nothing before it, indicating we want to keep all of the rows.
+コンマの前に何も指定しないことで、すべての行を保持することを示します。
 
-Alternatively, we can drop the column by using the index name and the `%in%` operator. The `%in%` operator goes through each element of its left argument, in this case the names of `cats`, and asks, "Does this element occur in the second argument?"
+または、インデックス名と `%in%` 演算子を使用して列を削除することもできます。`%in%` 演算子は、左側の引数（ここでは `cats` の名前）の各要素について「この要素は右側の引数に含まれますか？」と尋ねます。
 
 
 ``` r
@@ -207,13 +197,11 @@ cats[,!drop]
 4 tortoiseshell    3.3            1
 ```
 
-We will cover subsetting with logical operators like `%in%` in more detail in the next episode. See the section [Subsetting through other logical operations](06-data-subsetting.Rmd)
+論理演算子（`%in%` など）による部分集合化については、次のエピソードで詳しく説明します。詳細は [論理演算を使用した部分集合化](06-data-subsetting.Rmd) を参照してください。
 
-## Appending to a data frame
+## データフレームの結合
 
-The key to remember when adding data to a data frame is that *columns are
-vectors and rows are lists.* We can also glue two data frames
-together with `rbind`:
+データフレームにデータを追加する際に覚えておくべき重要な点は、*列はベクトル、行はリスト*であることです。2 つのデータフレームを `rbind` を使用して結合することもできます：
 
 
 ``` r
@@ -235,9 +223,9 @@ cats
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 1
+## チャレンジ 1
 
-You can create a new data frame right from within R with the following syntax:
+次の構文を使用して、新しいデータフレームを R 内で作成できます：
 
 
 ``` r
@@ -246,18 +234,17 @@ df <- data.frame(id = c("a", "b", "c"),
                  y = c(TRUE, TRUE, FALSE))
 ```
 
-Make a data frame that holds the following information for yourself:
+以下の情報を持つデータフレームを作成してください：
 
-- first name
-- last name
-- lucky number
+- 名
+- 姓
+- ラッキーナンバー
 
-Then use `rbind` to add an entry for the people sitting beside you.
-Finally, use `cbind` to add a column with each person's answer to the question, "Is it time for coffee break?"
+次に、`rbind` を使用して隣の人のエントリを追加します。最後に、`cbind` を使用して「コーヒーブレイクの時間ですか？」という質問への各人の回答を含む列を追加してください。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 1
+## チャレンジ 1 の解答
 
 
 ``` r
@@ -265,18 +252,16 @@ df <- data.frame(first = c("Grace"),
                  last = c("Hopper"),
                  lucky_number = c(0))
 df <- rbind(df, list("Marie", "Curie", 238) )
-df <- cbind(df, coffeetime = c(TRUE,TRUE))
+df <- cbind(df, coffeetime = c(TRUE, TRUE))
 ```
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Realistic example
+## 実用的な例
 
-So far, you have seen the basics of manipulating data frames with our cat data;
-now let's use those skills to digest a more realistic dataset. Let's read in the
-`gapminder` dataset that we downloaded previously:
+これまで、猫データを使ってデータフレーム操作の基本を学びました。次に、これらのスキルを使用して、より現実的なデータセットを扱います。以前ダウンロードした `gapminder` データセットを読み込んでみましょう：
 
 
 ``` r
@@ -285,13 +270,11 @@ gapminder <- read.csv("data/gapminder_data.csv")
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Miscellaneous Tips
+## その他のヒント
 
-- Another type of file you might encounter are tab-separated value files (.tsv). To specify a tab as a separator, use `"\\t"` or `read.delim()`.
+- タブ区切り値ファイル（.tsv）を扱う場合は、区切り文字として `"\\t"` を指定するか、`read.delim()` を使用します。
 
-- Files can also be downloaded directly from the Internet into a local
-  folder of your choice onto your computer using the `download.file` function.
-  The `read.csv` function can then be executed to read the downloaded file from the download location, for example,
+- ファイルをインターネットから直接ダウンロードしてコンピュータの指定したローカルフォルダに保存するには、`download.file` 関数を使用できます。保存されたファイルを `read.csv` 関数で読み込む例：
 
 
 ``` r
@@ -299,22 +282,20 @@ download.file("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/
 gapminder <- read.csv("data/gapminder_data.csv")
 ```
 
-- Alternatively, you can also read in files directly into R from the Internet by replacing the file paths with a web address in `read.csv`. One should note that in doing this no local copy of the csv file is first saved onto your computer. For example,
+- また、ファイルパスの代わりに Web アドレスを `read.csv` に指定して、ファイルを直接 R に読み込むこともできます。この場合、ローカルにファイルを保存する必要はありません。例：
 
 
 ``` r
 gapminder <- read.csv("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/main/episodes/data/gapminder_data.csv")
 ```
 
-- You can read directly from excel spreadsheets without
-  converting them to plain text first by using the [readxl](https://cran.r-project.org/package=readxl) package.
-  
-- The argument "stringsAsFactors" can be useful to tell R how to read strings either as factors or as character strings. In R versions after 4.0, all strings are read-in as characters by default, but in earlier versions of R, strings are read-in as factors by default. For more information, see the call-out in [the previous episode](https://swcarpentry.github.io/r-novice-gapminder/04-data-structures-part1.html#check-your-data-for-factors). 
-  
+- [readxl パッケージ](https://cran.r-project.org/package=readxl) を使用すると、Excel スプレッドシートをプレーンテキストに変換せずに直接読み込むことができます。
+
+- `"stringsAsFactors"` 引数を使用すると、文字列を因子として読み込むか文字列として読み込むかを指定できます。R バージョン 4.0 以降では、デフォルトで文字列は文字型として読み込まれますが、古いバージョンでは因子として読み込まれるのがデフォルトでした。詳細は[前のエピソード](https://swcarpentry.github.io/r-novice-gapminder/04-data-structures-part1.html#check-your-data-for-factors)のコールアウトを参照してください。
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Let's investigate gapminder a bit; the first thing we should always do is check
-out what the data looks like with `str`:
+`gapminder` データセットを調べてみましょう。最初に行うべきことは、`str` を使用してデータの構造を確認することです：
 
 
 ``` r
@@ -331,7 +312,7 @@ str(gapminder)
  $ gdpPercap: num  779 821 853 836 740 ...
 ```
 
-An additional method for examining the structure of gapminder is to use the `summary` function. This function can be used on various objects in R. For data frames, `summary` yields a numeric, tabular, or descriptive summary of each column. Numeric or integer columns are described by the descriptive statistics (quartiles and mean), and character columns by its length, class, and mode.
+`gapminder` の構造を調べる別の方法として、`summary` 関数を使用します。この関数は R のさまざまなオブジェクトで使用できます。データフレームの場合、`summary` は各列の数値的、表形式、または記述的な概要を提供します。数値または整数型の列は記述統計（四分位数や平均値）で、文字列型の列はその長さ、クラス、モードで説明されます。
 
 
 ``` r
@@ -355,7 +336,7 @@ summary(gapminder)
  Max.   :82.60   Max.   :113523.1  
 ```
 
-Along with the `str` and `summary` functions, we can examine individual columns of the data frame with our `typeof` function:
+`str` や `summary` 関数と合わせて、`typeof` 関数を使ってデータフレームの個々の列を調べることもできます：
 
 
 ``` r
@@ -382,9 +363,8 @@ str(gapminder$country)
  chr [1:1704] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
 ```
 
-We can also interrogate the data frame for information about its dimensions;
-remembering that `str(gapminder)` said there were 1704 observations of 6
-variables in gapminder, what do you think the following will produce, and why?
+データフレームの次元に関する情報も調べることができます。  
+`str(gapminder)` の出力によると、`gapminder` には 6 つの変数の 1704 個の観測値があります。このことを覚えた上で、次のコードが何を返すか考えてみてください：
 
 
 ``` r
@@ -395,9 +375,7 @@ length(gapminder)
 [1] 6
 ```
 
-A fair guess would have been to say that the length of a data frame would be the
-number of rows it has (1704), but this is not the case; remember, a data frame
-is a *list of vectors and factors*:
+データフレームの長さが行数（1704）であると考えるのが妥当ですが、実際にはそうではありません。データフレームは*ベクトルや因子のリスト*で構成されていることを思い出してください：
 
 
 ``` r
@@ -408,8 +386,7 @@ typeof(gapminder)
 [1] "list"
 ```
 
-When `length` gave us 6, it's because gapminder is built out of a list of 6
-columns. To get the number of rows and columns in our dataset, try:
+`length` が 6 を返した理由は、`gapminder` が 6 列のリストで構築されているためです。データセットの行数と列数を取得するには次のようにします：
 
 
 ``` r
@@ -428,7 +405,7 @@ ncol(gapminder)
 [1] 6
 ```
 
-Or, both at once:
+あるいは、両方を一度に取得するには：
 
 
 ``` r
@@ -439,8 +416,7 @@ dim(gapminder)
 [1] 1704    6
 ```
 
-We'll also likely want to know what the titles of all the columns are, so we can
-ask for them later:
+すべての列のタイトルを調べることもできます。後でアクセスする際に便利です：
 
 
 ``` r
@@ -451,15 +427,9 @@ colnames(gapminder)
 [1] "country"   "year"      "pop"       "continent" "lifeExp"   "gdpPercap"
 ```
 
-At this stage, it's important to ask ourselves if the structure R is reporting
-matches our intuition or expectations; do the basic data types reported for each
-column make sense? If not, we need to sort any problems out now before they turn
-into bad surprises down the road, using what we've learned about how R
-interprets data, and the importance of *strict consistency* in how we record our
-data.
+ここで、R が報告する構造が自分の直感や予想と一致しているかどうかを確認することが重要です。各列のデータ型が妥当かどうかを確認してください。そうでない場合は、これまで学んだ R のデータ解釈の仕組みや、一貫性の重要性に基づいて問題を解決する必要があります。
 
-Once we're happy that the data types and structures seem reasonable, it's time
-to start digging into our data proper. Check out the first few lines:
+データ型や構造が合理的であることを確認したら、データの探索を開始しましょう。最初の数行を確認します：
 
 
 ``` r
@@ -478,29 +448,29 @@ head(gapminder)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 2
+## チャレンジ 2
 
-It's good practice to also check the last few lines of your data and some in the middle. How would you do this?
+データの最後の数行や中間のいくつかの行も確認するのが良い習慣です。これをどのように行いますか？
 
-Searching for ones specifically in the middle isn't too hard, but we could ask for a few lines at random. How would you code this?
+特に中間の行を探すのは難しくありませんが、ランダムな行をいくつか取得することもできます。これをどのようにコード化しますか？
 
 :::::::::::::::  solution
 
-## Solution to Challenge 2
+## チャレンジ 2 の解答
 
-To check the last few lines it's relatively simple as R already has a function for this:
+最後の数行を確認するには、R に既にある関数を使用すれば簡単です：
 
 ```r
 tail(gapminder)
 tail(gapminder, n = 15)
 ```
 
-What about a few arbitrary rows just in case something is odd in the middle?
+では、途中の任意の行を確認するにはどうすればよいでしょうか？
 
-## Tip: There are several ways to achieve this.
+## ヒント: いくつかの方法で達成できます
 
-The solution here presents one form of using nested functions, i.e. a function passed as an argument to another function. This might sound like a new concept, but you are already using it!
-Remember my\_dataframe[rows, cols] will print to screen your data frame with the number of rows and columns you asked for (although you might have asked for a range or named columns for example). How would you get the last row if you don't know how many rows your data frame has? R has a function for this. What about getting a (pseudorandom) sample? R also has a function for this.
+ここではネストされた関数（関数を別の関数の引数として渡す）を使用する一例を示します。この考え方は新しいように思えるかもしれませんが、既に使用しています。  
+例えば、`my_dataframe[rows, cols]` は指定された行と列のデータフレームを表示します。データフレームの最後の行を取得するにはどうしますか？R にはそのための関数があります。また、（擬似ランダムな）サンプルを取得するにはどうすればよいでしょうか？
 
 ```r
 gapminder[sample(nrow(gapminder), 5), ]
@@ -510,32 +480,21 @@ gapminder[sample(nrow(gapminder), 5), ]
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-To make sure our analysis is reproducible, we should put the code
-into a script file so we can come back to it later.
+再現性のある分析を確保するために、コードをスクリプトファイルに保存し、後で再利用できるようにしましょう。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 3
+## チャレンジ 3
 
-Go to file -> new file -> R script, and write an R script
-to load in the gapminder dataset. Put it in the `scripts/`
-directory and add it to version control.
+File -> New File -> R Script に移動し、`gapminder` データセットを読み込むための R スクリプトを作成します。このスクリプトを `scripts/` ディレクトリに保存し、バージョン管理に追加してください。
 
-Run the script using the `source` function, using the file path
-as its argument (or by pressing the "source" button in RStudio).
+その後、`source` 関数を使用してスクリプトを実行します。ファイルパスを引数として指定するか、RStudio の「Source」ボタンを押します。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 3
+## チャレンジ 3 の解答
 
-The `source` function can be used to use a script within a script.
-Assume you would like to load the same type of file over and over
-again and therefore you need to specify the arguments to fit the
-needs of your file. Instead of writing the necessary argument again
-and again you could just write it once and save it as a script. Then,
-you can use `source("Your_Script_containing_the_load_function")` in a new
-script to use the function of that script without writing everything again.
-Check out `?source` to find out more.
+`source` 関数はスクリプト内で別のスクリプトを使用するために使用できます。同じ種類のファイルを何度も読み込む必要がある場合、一度スクリプトとして保存すれば、以降はそれを繰り返し利用できます。
 
 
 ``` r
@@ -543,7 +502,7 @@ download.file("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/
 gapminder <- read.csv(file = "data/gapminder_data.csv")
 ```
 
-To run the script and load the data into the `gapminder` variable:
+データを `gapminder` 変数に読み込むには次のようにします：
 
 
 ``` r
@@ -556,23 +515,21 @@ source(file = "scripts/load-gapminder.R")
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 4
+## チャレンジ 4
 
-Read the output of `str(gapminder)` again;
-this time, use what you've learned about lists and vectors,
-as well as the output of functions like `colnames` and `dim`
-to explain what everything that `str` prints out for gapminder means.
-If there are any parts you can't interpret, discuss with your neighbors!
+`str(gapminder)` の出力をもう一度読み、リストやベクトルについて学んだこと、および `colnames` や `dim` の出力を活用して、`str` が表示する内容を説明してください。理解できない部分があれば、隣の人と相談してみてください。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 4
+## チャレンジ 4 の解答
 
-The object `gapminder` is a data frame with columns
+オブジェクト `gapminder` はデータフレームで、列は次のようになっています：
 
-- `country` and `continent` are character strings.
-- `year` is an integer vector.
-- `pop`, `lifeExp`, and `gdpPercap` are numeric vectors.
+-
+
+ `country` と `continent` は文字列（character）。
+- `year` は整数型のベクトル。
+- `pop`、`lifeExp`、`gdpPercap` は数値型のベクトル。
 
 :::::::::::::::::::::::::
 
@@ -580,13 +537,11 @@ The object `gapminder` is a data frame with columns
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use `cbind()` to add a new column to a data frame.
-- Use `rbind()` to add a new row to a data frame.
-- Remove rows from a data frame.
-- Use `str()`, `summary()`, `nrow()`, `ncol()`, `dim()`, `colnames()`, `head()`, and `typeof()` to understand the structure of a data frame.
-- Read in a csv file using `read.csv()`.
-- Understand what `length()` of a data frame represents.
+- 新しい列をデータフレームに追加するには `cbind()` を使用します。
+- 新しい行をデータフレームに追加するには `rbind()` を使用します。
+- データフレームから行を削除します。
+- データフレームの構造を理解するために、`str()`、`summary()`、`nrow()`、`ncol()`、`dim()`、`colnames()`、`head()`、`typeof()` を使用します。
+- `read.csv()` を使用して CSV ファイルを読み込みます。
+- データフレームの `length()` が何を表しているのか理解します。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
-
-

@@ -1,5 +1,5 @@
 ---
-title: Seeking Help
+title: ヘルプの利用
 teaching: 10
 exercises: 10
 source: Rmd
@@ -7,25 +7,23 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- To be able to read R help files for functions and special operators.
-- To be able to use CRAN task views to identify packages to solve a problem.
-- To be able to seek help from your peers.
+- 関数や特殊な演算子に関する R のヘルプファイルを読むことができる。
+- 問題を解決するためのパッケージを特定するために CRAN タスクビューを利用できる。
+- 仲間に助けを求める方法を理解する。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I get help in R?
+- R でどのようにしてヘルプを得ることができますか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-## Reading Help Files
+## ヘルプファイルを読む
 
-R, and every package, provide help files for functions. The general syntax to search for help on any
-function, "function\_name", from a specific function that is in a package loaded into your
-namespace (your interactive R session) is:
+R および各パッケージには関数用のヘルプファイルが用意されています。特定のパッケージに含まれる関数についてヘルプを検索する際の一般的な構文は次の通りです：
 
 
 ``` r
@@ -33,28 +31,28 @@ namespace (your interactive R session) is:
 help(function_name)
 ```
 
-For example take a look at the help file for `write.table()`, we will be using a similar function in an upcoming episode.
+たとえば、`write.table()` のヘルプファイルを見てみましょう。この関数に似た機能を持つ関数を今後のエピソードで使用します。
 
 
 ``` r
 ?write.table()
 ```
 
-This will load up a help page in RStudio (or as plain text in R itself).
+これにより、RStudio ではヘルプページが表示され、R 本体ではプレーンテキストとして表示されます。
 
-Each help page is broken down into sections:
+各ヘルプページは次のようなセクションに分かれています：
 
-- Description: An extended description of what the function does.
-- Usage: The arguments of the function and their default values (which can be changed).
-- Arguments: An explanation of the data each argument is expecting.
-- Details: Any important details to be aware of.
-- Value: The data the function returns.
-- See Also: Any related functions you might find useful.
-- Examples: Some examples for how to use the function.
+- **Description（説明）**: 関数が何をするかの詳細な説明。
+- **Usage（使用法）**: 関数の引数とそのデフォルト値（変更可能）。
+- **Arguments（引数）**: 各引数が期待するデータの説明。
+- **Details（詳細）**: 注意すべき重要な点。
+- **Value（戻り値）**: 関数が返すデータ。
+- **See Also（関連項目）**: 有用な関連関数。
+- **Examples（例）**: 関数の使用例。
 
-Different functions might have different sections, but these are the main ones you should be aware of.
+関数によってはセクションが異なる場合がありますが、これらが主なポイントです。
 
-Notice how related functions might call for the same help file:
+関連する関数が同じヘルプファイルを参照する場合があることに注意してください：
 
 
 ``` r
@@ -62,35 +60,31 @@ Notice how related functions might call for the same help file:
 ?write.csv()
 ```
 
-This is because these functions have very similar applicability and often share the same arguments as inputs to the function, so package authors often choose to document them together in a single help file.
+これらの関数は非常に似た用途を持ち、引数も共通しているため、パッケージ作者が同じヘルプファイルで文書化していることがよくあります。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Running Examples
+## ヒント: 実例を実行する
 
-From within the function help page, you can highlight code in the
-Examples and hit <kbd>Ctrl</kbd>\+<kbd>Return</kbd> to run it in
-RStudio console. This gives you a quick way to get a feel for
-how a function works.
-
+ヘルプページ内の Examples セクションからコードをハイライトして
+<kbd>Ctrl</kbd>\+<kbd>Return</kbd> を押すと、RStudio コンソールで実行されます。
+関数の動作を素早く理解する方法です。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Reading Help Files
+## ヒント: ヘルプファイルを読む
 
-One of the most daunting aspects of R is the large number of functions
-available. It would be prohibitive, if not impossible to remember the
-correct usage for every function you use. Luckily, using the help files
-means you don't have to remember that!
-
+R の大きな課題の一つは、利用可能な関数の数が膨大であることです。
+すべての関数の正しい使用法を記憶するのは現実的ではありません。
+しかし、ヘルプファイルを利用すれば、記憶する必要はありません！
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Special Operators
+## 特殊な演算子
 
-To seek help on special operators, use quotes or backticks:
+特殊な演算子に関するヘルプを検索するには、引用符またはバッククォートを使用します：
 
 
 ``` r
@@ -98,61 +92,60 @@ To seek help on special operators, use quotes or backticks:
 ?`<-`
 ```
 
-## Getting Help with Packages
+## パッケージに関するヘルプ
 
-Many packages come with "vignettes": tutorials and extended example documentation.
-Without any arguments, `vignette()` will list all vignettes for all installed packages;
-`vignette(package="package-name")` will list all available vignettes for
-`package-name`, and `vignette("vignette-name")` will open the specified vignette.
+多くのパッケージには「ビネット」と呼ばれるチュートリアルや拡張的な例のドキュメントが含まれています。
+引数なしで `vignette()` を実行すると、インストール済みのすべてのパッケージのビネットが表示されます。
+特定のパッケージについては `vignette(package="パッケージ名")` を使用します。
+特定のビネットを開くには `vignette("ビネット名")` を実行します。
 
-If a package doesn't have any vignettes, you can usually find help by typing
-`help("package-name")`.
+パッケージにビネットがない場合は、通常、次のコマンドでヘルプを探せます：
 
-RStudio also has a set of excellent
-[cheatsheets](https://rstudio.com/resources/cheatsheets/) for many packages.
 
-## When You Remember Part of the Function Name
+``` r
+help("パッケージ名")
+```
 
-If you're not sure what package a function is in or how it's specifically spelled, you can do a fuzzy search:
+また、RStudio には多くのパッケージ向けに優れた
+[チートシート](https://rstudio.com/resources/cheatsheets/) があります。
+
+## 関数名の一部を覚えている場合
+
+関数がどのパッケージに属しているか、または正確なスペルがわからない場合、ファジー検索が可能です：
 
 
 ``` r
 ??function_name
 ```
 
-A fuzzy search is when you search for an approximate string match. For example, you may remember that the function
-to set your working directory includes "set" in its name. You can do a fuzzy search to help you identify the function:
+ファジー検索では文字列の近似一致を検索します。たとえば、作業ディレクトリを設定する関数に「set」が含まれていることを覚えている場合、次のように検索できます：
 
 
 ``` r
 ??set
 ```
 
-## When You Have No Idea Where to Begin
+## どこから始めるべきかわからない場合
 
-If you don't know what function or package you need to use
-[CRAN Task Views](https://cran.at.r-project.org/web/views)
-is a specially maintained list of packages grouped into
-fields. This can be a good starting point.
+どの関数やパッケージを使用すべきかわからない場合、
+[CRAN Task Views](https://cran.at.r-project.org/web/views) を利用するとよいでしょう。
+これは、パッケージを分野別にグループ化した特別なリストで、出発点として適しています。
 
-## When Your Code Doesn't Work: Seeking Help from Your Peers
+## コードが動作しない場合: 仲間に助けを求める
 
-If you're having trouble using a function, 9 times out of 10,
-the answers you seek have already been answered on
-[Stack Overflow](https://stackoverflow.com/). You can search using
-the `[r]` tag. Please make sure to see their page on
-[how to ask a good question.](https://stackoverflow.com/help/how-to-ask)
+関数の使用に問題がある場合、その答えのほとんどはすでに
+[Stack Overflow](https://stackoverflow.com/) で回答されています。
+`[r]` タグを使って検索してください。質問の仕方については、Stack Overflow の
+[良い質問の仕方](https://stackoverflow.com/help/how-to-ask)のページを参照してください。
 
-If you can't find the answer, there are a few useful functions to
-help you ask your peers:
+答えが見つからない場合、以下の便利な関数を使って仲間に助けを求めるとよいでしょう：
 
 
 ``` r
 ?dput
 ```
 
-Will dump the data you're working with into a format that can
-be copied and pasted by others into their own R session.
+この関数は、使用しているデータを他の人が自分の R セッションでコピー＆ペーストできる形式に出力します。
 
 
 ``` r
@@ -185,16 +178,14 @@ loaded via a namespace (and not attached):
 [6] renv_1.0.11    evaluate_1.0.1
 ```
 
-Will print out your current version of R, as well as any packages you
-have loaded. This can be useful for others to help reproduce and debug
-your issue.
+この関数は、R の現在のバージョンやロードしているパッケージを表示します。
+これは他の人が問題を再現し、デバッグするのに役立ちます。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 1
+## チャレンジ 1
 
-Look at the help page for the `c` function. What kind of vector do you
-expect will be created if you evaluate the following:
+`c` 関数のヘルプページを見てください。次のコードを評価した場合、どのようなベクトルが作成されると思いますか？
 
 
 ``` r
@@ -205,14 +196,10 @@ c(1, 2, 'f')
 
 :::::::::::::::  solution
 
-## Solution to Challenge 1
+## チャレンジ 1 の解答
 
-The `c()` function creates a vector, in which all elements are of the
-same type. In the first case, the elements are numeric, in the
-second, they are characters, and in the third they are also characters:
-the numeric values are "coerced" to be characters.
-
-
+`c()` 関数はすべての要素が同じ型のベクトルを作成します。最初の場合、要素は数値型、
+2 番目の場合は文字型、そして 3 番目の場合も文字型です。数値型の値は文字型に「強制変換」されます。
 
 :::::::::::::::::::::::::
 
@@ -220,16 +207,16 @@ the numeric values are "coerced" to be characters.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 2
+## チャレンジ 2
 
-Look at the help for the `paste` function. You will need to use it later.
-What's the difference between the `sep` and `collapse` arguments?
+`paste` 関数のヘルプを見てください。この関数を後ほど使用します。
+`sep` 引数と `collapse` 引数の違いは何ですか？
 
 :::::::::::::::  solution
 
-## Solution to Challenge 2
+## チャレンジ 2 の解答
 
-To look at the help for the `paste()` function, use:
+`paste()` 関数のヘルプを見るには以下を実行します：
 
 
 ``` r
@@ -237,18 +224,15 @@ help("paste")
 ?paste
 ```
 
-The difference between `sep` and `collapse` is a little
-tricky. The `paste` function accepts any number of arguments, each of which
-can be a vector of any length. The `sep` argument specifies the string
-used between concatenated terms — by default, a space. The result is a
-vector as long as the longest argument supplied to `paste`. In contrast,
-`collapse` specifies that after concatenation the elements are *collapsed*
-together using the given separator, the result being a single string.
+`sep` と `collapse` の違いは少し複雑です。`paste` 関数は任意の数の引数を受け取り、それぞれが任意の長さのベクトルであることができます。
+`sep` 引数は連結される各項目の間に使用される文字列を指定します（デフォルトはスペース）。
+結果は、`paste` に渡された最も長い引数と同じ長さのベクトルです。
+一方、`collapse` 引数は、連結後の要素を指定された区切り文字を使用して「まとめて結合」することを示します。
+その結果、単一の文字列になります。
 
-It is important to call the arguments explicitly by typing out the argument
-name e.g `sep = ","` so the function understands to use the "," as a
-separator and not a term to concatenate.
-e.g.
+引数を明示的に指定することが重要です。たとえば `sep = ","` と入力すると、関数は区切り文字として "," を使用し、結合する項目としてではないと認識します。
+
+例：
 
 
 ``` r
@@ -291,11 +275,7 @@ paste(c("a","b"), "c", sep = ",", collapse = "|")
 [1] "a,c|b,c"
 ```
 
-(For more information,
-scroll to the bottom of the `?paste` help page and look at the
-examples, or try `example('paste')`.)
-
-
+（詳細については、`?paste` ヘルプページの末尾の例を参照するか、`example('paste')` を試してください。）
 
 :::::::::::::::::::::::::
 
@@ -303,42 +283,33 @@ examples, or try `example('paste')`.)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 3
+## チャレンジ 3
 
-Use help to find a function (and its associated parameters) that you could
-use to load data from a tabular file in which columns are delimited with "\\t"
-(tab) and the decimal point is a "." (period). This check for decimal
-separator is important, especially if you are working with international
-colleagues, because different countries have different conventions for the
-decimal point (i.e. comma vs period).
-Hint: use `??"read table"` to look up functions related to reading in tabular data.
+ヘルプを使用して、タブ区切り（`\t`）の列と小数点が "."（ピリオド）で表される表形式のファイルを読み込むために使用できる関数（および関連するパラメータ）を見つけてください。
+特に国際的な同僚と協力している場合、小数点の表記（例：コンマ対ピリオド）は異なる場合があるため、この確認が重要です。
+ヒント：`??"read table"` を使用して表形式データの読み込みに関連する関数を調べてください。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 3
+## チャレンジ 3 の解答
 
-The standard R function for reading tab-delimited files with a period
-decimal separator is read.delim(). You can also do this with
-`read.table(file, sep="\t")` (the period is the *default* decimal
-separator for `read.table()`), although you may have to change
-the `comment.char` argument as well if your data file contains
-hash (#) characters.
-
-
+タブ区切りファイルを小数点がピリオドで表される形式で読み込む標準的な R 関数は `read.delim()` です。
+また、`read.table(file, sep="\t")` を使用することもできます（`read.table()` のデフォルトの小数点はピリオドです）。
+ただし、データファイルにハッシュ（#）文字が含まれている場合は、`comment.char` 引数を変更する必要があるかもしれません。
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Other Resources
+## その他のリソース
 
 - [Quick R](https://www.statmethods.net/)
-- [RStudio cheat sheets](https://www.rstudio.com/resources/cheatsheets/)
+- [RStudio チートシート](https://www.rstudio.com/resources/cheatsheets/)
 - [Cookbook for R](https://www.cookbook-r.com/)
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use `help()` to get online help in R.
+- R のオンラインヘルプを取得するには `help()` を使用します。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

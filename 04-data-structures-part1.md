@@ -1,5 +1,5 @@
 ---
-title: Data Structures
+title: データ構造
 teaching: 40
 exercises: 15
 source: Rmd
@@ -7,26 +7,24 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- To be able to identify the 5 main data types.
-- To begin exploring data frames, and understand how they are related to vectors and lists.
-- To be able to ask questions from R about the type, class, and structure of an object.
-- To understand the information of the attributes "names", "class", and "dim".
+- 5 つの主なデータ型を特定できるようになる。
+- データフレームを探索し始め、ベクトルやリストとの関連を理解する。
+- R からオブジェクトの型、クラス、構造に関する質問ができるようになる。
+- "names"、"class"、"dim" 属性の情報を理解する。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I read data in R?
-- What are the basic data types in R?
-- How do I represent categorical information in R?
+- R でデータをどのように読み取ることができますか？
+- R の基本的なデータ型は何ですか？
+- R でカテゴリ情報をどのように表現しますか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-One of R's most powerful features is its ability to deal with tabular data -
-such as you may already have in a spreadsheet or a CSV file. Let's start by
-making a toy dataset in your `data/` directory, called `feline-data.csv`:
+R の最も強力な機能の 1 つは、スプレッドシートや CSV ファイルにすでに保存されているような表形式データを処理する能力です。まずは、`data/` ディレクトリに `feline-data.csv` という名前の小さなデータセットを作成しましょう：
 
 
 ``` r
@@ -35,17 +33,14 @@ cats <- data.frame(coat = c("calico", "black", "tabby"),
                     likes_catnip = c(1, 0, 1))
 ```
 
-We can now save `cats` as a CSV file. It is good practice to call the argument
-names explicitly so the function knows what default values you are changing. Here we
-are setting `row.names = FALSE`. Recall you can use `?write.csv` to pull
-up the help file to check out the argument names and their default values.
+次に、`cats` を CSV ファイルとして保存します。引数名を明示的に指定することは良い習慣であり、関数が変更されたデフォルト値を認識できます。この場合は `row.names = FALSE` を設定しています。引数名やそのデフォルト値を確認するには、`?write.csv` を使用してヘルプファイルを表示してください。
 
 
 ``` r
 write.csv(x = cats, file = "data/feline-data.csv", row.names = FALSE)
 ```
 
-The contents of the new file, `feline-data.csv`:
+新しいファイル `feline-data.csv` の内容は次の通りです：
 
 
 ``` r
@@ -57,15 +52,13 @@ tabby,3.2,1
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-### Tip: Editing Text files in R
+### ヒント: R でテキストファイルを編集する
 
-Alternatively, you can create `data/feline-data.csv` using a text editor (Nano),
-or within RStudio with the **File -> New File -> Text File** menu item.
-
+または、テキストエディタ（Nano）や RStudio の **File -> New File -> Text File** メニュー項目を使用して `data/feline-data.csv` を作成することもできます。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-We can load this into R via the following:
+このデータを R に読み込むには、以下のコマンドを使用します：
 
 
 ``` r
@@ -80,48 +73,23 @@ cats
 3  tabby    3.2            1
 ```
 
-The `read.table` function is used for reading in tabular data stored in a text
-file where the columns of data are separated by punctuation characters such as
-CSV files (csv = comma-separated values). Tabs and commas are the most common
-punctuation characters used to separate or delimit data points in csv files.
-For convenience R provides 2 other versions of `read.table`. These are: `read.csv`
-for files where the data are separated with commas and `read.delim` for files
-where the data are separated with tabs. Of these three functions `read.csv` is
-the most commonly used.  If needed it is possible to override the default
-delimiting punctuation marks for both `read.csv` and `read.delim`.
+`read.table` 関数は、CSV ファイル（csv = comma-separated values）などのテキストファイルに保存された表形式データを読み取るために使用されます。タブやカンマは、CSV ファイルでデータポイントを区切るために最も一般的に使用される記号です。R では `read.table` の便利なバージョンとして `read.csv`（データがカンマで区切られている場合）と `read.delim`（データがタブで区切られている場合）が用意されています。この 3 つの中で、`read.csv` が最も一般的に使用されます。必要に応じて、デフォルトの区切り記号を変更することもできます。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-### Check your data for factors
+### データが因子かどうかを確認する
 
-In recent times, the default way how R handles textual data has changed. Text
-data was interpreted by R automatically into a format called "factors". But
-there is an easier format that is called "character". We will hear about
-factors later, and what to use them for. For now, remember that in most cases,
-they are not needed and only complicate your life, which is why newer R
-versions read in text as "character". Check now if your version of R has
-automatically created factors and convert them to "character" format:
+最近、R がテキストデータを処理する方法が変更されました。以前は、R はテキストデータを自動的に "因子" という形式に変換していましたが、現在は "文字列" という形式で処理されるようになりました。因子の使用用途については後ほど学びますが、ほとんどの場合は必要なく、使用することで複雑になるだけです。そのため、新しい R バージョンではテキストデータが "文字列" として読み取られます。因子が自動的に作成されているかを確認し、必要に応じて文字列形式に変換してください：
 
-1. Check the data types of your input by typing `str(cats)`
-2. In the output, look at the three-letter codes after the colons: If you see
-  only "num" and "chr", you can continue with the lesson and skip this box.
-  If you find "fct", continue to step 3.
-3. Prevent R from automatically creating "factor" data. That can be done by
-  the following code: `options(stringsAsFactors = FALSE)`. Then, re-read
-  the cats table for the change to take effect.
-4. You must set this option every time you restart R. To not forget this,
-  include it in your analysis script before you read in any data, for example
-  in one of the first lines.
-5. For R versions greater than 4.0.0, text data is no longer converted to
-  factors anymore. So you can install this or a newer version to avoid this
-  problem. If you are working on an institute or company computer, ask your
-  administrator to do it.
-  
+1. 入力データの型を確認するには、`str(cats)` を入力します。
+2. 出力で、コロンの後にある 3 文字のコードを確認します：`num` と `chr` のみが表示される場合は、レッスンを続けることができます。このボックスはスキップしてください。`fct` が見つかった場合は、次の手順に進んでください。
+3. R が因子データを自動的に作成しないようにするには、以下のコードを実行します：`options(stringsAsFactors = FALSE)`。その後、`cats` テーブルを再読み込みして変更を反映させます。
+4. R を再起動するたびに、このオプションを設定する必要があります。忘れないように、データを読み込む前にスクリプトの最初の行のいずれかに含めてください。
+5. R バージョン 4.0.0 以降では、テキストデータは因子に変換されなくなりました。問題を回避するためにこのバージョン以降をインストールすることを検討してください。研究所や会社のコンピュータを使用している場合は、管理者に依頼してください。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-We can begin exploring our dataset right away, pulling out columns by specifying
-them using the `$` operator:
+データセットをすぐに探索し始めることができます。たとえば、`$` 演算子を使用して列を指定します：
 
 
 ``` r
@@ -140,11 +108,11 @@ cats$coat
 [1] "calico" "black"  "tabby" 
 ```
 
-We can do other operations on the columns:
+列に対して操作を実行することもできます：
 
 
 ``` r
-## Say we discovered that the scale weighs two Kg light:
+## たとえば、スケールが 2kg 軽いことが判明した場合：
 cats$weight + 2
 ```
 
@@ -160,7 +128,7 @@ paste("My cat is", cats$coat)
 [1] "My cat is calico" "My cat is black"  "My cat is tabby" 
 ```
 
-But what about
+しかし、次のコードではどうでしょうか？
 
 
 ``` r
@@ -171,14 +139,11 @@ cats$weight + cats$coat
 Error in cats$weight + cats$coat: non-numeric argument to binary operator
 ```
 
-Understanding what happened here is key to successfully analyzing data in R.
+ここで何が起こったのかを理解することが、R でデータを成功裏に分析する鍵です。
 
-### Data Types
+### データ型
 
-If you guessed that the last command will return an error because `2.1` plus
-`"black"` is nonsense, you're right - and you already have some intuition for an
-important concept in programming called *data types*. We can ask what type of
-data something is:
+最後のコマンドがエラーを返す理由が `2.1` と `"black"` を加算するのは無意味だからだと推測したなら、あなたは正しいです！これはプログラミングにおける重要な概念である *データ型* に関する直感をすでに持っているということです。データの型を調べるには、次のように入力します：
 
 
 ``` r
@@ -189,8 +154,8 @@ typeof(cats$weight)
 [1] "double"
 ```
 
-There are 5 main types: `double`, `integer`, `complex`, `logical` and `character`.
-For historic reasons, `double` is also called `numeric`.
+主なデータ型は次の 5 種類です：`double`、`integer`、`complex`、`logical`、`character`。
+歴史的な理由で、`double` は `numeric` とも呼ばれます。
 
 
 ``` r
@@ -202,7 +167,7 @@ typeof(3.14)
 ```
 
 ``` r
-typeof(1L) # The L suffix forces the number to be an integer, since by default R uses float numbers
+typeof(1L) # L サフィックスを付けると数値を整数に強制します（R はデフォルトで浮動小数点数を使用）
 ```
 
 ``` output
@@ -233,12 +198,9 @@ typeof('banana')
 [1] "character"
 ```
 
-No matter how
-complicated our analyses become, all data in R is interpreted as one of these
-basic data types. This strictness has some really important consequences.
+分析がどれだけ複雑であっても、R ではすべてのデータがこれらの基本的なデータ型のいずれかとして解釈されます。この厳格さには非常に重要な意味があります。
 
-A user has added details of another cat. This information is in the file
-`data/feline-data_v2.csv`.
+別の猫の詳細を追加した情報が、ファイル `data/feline-data_v2.csv` に保存されています。
 
 
 ``` r
@@ -254,21 +216,21 @@ tabby,3.2,1
 tabby,2.3 or 2.4,1
 ```
 
-Load the new cats data like before, and check what type of data we find in the
-`weight` column:
+この新しい猫データを以前と同じ方法で読み込み、`weight` 列にどのようなデータ型が含まれているか確認します：
 
 
 ``` r
 cats <- read.csv(file="data/feline-data_v2.csv")
-typeof(cats$weight)
+typeof(cats
+
+$weight)
 ```
 
 ``` output
 [1] "character"
 ```
 
-Oh no, our weights aren't the double type anymore! If we try to do the same math
-we did on them before, we run into trouble:
+あらら、`weight` 列の型が `double` ではなくなっています！以前と同じ計算を試みると、問題が発生します：
 
 
 ``` r
@@ -279,16 +241,12 @@ cats$weight + 2
 Error in cats$weight + 2: non-numeric argument to binary operator
 ```
 
-What happened?
-The `cats` data we are working with is something called a *data frame*. Data frames
-are one of the most common and versatile types of *data structures* we will work with in R.
-A given column in a data frame cannot be composed of different data types.
-In this case, R does not read everything in the data frame column `weight` as a *double*, therefore the entire
-column data type changes to something that is suitable for everything in the column.
+何が起こったのでしょうか？
+私たちが扱っている `cats` データは *データフレーム* と呼ばれるものです。データフレームは、R で最も一般的で多用途な *データ構造* の 1 つです。
+データフレームの特定の列には異なるデータ型を混在させることはできません。
+この場合、R はデータフレーム列 `weight` のすべてを *double* として読み取らなかったため、列全体のデータ型がその列内のすべてに適した型に変わります。
 
-When R reads a csv file, it reads it in as a *data frame*. Thus, when we loaded the `cats`
-csv file, it is stored as a data frame. We can recognize data frames by the first row that
-is written by the `str()` function:
+R が CSV ファイルを読み取ると、それは *データフレーム* として読み込まれます。そのため、`cats` CSV ファイルを読み込むと、データフレームとして保存されます。データフレームは `str()` 関数によって表示される最初の行で認識できます：
 
 
 ``` r
@@ -302,14 +260,9 @@ str(cats)
  $ likes_string: int  1 0 1 1
 ```
 
-*Data frames* are composed of rows and columns, where each column has the
-same number of rows. Different columns in a data frame can be made up of different
-data types (this is what makes them so versatile), but everything in a given
-column needs to be the same type (e.g., vector, factor, or list).
+*データフレーム* は行と列で構成され、各列は同じ数の行を持ちます。データフレームの異なる列は異なるデータ型で構成できます（これがデータフレームを非常に柔軟にする理由です）が、特定の列内ではすべてが同じ型である必要があります（例：ベクトル、因子、リストなど）。
 
-Let's explore more about different data structures and how they behave.
-For now, let's remove that extra line from our cats data and reload it,
-while we investigate this behavior further:
+この振る舞いをさらに調査する間、猫のデータから余分な行を削除し、それを再読み込みしましょう：
 
 feline-data.csv:
 
@@ -320,7 +273,7 @@ black,5.0,0
 tabby,3.2,1
 ```
 
-And back in RStudio:
+そして RStudio 内で：
 
 
 ``` r
@@ -329,10 +282,9 @@ cats <- read.csv(file="data/feline-data.csv")
 
 
 
-### Vectors and Type Coercion
+### ベクトルと型の強制変換
 
-To better understand this behavior, let's meet another of the data structures:
-the *vector*.
+この挙動をよりよく理解するために、別のデータ構造である *ベクトル* を紹介します。
 
 
 ``` r
@@ -344,10 +296,7 @@ my_vector
 [1] FALSE FALSE FALSE
 ```
 
-A vector in R is essentially an ordered list of things, with the special
-condition that *everything in the vector must be the same basic data type*. If
-you don't choose the datatype, it'll default to `logical`; or, you can declare
-an empty vector of whatever type you like.
+R におけるベクトルは、基本的に順序付けられた要素のリストです。ただし、特別な条件として、*ベクトル内のすべての要素は同じ基本データ型である必要があります*。データ型を指定しない場合、デフォルトで `logical` 型になります。また、任意の型の空のベクトルを宣言することも可能です。
 
 
 ``` r
@@ -359,7 +308,7 @@ another_vector
 [1] "" "" ""
 ```
 
-You can check if something is a vector:
+あるオブジェクトがベクトルかどうかを確認することもできます：
 
 
 ``` r
@@ -370,11 +319,7 @@ str(another_vector)
  chr [1:3] "" "" ""
 ```
 
-The somewhat cryptic output from this command indicates the basic data type
-found in this vector - in this case `chr`, character; an indication of the
-number of things in the vector - actually, the indexes of the vector, in this
-case `[1:3]`; and a few examples of what's actually in the vector - in this case
-empty character strings. If we similarly do
+このコマンドのやや難解な出力は、このベクトルに含まれる基本データ型（この場合は `chr`、文字型）を示し、ベクトル内の要素数（この場合は `[1:3]`）、および実際に含まれる要素（この場合は空の文字列）を示します。同様に次のコマンドを実行すると、
 
 
 ``` r
@@ -385,37 +330,28 @@ str(cats$weight)
  num [1:3] 2.1 5 3.2
 ```
 
-we see that `cats$weight` is a vector, too - *the columns of data we load into R
-data.frames are all vectors*, and that's the root of why R forces everything in
-a column to be the same basic data type.
+`cats$weight` もベクトルであることがわかります。*R のデータフレームに読み込まれる列はすべてベクトルです*。これが、R が列内のすべての要素を同じ基本データ型に強制する理由の根本です。
 
 ::::::::::::::::::::::::::::::::::::::  discussion
 
-### Discussion 1
+### 討論 1
 
-Why is R so opinionated about what we put in our columns of data?
-How does this help us?
+なぜ R は列に含まれるデータに対してこれほど厳格なのでしょうか？
+この厳格さは私たちにどのように役立つのでしょうか？
 
 :::::::::::::::  solution
 
-### Discussion 1
+### 討論 1 の解答
 
-By keeping everything in a column the same, we allow ourselves to make simple
-assumptions about our data; if you can interpret one entry in the column as a
-number, then you can interpret *all* of them as numbers, so we don't have to
-check every time. This consistency is what people mean when they talk about
-*clean data*; in the long run, strict consistency goes a long way to making
-our lives easier in R.
-
-
+列内のすべてのデータが同じであることで、データに対して単純な仮定を行うことができます。たとえば、列の 1 つの要素を数値として解釈できるなら、列内の*すべて*の要素を数値として解釈できます。そのため、毎回確認する必要がなくなります。この一貫性こそが、人々が「クリーンデータ」と呼ぶものです。長い目で見ると、この厳格な一貫性は R におけるデータ操作を非常に簡単にしてくれます。
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-#### Coercion by combining vectors
+#### ベクトルを結合する際の型の強制変換
 
-You can also make vectors with explicit contents with the combine function:
+明示的な内容を持つベクトルを `c()` 関数で作成できます：
 
 
 ``` r
@@ -427,18 +363,14 @@ combine_vector
 [1] 2 6 3
 ```
 
-Given what we've learned so far, what do you think the following will produce?
+これまで学んだ内容を考えると、次のコードは何を生成すると思いますか？
 
 
 ``` r
 quiz_vector <- c(2,6,'3')
 ```
 
-This is something called *type coercion*, and it is the source of many surprises
-and the reason why we need to be aware of the basic data types and how R will
-interpret them. When R encounters a mix of types (here double and character) to
-be combined into a single vector, it will force them all to be the same
-type. Consider:
+これは *型の強制変換* と呼ばれるもので、予想外の結果をもたらすことがあり、基本データ型と R がそれをどのように解釈するかを理解する必要があります。R は、異なる型（ここでは `double` と `character`）が単一のベクトルに結合される場合、それらをすべて同じ型に強制します。例を見てみましょう：
 
 
 ``` r
@@ -459,12 +391,11 @@ another_coercion_vector
 [1] 0 1
 ```
 
-#### The type hierarchy
+#### 型の階層
 
-The coercion rules go: `logical` -> `integer` -> `double` ("`numeric`") ->
-`complex` -> `character`, where -> can be read as *are transformed into*. For
-example, combining `logical` and `character` transforms the result to
-`character`:
+型の強制変換ルールは次の通りです：  
+`logical` -> `integer` -> `double` ("`numeric`") -> `complex` -> `character`  
+この矢印は「*変換される*」と読めます。たとえば、`logical` と `character` を結合すると、結果は `character` に変換されます：
 
 
 ``` r
@@ -475,11 +406,9 @@ c('a', TRUE)
 [1] "a"    "TRUE"
 ```
 
-A quick way to recognize `character` vectors is by the quotes that enclose them
-when they are printed.
+`character` ベクトルは、印刷時にクォートで囲まれていることで簡単に認識できます。
 
-You can try to force
-coercion against this flow using the `as.` functions:
+逆方向の強制変換を試みる場合は、`as.` 関数を使用します：
 
 
 ``` r
@@ -509,18 +438,9 @@ double_coerced_to_logical
 [1] FALSE  TRUE  TRUE
 ```
 
-As you can see, some surprising things can happen when R forces one basic data
-type into another! Nitty-gritty of type coercion aside, the point is: if your
-data doesn't look like what you thought it was going to look like, type coercion
-may well be to blame; make sure everything is the same type in your vectors and
-your columns of data.frames, or you will get nasty surprises!
+R が基本データ型を他の型に強制する際に驚くべきことが起こる場合があります！型の強制変換の細かい点はさておき、重要なのは：データが予想していた形式と異なる場合、それは型の強制変換が原因である可能性が高いです。ベクトルやデータフレームの列内のすべてのデータが同じ型であることを確認してください。さもなければ、予想外の問題が発生する可能性があります！
 
-But coercion can also be very useful! For example, in our `cats` data
-`likes_catnip` is numeric, but we know that the 1s and 0s actually represent
-`TRUE` and `FALSE` (a common way of representing them). We should use the
-`logical` datatype here, which has two states: `TRUE` or `FALSE`, which is
-exactly what our data represents. We can 'coerce' this column to be `logical` by
-using the `as.logical` function:
+しかし、強制変換は非常に便利な場合もあります！たとえば、`cats` データの `likes_catnip` 列は数値型ですが、実際には 1 と 0 がそれぞれ `TRUE` と `FALSE` を表しています。このデータには `logical` 型を使用すべきです。この型は `TRUE` または `FALSE` の 2 状態を持ち、データの意味に完全に一致します。この列を `logical` に「強制変換」するには、`as.logical` 関数を使用します：
 
 
 ``` r
@@ -542,188 +462,180 @@ cats$likes_catnip
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 1
+### チャレンジ 1
 
-An important part of every data analysis is cleaning the input data. If you
-know that the input data is all of the same format, (e.g. numbers), your
-analysis is much easier! Clean the cat data set from the chapter about
-type coercion.
+データ分析の重要な部分は、入力データのクリーンアップです。入力データがすべて同じ形式（例：数値）であることを知っていると、分析がはるかに簡単になります！型の強制変換に関する章で扱った猫のデータセットをクリーンアップしましょう。
 
-#### Copy the code template
+#### コードテンプレートをコピー
 
-Create a new script in RStudio and copy and paste the following code. Then
-move on to the tasks below, which help you to fill in the gaps (\_\_\_\_\_\_).
+RStudio で新しいスクリプトを作成し、以下のコードをコピー＆ペーストしてください。その後、以下のタスクを参考にギャップ（\_\_\_\_\_\_）を埋めてください。
 
 ```
-# Read data
+# データを読み込み
 cats <- read.csv("data/feline-data_v2.csv")
 
-# 1. Print the data
+# 1. データを表示
 _____
 
-# 2. Show an overview of the table with all data types
+# 2. 表の概要をデータ型と共に表示
 _____(cats)
 
-# 3. The "weight" column has the incorrect data type __________.
-#    The correct data type is: ____________.
+# 3. "weight" 列の現在のデータ型 __________。
+#    正しいデータ型は： ____________。
 
-# 4. Correct the 4th weight data point with the mean of the two given values
+# 4. 4 番目の "weight" データポイントを指定された 2 つの値の平均に修正
 cats$weight[4] <- 2.35
-#    print the data again to see the effect
+#    効果を確認するためにデータを再表示
 cats
 
-# 5. Convert the weight to the right data type
+# 5. "weight" を正しいデータ型に変換
 cats$weight <- ______________(cats$weight)
 
-#    Calculate the mean to test yourself
+#    自分でテストするために平均を計算
 mean(cats$weight)
 
-# If you see the correct mean value (and not NA), you did the exercise
-# correctly!
+# 正しい平均値（NA ではない）が表示されたら、演習は完了です！
 ```
 
-### Instructions for the tasks
+### タスクの手順
 
-#### 1\. Print the data
+#### 1\. データを表示する
 
-Execute the first statement (`read.csv(...)`). Then print the data to the
-console
+最初のステートメント（`read.csv(...)`）を実行します。その後、データをコンソールに表示します。
 
 :::::::::::::::  solution
 
-### Tip 1.1
+### ヒント 1.1
 
-Show the content of any variable by typing its name.
+任意の変数の内容を表示するには、その名前を入力します。
+
+### チャレンジ 1.1 の解答
+
+2 つの正しい解答：
 
 
-### Solution to Challenge 1.1
-
-Two correct solutions:
-
-```
+``` r
 cats
+```
+
+``` output
+    coat weight likes_catnip
+1 calico    2.1         TRUE
+2  black    5.0        FALSE
+3  tabby    3.2         TRUE
+```
+
+``` r
 print(cats)
 ```
 
+``` output
+    coat weight likes_catnip
+1 calico    2.1         TRUE
+2  black    5.0        FALSE
+3  tabby    3.2         TRUE
+```
+
 :::::::::::::::::::::::::
 
-#### 2\. Overview of the data types
+#### 2\. データ型の概要を表示する
 
-The data type of your data is as important as the data itself. Use a
-function we saw earlier to print out the data types of all columns of the
-`cats` table.
+データ型はデータ自体と同じくらい重要です。以前見た関数を使用して、`cats` テーブルのすべての列のデータ型を表示します。
 
 :::::::::::::::  solution
 
-### Tip 1.2
+### ヒント 1.2
 
-In the chapter "Data types" we saw two functions that can show data types.
-One printed just a single word, the data type name. The other printed
-a short form of the data type, and the first few values. We need the second
-here.
+「データ型」の章で、データ型を表示する 2 つの関数を見ました。1 つはデータ型の名前だけを出力し、もう 1 つは短い形式のデータ型と最初の値を出力しました。ここでは後者を使用します。
 
+### チャレンジ 1.2 の解答
+
+
+``` r
+str(cats)
+```
+
+``` output
+'data.frame':	3 obs. of  3 variables:
+ $ coat        : chr  "calico" "black" "tabby"
+ $ weight      : num  2.1 5 3.2
+ $ likes_catnip: logi  TRUE FALSE TRUE
+```
 
 :::::::::::::::::::::::::
 
-> ### Solution to Challenge 1.2
-> 
-> ```
-> str(cats)
-> ```
+#### 3\. 必要
 
-#### 3\. Which data type do we need?
+なデータ型はどれですか？
 
-The shown data type is not the right one for this data (weight of
-a cat). Which data type do we need?
+表示されるデータ型は、このデータ（猫の体重）には適していません。必要なデータ型はどれですか？
 
-- Why did the `read.csv()` function not choose the correct data type?
-- Fill in the gap in the comment with the correct data type for cat weight!
+- なぜ `read.csv()` 関数は正しいデータ型を選ばなかったのでしょうか？
+- コメントのギャップに猫の体重に適したデータ型を埋めてください！
 
 :::::::::::::::  solution
 
-### Tip 1.3
+### ヒント 1.3
 
-Scroll up to the section about the [type hierarchy](#the-type-hierarchy)
-to review the available data types
+[型の階層](#the-type-hierarchy) のセクションに戻り、利用可能なデータ型を確認してください。
 
+### チャレンジ 1.3 の解答
+
+- 体重は連続スケール（実数）で表されます。この場合の R のデータ型は "double"（"numeric" とも呼ばれます）です。
+- 4 行目の値は "2.3 or 2.4" であり、数値ではなく英単語が含まれています。そのため、"character" 型が選ばれます。同じ列内のすべての値が同じデータ型である必要があるため、列全体がテキスト型になっています。
 
 :::::::::::::::::::::::::
+
+#### 4\. 問題のある値を修正する
+
+問題のある 4 行目に新しい体重値を割り当てるコードが提供されています。実行する前に考えてみてください。この例のように数値を割り当てた後のデータ型はどうなりますか？
+実行後にデータ型を確認して、自分の予測が正しいか確認してください。
 
 :::::::::::::::  solution
 
-### Solution to Challenge 1.3
+### ヒント 1.4
 
-- Weight is expressed on a continuous scale (real numbers). The R
-  data type for this is "double" (also known as "numeric").
-- The fourth row has the value "2.3 or 2.4". That is not a number
-  but two, and an english word. Therefore, the "character" data type
-  is chosen. The whole column is now text, because all values in the same
-  columns have to be the same data type.
-  
+2 つの異なるデータ型が組み合わされた場合の型の階層を再確認してください。
+
+### チャレンジ 1.4 の解答
+
+列 "weight" のデータ型は "character" です。割り当てるデータ型は "double" です。異なるデータ型を組み合わせると、次の階層でより高いデータ型に変換されます：
+
+```
+logical < integer < double < complex < character
+```
+
+したがって、列はまだ "character" 型です！これを "double" 型に手動で変換する必要があります。
 
 :::::::::::::::::::::::::
 
-#### 4\. Correct the problematic value
+#### 5\. 列 "weight" を正しいデータ型に変換する
 
-The code to assign a new weight value to the problematic fourth row is given.
-Think first and then execute it: What will be the data type after assigning
-a number like in this example?
-You can check the data type after executing to see if you were right.
+猫の体重は数値です。しかし、列にはまだ適切なデータ型が設定されていません。この列を浮動小数点数に強制変換してください。
 
 :::::::::::::::  solution
 
-### Tip 1.4
+### ヒント 1.5
 
-Revisit the hierarchy of data types when two different data types are
-combined.
-
+データ型を変換する関数は `as.` で始まります。このスクリプトの上部で関数を確認するか、RStudio のオートコンプリート機能を使用してください。 "`as.`" と入力し、TAB キーを押します。
 
 :::::::::::::::::::::::::
 
-> ### Solution to challenge 1.4
-> 
-> The data type of the column "weight" is "character". The assigned data
-> type is "double". Combining two data types yields the data type that is
-> higher in the following hierarchy:
-> 
-> ```
-> logical < integer < double < complex < character
-> ```
-> 
-> Therefore, the column is still of type character! We need to manually
-> convert it to "double".
-> {: .solution}
+### チャレンジ 1.5 の解答
 
-#### 5\. Convert the column "weight" to the correct data type
-
-Cat weight are numbers. But the column does not have this data type yet.
-Coerce the column to floating point numbers.
-
-:::::::::::::::  solution
-
-### Tip 1.5
-
-The functions to convert data types start with `as.`. You can look
-for the function further up in the manuscript or use the RStudio
-auto-complete function: Type "`as.`" and then press the TAB key.
+歴史的な理由で、2 つの同義の関数があります：
 
 
-:::::::::::::::::::::::::
-
-> ### Solution to Challenge 1.5
-> 
-> There are two functions that are synonymous for historic reasons:
-> 
-> ```
-> cats$weight <- as.double(cats$weight)
-> cats$weight <- as.numeric(cats$weight)
-> ```
+``` r
+cats$weight <- as.double(cats$weight)
+cats$weight <- as.numeric(cats$weight)
+```
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-### Some basic vector functions
+### 基本的なベクトル関数
 
-The combine function, `c()`, will also append things to an existing vector:
+`c()` 関数を使用すると、既存のベクトルに新しい要素を追加することができます：
 
 
 ``` r
@@ -744,7 +656,7 @@ combine_example
 [1] "a"   "b"   "SWC"
 ```
 
-You can also make series of numbers:
+また、数列を生成することも可能です：
 
 
 ``` r
@@ -765,7 +677,7 @@ seq(10)
 ```
 
 ``` r
-seq(1,10, by=0.1)
+seq(1, 10, by=0.1)
 ```
 
 ``` output
@@ -778,7 +690,7 @@ seq(1,10, by=0.1)
 [91] 10.0
 ```
 
-We can ask a few questions about vectors:
+ベクトルについていくつかの質問をすることもできます：
 
 
 ``` r
@@ -814,7 +726,7 @@ typeof(sequence_example)
 [1] "integer"
 ```
 
-We can get individual elements of a vector by using the bracket notation:
+ベクトルの特定の要素を取得するには、角括弧記法を使用します：
 
 
 ``` r
@@ -826,7 +738,7 @@ first_element
 [1] 20
 ```
 
-To change a single element, use the bracket on the other side of the arrow:
+特定の要素を変更するには、角括弧を矢印の右側に使用します：
 
 
 ``` r
@@ -840,14 +752,13 @@ sequence_example
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 2
+### チャレンジ 2
 
-Start by making a vector with the numbers 1 through 26.
-Then, multiply the vector by 2.
+1 から 26 までの数を含むベクトルを作成します。その後、このベクトルを 2 倍にします。
 
 :::::::::::::::  solution
 
-### Solution to Challenge 2
+### チャレンジ 2 の解答
 
 
 ``` r
@@ -859,12 +770,9 @@ x <- x * 2
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-### Lists
+### リスト
 
-Another data structure you'll want in your bag of tricks is the `list`. A list
-is simpler in some ways than the other types, because you can put anything you
-want in it. Remember *everything in the vector must be of the same basic data type*,
-but a list can have different data types:
+次に紹介するデータ構造は `list` です。リストは他のデータ型よりもシンプルで、*何でも入れることができる*のが特徴です。ベクトルでは要素の基本データ型を統一する必要がありましたが、リストは異なるデータ型を持つことができます：
 
 
 ``` r
@@ -886,8 +794,7 @@ list_example
 [1] 1+4i
 ```
 
-When printing the object structure with `str()`, we see the data types of all
-elements:
+`str()` を使用してオブジェクトの構造を表示すると、すべての要素のデータ型を確認できます：
 
 
 ``` r
@@ -902,13 +809,11 @@ List of 4
  $ : cplx 1+4i
 ```
 
-What is the use of lists? They can **organize data of different types**. For
-example, you can organize different tables that belong together, similar to
-spreadsheets in Excel. But there are many other uses, too.
+リストの用途は何でしょうか？例えば、異なるデータ型を持つ関連データを整理できます。これは、Excel のスプレッドシートのように複数の表をまとめるのと似ています。他にも多くの用途があります。
 
-We will see another example that will maybe surprise you in the next chapter.
+次の章で、驚くかもしれない別の例を紹介します。
 
-To retrieve one of the elements of a list, use the **double bracket**:
+リストの特定の要素を取得するには **二重角括弧** を使用します：
 
 
 ``` r
@@ -919,8 +824,7 @@ list_example[[2]]
 [1] "a"
 ```
 
-The elements of lists also can have **names**, they can be given by prepending
-them to the values, separated by an equals sign:
+リストの要素には **名前** を付けることもできます。名前を値の前に等号で指定します：
 
 
 ``` r
@@ -939,8 +843,7 @@ $data
 [1] TRUE
 ```
 
-This results in a **named list**. Now we have a new function of our object!
-We can access single elements by an additional way!
+これにより **名前付きリスト** が生成されます。これで新しいアクセス方法が追加されます！
 
 
 ``` r
@@ -951,25 +854,20 @@ another_list$title
 [1] "Numbers"
 ```
 
-## Names
+## 名前
 
-With names, we can give meaning to elements. It is the first time that we do not
-only have the **data**, but also explaining information. It is *metadata*
-that can be stuck to the object like a label. In R, this is called an
-**attribute**. Some attributes enable us to do more with our
-object, for example, like here, accessing an element by a self-defined name.
+名前を使用すると、要素に意味を持たせることができます。これにより、データだけでなく説明情報も持つことができます。これはオブジェクトに貼り付けられるラベルのような *メタデータ* です。R ではこれは **属性** と呼ばれます。属性により、オブジェクトをさらに操作することが可能になります。ここでは、定義された名前で要素にアクセスすることができます。
 
-### Accessing vectors and lists by name
+### 名前を使用してベクトルやリストにアクセスする
 
-We have already seen how to generate a named list. The way to generate a named
-vector is very similar. You have seen this function before:
+名前付きリストの生成方法はすでに学びました。名前付きベクトルを生成する方法も非常に似ています。以前このような関数を見たことがあるはずです：
 
 
 ``` r
 pizza_price <- c( pizzasubito = 5.64, pizzafresh = 6.60, callapizza = 4.50 )
 ```
 
-The way to retrieve elements is different, though:
+しかし、要素の取得方法はリストとは異なります：
 
 
 ``` r
@@ -981,7 +879,7 @@ pizzasubito
        5.64 
 ```
 
-The approach used for the list does not work:
+リストのアプローチは機能しません：
 
 
 ``` r
@@ -992,13 +890,11 @@ pizza_price$pizzafresh
 Error in pizza_price$pizzafresh: $ operator is invalid for atomic vectors
 ```
 
-It will pay off if you remember this error message, you will meet it in your own
-analyses. It means that you have just tried accessing an element like it was in
-a list, but it is actually in a vector.
+このエラーメッセージを覚えておくと役立ちます。同じようなエラーに遭遇することが多いですが、これはリストと勘違いしてベクトルの要素にアクセスしようとした場合に発生します。
 
-### Accessing and changing names
+### 名前の取得と変更
 
-If you are only interested in the names, use the `names()` function:
+名前だけに興味がある場合は、`names()` 関数を使用します：
 
 
 ``` r
@@ -1009,8 +905,7 @@ names(pizza_price)
 [1] "pizzasubito" "pizzafresh"  "callapizza" 
 ```
 
-We have seen how to access and change single elements of a vector. The same is
-possible for names:
+ベクトルの要素にアクセスしたり変更したりする方法を学びました。同じことが名前についても可能です：
 
 
 ``` r
@@ -1033,24 +928,21 @@ pizza_price
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 3
+### チャレンジ 3
 
-- What is the data type of the names of `pizza_price`? You can find out
-  using the `str()` or `typeof()` functions.
+- `pizza_price` の名前のデータ型は何ですか？`str()` または `typeof()` 関数を使用して調べてください。
 
 :::::::::::::::  solution
 
-### Solution to Challenge 3
+### チャレンジ 3 の解答
 
-You get the names of an object by wrapping the object name inside
-`names(...)`. Similarly, you get the data type of the names by again
-wrapping the whole code in `typeof(...)`:
+オブジェクトの名前を取得するには、その名前を `names(...)` で囲みます。同様に、名前のデータ型を取得するには、全体をさらに `typeof(...)` で囲みます：
 
 ```
 typeof(names(pizza))
 ```
 
-alternatively, use a new variable if this is easier for you to read:
+または、コードをわかりやすくするために新しい変数を使用します：
 
 ```
 n <- names(pizza)
@@ -1063,27 +955,23 @@ typeof(n)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 4
+### チャレンジ 4
 
-Instead of just changing some of the names a vector/list already has, you can
-also set all names of an object by writing code like (replace ALL CAPS text):
+既存のベクトルやリストの一部の名前を変更する代わりに、オブジェクトのすべての名前を設定することも可能です。次のコード形式を使用します（すべての大文字部分を置き換えてください）：
 
 ```
 names( OBJECT ) <-  CHARACTER_VECTOR
 ```
 
-Create a vector that gives the number for each letter in the alphabet!
+アルファベットの各文字に番号を割り当てるベクトルを作成しましょう！
 
-1. Generate a vector called `letter_no` with the sequence of numbers from 1
-  to 26!
-2. R has a built-in object called `LETTERS`. It is a 26-character vector, from
-  A to Z. Set the names of the number sequence to this 26 letters
-3. Test yourself by calling `letter_no["B"]`, which should give you the number
-  2!
+1. 1 から 26 の数列を持つ `letter_no` というベクトルを作成します。
+2. R には `LETTERS` という組み込みオブジェクトがあります。これは A から Z までの 26 文字を含むベクトルです。この 26 文字を `letter_no` の名前として設定します。
+3. `letter_no["B"]` を呼び出して、値が 2 であることを確認してください！
 
 :::::::::::::::  solution
 
-### Solution to Challenge 4
+### チャレンジ 4 の解答
 
 ```
 letter_no <- 1:26   # or seq(1,26)
@@ -1095,11 +983,9 @@ letter_no["B"]
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Data frames
+## データフレーム
 
-We have data frames at the very beginning of this lesson, they represent
-a table of data. We didn't go much further into detail with our example cat
-data frame:
+このレッスンの冒頭でデータフレームについて簡単に触れましたが、それはデータの表形式を表しています。例として示した猫のデータフレームについては詳細に掘り下げていませんでした：
 
 
 ``` r
@@ -1113,8 +999,7 @@ cats
 3  tabby    3.2         TRUE
 ```
 
-We can now understand something a bit surprising in our data.frame; what happens
-if we run:
+ここで少し驚くべきことに気づくかもしれません。次のコマンドを実行してみましょう：
 
 
 ``` r
@@ -1125,19 +1010,15 @@ typeof(cats)
 [1] "list"
 ```
 
-We see that data.frames look like lists 'under the hood'. Think again what we
-heard about what lists can be used for:
+データフレームが「内部的にはリストのように見える」ことがわかります。以前、リストについて次のように説明しました：
 
-> Lists organize data of different types
+> リストは異なる型のデータを整理するためのもの
 
-Columns of a data frame are vectors of different types, that are organized
-by belonging to the same table.
+データフレームの列は、それぞれが異なる型のベクトルであり、同じ表に属することで整理されています。
 
-A data.frame is really a list of vectors. It is a special list in which all the
-vectors must have the same length.
+データフレームは実際にはベクトルのリストです。データフレームが特別なのは、すべてのベクトルが同じ長さでなければならない点です。
 
-How is this "special"-ness written into the object, so that R does not treat it
-like any other list, but as a table?
+この「特別さ」はどのようにオブジェクトに組み込まれているのでしょうか？R がそれを単なるリストではなく、表として扱うのはなぜでしょう？
 
 
 ``` r
@@ -1148,18 +1029,12 @@ class(cats)
 [1] "data.frame"
 ```
 
-A **class**, just like names, is an attribute attached to the object. It tells
-us what this object means for humans.
+**クラス** は名前と同様に、オブジェクトに付加される属性です。この属性は、そのオブジェクトが人間にとって何を意味するのかを示します。
 
-You might wonder: Why do we need another what-type-of-object-is-this-function?
-We already have `typeof()`? That function tells us how the object is
-**constructed in the computer**. The `class` is the **meaning of the object for
-humans**. Consequently, what `typeof()` returns is *fixed* in R (mainly the
-five data types), whereas the output of `class()` is *diverse* and *extendable*
-by R packages.
+ここで疑問に思うかもしれません：なぜオブジェクトの型を判断するための関数がもう一つ必要なのでしょうか？すでに `typeof()` がありますよね？  
+`typeof()` はオブジェクトが**コンピュータ内でどのように構築されているか**を教えてくれます。一方、`class()` はオブジェクトの**人間にとっての意味**を示します。したがって、`typeof()` の出力は R で固定されています（主に 5 種類のデータ型）が、`class()` の出力は R パッケージによって多様で拡張可能です。
 
-In our `cats` example, we have an integer, a double and a logical variable. As
-we have seen already, each column of data.frame is a vector.
+`cats` の例では、整数型、倍精度数値型、論理型の変数が含まれています。すでに見たように、データフレームの各列はベクトルです：
 
 
 ``` r
@@ -1194,8 +1069,7 @@ str(cats[,1])
  chr [1:3] "calico" "black" "tabby"
 ```
 
-Each row is an *observation* of different variables, itself a data.frame, and
-thus can be composed of elements of different types.
+一方、各行は異なる変数の*観測値*であり、それ自体がデータフレームであり、異なる型の要素で構成されることができます：
 
 
 ``` r
@@ -1228,10 +1102,9 @@ str(cats[1,])
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 5
+### チャレンジ 5
 
-There are several subtly different ways to call variables, observations and
-elements from data.frames:
+データフレームから変数、観測値、要素を取得する方法はいくつかあります：
 
 - `cats[1]`
 - `cats[[1]]`
@@ -1241,13 +1114,13 @@ elements from data.frames:
 - `cats[, 1]`
 - `cats[1, ]`
 
-Try out these examples and explain what is returned by each one.
+これらの例を試して、それぞれが何を返すのかを説明してください。
 
-*Hint:* Use the function `typeof()` to examine what is returned in each case.
+*ヒント:* 返されるものを調べるには、`typeof()` 関数を使用してください。
 
 :::::::::::::::  solution
 
-### Solution to Challenge 5
+### チャレンジ 5 の解答
 
 
 ``` r
@@ -1261,9 +1134,7 @@ cats[1]
 3  tabby
 ```
 
-We can think of a data frame as a list of vectors. The single brace `[1]`
-returns the first slice of the list, as another list. In this case it is the
-first column of the data frame.
+データフレームはベクトルのリストと考えられます。単一ブラケット `[1]` はリストの最初のスライスを別のリストとして返します。この場合、それはデータフレームの最初の列です。
 
 
 ``` r
@@ -1274,8 +1145,7 @@ cats[[1]]
 [1] "calico" "black"  "tabby" 
 ```
 
-The double brace `[[1]]` returns the contents of the list item. In this case
-it is the contents of the first column, a *vector* of type *character*.
+二重ブラケット `[[1]]` はリスト項目の内容を返します。この場合、最初の列の内容である *character* 型のベクトルです。
 
 
 ``` r
@@ -1286,8 +1156,7 @@ cats$coat
 [1] "calico" "black"  "tabby" 
 ```
 
-This example uses the `$` character to address items by name. *coat* is the
-first column of the data frame, again a *vector* of type *character*.
+`$` を使用して名前で項目にアクセスします。`coat` はデータフレームの最初の列であり、*character* 型のベクトルです。
 
 
 ``` r
@@ -1301,8 +1170,7 @@ cats["coat"]
 3  tabby
 ```
 
-Here we are using a single brace `["coat"]` replacing the index number with
-the column name. Like example 1, the returned object is a *list*.
+単一ブラケット `["coat"]` を使用し、インデックス番号の代わりに列名を指定します。例 1 と同様に、返されるオブジェクトは *list* です。
 
 
 ``` r
@@ -1313,9 +1181,7 @@ cats[1, 1]
 [1] "calico"
 ```
 
-This example uses a single brace, but this time we provide row and column
-coordinates. The returned object is the value in row 1, column 1. The object
-is a *vector* of type *character*.
+単一ブラケットを使用し、行と列の座標を指定します。この場合、1 行目 1 列目の値が返されます。オブジェクトは *character* 型のベクトルです。
 
 
 ``` r
@@ -1326,9 +1192,7 @@ cats[, 1]
 [1] "calico" "black"  "tabby" 
 ```
 
-Like the previous example we use single braces and provide row and column
-coordinates. The row coordinate is not specified, R interprets this missing
-value as all the elements in this *column* and returns them as a *vector*.
+前の例と同様に単一ブラケットを使用し、行と列の座標を指定しますが、行座標が指定されていません。この場合、R は欠損値をその列のすべての要素として解釈し、*ベクトル* として返します。
 
 
 ``` r
@@ -1340,11 +1204,7 @@ cats[1, ]
 1 calico    2.1         TRUE
 ```
 
-Again we use the single brace with row and column coordinates. The column
-coordinate is not specified. The return value is a *list* containing all the
-values in the first row.
-
-
+再び単一ブラケットを使用し、行と列の座標を指定しますが、今回は列座標が指定されていません。返される値は 1 行目のすべての値を含む *list* です。
 
 :::::::::::::::::::::::::
 
@@ -1352,9 +1212,9 @@ values in the first row.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-### Tip: Renaming data frame columns
+### ヒント: データフレーム列の名前変更
 
-Data frames have column names, which can be accessed with the `names()` function.
+データフレームには列名があり、`names()` 関数でアクセスできます：
 
 
 ``` r
@@ -1365,7 +1225,7 @@ names(cats)
 [1] "coat"         "weight"       "likes_catnip"
 ```
 
-If you want to rename the second column of `cats`, you can assign a new name to the second element of `names(cats)`.
+`cats` の 2 番目の列の名前を変更したい場合は、`names(cats)` の 2 番目の要素に新しい名前を割り当てます：
 
 
 ``` r
@@ -1384,9 +1244,9 @@ cats
 
 
 
-### Matrices
+### 行列（Matrix）
 
-Last but not least is the matrix. We can declare a matrix full of zeros:
+最後に紹介するのは行列です。ゼロで満たされた行列を宣言してみましょう：
 
 
 ``` r
@@ -1401,7 +1261,7 @@ matrix_example
 [3,]    0    0    0    0    0    0
 ```
 
-What makes it special is the `dim()` attribute:
+行列を特別なものにしているのは `dim()` 属性です：
 
 
 ``` r
@@ -1412,7 +1272,7 @@ dim(matrix_example)
 [1] 3 6
 ```
 
-And similar to other data structures, we can ask things about our matrix:
+他のデータ構造と同様に、行列について質問することも可能です：
 
 
 ``` r
@@ -1457,19 +1317,26 @@ ncol(matrix_example)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 6
+### チャレンジ 6
 
-What do you think will be the result of
-`length(matrix_example)`?
-Try it.
-Were you right? Why / why not?
+次のコードの結果はどうなるでしょうか？
+
+
+``` r
+length(matrix_example)
+```
+
+``` output
+[1] 18
+```
+
+実行して確認してください。予想は当たりましたか？なぜそのような結果になるのでしょうか？
 
 :::::::::::::::  solution
 
-### Solution to Challenge 6
+### チャレンジ 6 の解答
 
-What do you think will be the result of
-`length(matrix_example)`?
+行列は次元属性を持つベクトルであるため、`length` は行列内の要素の総数を返します：
 
 
 ``` r
@@ -1481,41 +1348,26 @@ length(matrix_example)
 [1] 18
 ```
 
-Because a matrix is a vector with added dimension attributes, `length`
-gives you the total number of elements in the matrix.
-
-
-
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 7
+### チャレンジ 7
 
-Make another matrix, this time containing the numbers 1:50,
-with 5 columns and 10 rows.
-Did the `matrix` function fill your matrix by column, or by
-row, as its default behaviour?
-See if you can figure out how to change this.
-(hint: read the documentation for `matrix`!)
+1 から 50 の数値を含む、列数 5、行数 10 の行列を作成します。
+デフォルトの動作として、この行列は列ごとに値が埋められますか、それとも行ごとですか？
+その動作を変更する方法を調べてください。（ヒント：`matrix` のドキュメントを参照）
 
 :::::::::::::::  solution
 
-### Solution to Challenge 7
-
-Make another matrix, this time containing the numbers 1:50,
-with 5 columns and 10 rows.
-Did the `matrix` function fill your matrix by column, or by
-row, as its default behaviour?
-See if you can figure out how to change this.
-(hint: read the documentation for `matrix`!)
+### チャレンジ 7 の解答
 
 
 ``` r
 x <- matrix(1:50, ncol=5, nrow=10)
-x <- matrix(1:50, ncol=5, nrow=10, byrow = TRUE) # to fill by row
+x <- matrix(1:50, ncol=5, nrow=10, byrow = TRUE) # 行ごとに埋める
 ```
 
 :::::::::::::::::::::::::
@@ -1524,19 +1376,18 @@ x <- matrix(1:50, ncol=5, nrow=10, byrow = TRUE) # to fill by row
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 8
+### チャレンジ 8
 
-Create a list of length two containing a character vector for each of the sections in this part of the workshop:
+このワークショップの次のセクションに対応する 2 つの要素を持つリストを作成します：
 
-- Data types
-- Data structures
+- データ型
+- データ構造
 
-Populate each character vector with the names of the data types and data
-structures we've seen so far.
+各データ型およびデータ構造の名前を文字型ベクトルに格納してください。
 
 :::::::::::::::  solution
 
-### Solution to Challenge 8
+### チャレンジ 8 の解答
 
 
 ``` r
@@ -1545,19 +1396,15 @@ dataStructures <- c('data.frame', 'vector', 'list', 'matrix')
 answer <- list(dataTypes, dataStructures)
 ```
 
-Note: it's nice to make a list in big writing on the board or taped to the wall
-listing all of these types and structures - leave it up for the rest of the workshop
-to remind people of the importance of these basics.
-
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-### Challenge 9
+### チャレンジ 9
 
-Consider the R output of the matrix below:
+以下の行列の R 出力を考えてみてください：
 
 
 ``` output
@@ -1567,9 +1414,8 @@ Consider the R output of the matrix below:
 [3,]   10    7
 ```
 
-What was the correct command used to write this matrix? Examine
-each command and try to figure out the correct one before typing them.
-Think about what matrices the other commands will produce.
+この行列を作成するために使用された正しいコマンドはどれでしょうか？各コマンドを確認し、入力する前に正しいものを考えてください。  
+他のコマンドでどのような行列が作成されるかを考えてみてください。
 
 1. `matrix(c(4, 1, 9, 5, 10, 7), nrow = 3)`
 2. `matrix(c(4, 9, 10, 1, 5, 7), ncol = 2, byrow = TRUE)`
@@ -1578,21 +1424,7 @@ Think about what matrices the other commands will produce.
 
 :::::::::::::::  solution
 
-### Solution to Challenge 9
-
-Consider the R output of the matrix below:
-
-
-``` output
-     [,1] [,2]
-[1,]    4    1
-[2,]    9    5
-[3,]   10    7
-```
-
-What was the correct command used to write this matrix? Examine
-each command and try to figure out the correct one before typing them.
-Think about what matrices the other commands will produce.
+### チャレンジ 9 の解答
 
 
 ``` r
@@ -1605,9 +1437,9 @@ matrix(c(4, 1, 9, 5, 10, 7), ncol = 2, byrow = TRUE)
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use `read.csv` to read tabular data in R.
-- The basic data types in R are double, integer, complex, logical, and character.
-- Data structures such as data frames or matrices are built on top of lists and vectors, with some added attributes.
+- `read.csv` を使用して R で表形式データを読み取ります。
+- R の基本データ型は、double、integer、complex、logical、character です。
+- データフレームや行列のようなデータ構造は、リストやベクトルを基にし、いくつかの属性が追加されています。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

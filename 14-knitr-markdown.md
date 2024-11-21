@@ -1,5 +1,5 @@
 ---
-title: Producing Reports With knitr
+title: knitrを使ったレポート作成
 teaching: 60
 exercises: 15
 source: Rmd
@@ -7,77 +7,53 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Understand the value of writing reproducible reports
-- Learn how to recognise and compile the basic components of an R Markdown file
-- Become familiar with R code chunks, and understand their purpose, structure and options
-- Demonstrate the use of inline chunks for weaving R outputs into text blocks, for example when discussing the results of some calculations
-- Be aware of alternative output formats to which an R Markdown file can be exported
+- 再現性のあるレポート作成の価値を理解する
+- R Markdownファイルの基本構成を認識し、コンパイルする方法を学ぶ
+- Rコードチャンクを理解し、その目的、構造、およびオプションを学ぶ
+- 計算結果を議論する際に、テキストブロックにRの出力を埋め込むインラインチャンクの使用方法を実演する
+- R Markdownファイルを他の形式にエクスポートする際の代替出力形式を把握する
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I integrate software and reports?
+- ソフトウェアとレポートをどのように統合できますか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-## Data analysis reports
+## データ解析レポート
 
-Data analysts tend to write a lot of reports, describing their
-analyses and results, for their collaborators or to document their
-work for future reference.
+データ解析者は通常、コラボレーター向けや将来の参照のために、自分の解析や結果を記述したレポートを多く作成します。
 
-Many new users begin by first writing a single R script containing all of their
-work, and then share the analysis by emailing the script and various graphs
-as attachments. But this can be cumbersome, requiring a lengthy discussion to
-explain which attachment was which result.
+初心者の多くは、まず解析をすべて1つのRスクリプトに書き込み、スクリプトやさまざまなグラフを添付ファイルとしてメールで共有することから始めます。しかし、これは手間がかかり、どの添付ファイルがどの結果なのかを説明するのに長い議論を要する場合があります。
 
-Writing formal reports with Word or [LaTeX](https://www.latex-project.org/)
-can simplify this process by incorporating both the analysis report and output graphs
-into a single document. But tweaking formatting to make figures look correct
-and fixing obnoxious page breaks can be tedious and lead to a lengthy "whack-a-mole"
-game of fixing new mistakes resulting from a single formatting change.
+Wordや[LaTeX](https://www.latex-project.org/)を使って正式なレポートを書くと、このプロセスが簡単になります。解析レポートと出力グラフを1つの文書にまとめることができます。ただし、図の形式を整えたり、煩わしい改ページを修正したりするのに手間がかかり、一度の形式変更で新たな問題が発生する「モグラ叩きゲーム」のような状況になりがちです。
 
-Creating a report as a web page (which is an html file) using R Markdown makes things easier.
-The report can be one long stream, so tall figures that wouldn't ordinarily fit on
-one page can be kept at full size and easier to read, since the reader can simply
-keep scrolling. Additionally, the formatting of and R Markdown document is simple and easy to modify, allowing you to spend
-more time on your analyses instead of writing reports.
+R Markdownを使ってWebページ（htmlファイル）としてレポートを作成すると、これらの作業が簡単になります。この形式では、レポートを長いストリームとして作成できるため、通常は1ページに収まらない大きな図も完全なサイズで保持でき、読み手は単にスクロールするだけで内容を確認できます。また、R Markdown文書の形式はシンプルで、簡単に変更できるため、レポート作成ではなく解析に時間を費やすことができます。
 
-## Literate programming
+## 文芸的プログラミング（Literate Programming）
 
-Ideally, such analysis reports are *reproducible* documents: If an
-error is discovered, or if some additional subjects are added to the
-data, you can just re-compile the report and get the new or corrected
-results rather than having to reconstruct figures, paste them into
-a Word document, and hand-edit various detailed results.
+理想的には、このような解析レポートは*再現性のある*文書です。エラーが見つかったり、データに新しい被験者が追加されたりした場合でも、レポートを再コンパイルするだけで、新しい結果や修正された結果を得ることができます。図を再作成し、Word文書に貼り付け、詳細な結果を手作業で編集する必要はありません。
 
-The key R package here is [`knitr`](https://yihui.name/knitr/). It allows you
-to create a document that is a mixture of text and chunks of
-code. When the document is processed by `knitr`, chunks of code will
-be executed, and graphs or other results will be inserted into the final document.
+ここで重要なRパッケージは[`knitr`](https://yihui.name/knitr/)です。このパッケージを使うと、テキストとコードチャンクを混在させた文書を作成できます。`knitr`が文書を処理すると、コードチャンクが実行され、グラフやその他の結果が最終文書に挿入されます。
 
-This sort of idea has been called "literate programming".
+このようなアイデアは「文芸的プログラミング」と呼ばれています。
 
-`knitr` allows you to mix basically any type of text with code from different programming languages, but we recommend that you use `R Markdown`, which mixes Markdown
-with R. [Markdown](https://www.markdownguide.org/) is a light-weight mark-up language for creating web
-pages.
+`knitr`では、ほぼすべての種類のテキストとさまざまなプログラミング言語のコードを混在させることができますが、`R Markdown`を使用することをお勧めします。`R Markdown`はMarkdownとRを組み合わせたものです。[Markdown](https://www.markdownguide.org/)は、Webページを作成するための軽量マークアップ言語です。
 
-## Creating an R Markdown file
+## R Markdownファイルの作成
 
-Within RStudio, click File → New File → R Markdown and
-you'll get a dialog box like this:
+RStudio内で、[File] → [New File] → [R Markdown] をクリックすると、次のようなダイアログボックスが表示されます：
 
-![](fig/New_R_Markdown.png){alt='Screenshot of the New R Markdown file dialogue box in RStudio'}
+![](fig/New_R_Markdown.png){alt='RStudioでの新しいR Markdownファイルダイアログボックスのスクリーンショット'}
 
-You can stick with the default (HTML output), but give it a title.
+デフォルト設定（HTML出力）をそのまま使用しても構いませんが、タイトルを入力してください。
 
-## Basic components of R Markdown
+## R Markdownの基本構成
 
-The initial chunk of text (header) contains instructions for R to specify what kind of document will be created, and the options chosen. You can use the header to give your document a title, author, date, and tell it what type of output you want
-to produce. In this case, we're creating an html document.
+冒頭のテキストチャンク（ヘッダー）は、どの種類の文書を作成するか、選択されたオプションとともにRに指示を与えます。このヘッダーを使用して、文書にタイトル、著者、日付を指定し、作成したい出力形式を指定できます。この例では、HTML文書を作成します。
 
 ```
 ---
@@ -88,12 +64,9 @@ output: html_document
 ---
 ```
 
-You can delete any of those fields if you don't want them
-included. The double-quotes aren't strictly *necessary* in this case.
-They're mostly needed if you want to include a colon in the title.
+これらのフィールドは、不要であれば削除できます。ダブルクォートは必須ではありません。必要になるのは、タイトルにコロンを含めたい場合などです。
 
-RStudio creates the document with some example text to get you
-started. Note below that there are chunks like
+RStudioは、始めるためのサンプルテキスト付きで文書を作成します。以下のようなチャンクに注意してください：
 
 <pre>
 &#96;&#96;&#96;{r}
@@ -101,105 +74,34 @@ summary(cars)
 &#96;&#96;&#96;
 </pre>
 
-These are chunks of R code that will be executed by `knitr` and replaced
-by their results. More on this later.
+これらはRコードチャンクで、`knitr`によって実行され、その結果で置き換えられます。詳細は後ほど説明します。
 
 ## Markdown
 
-Markdown is a system for writing web pages by marking up the text much
-as you would in an email rather than writing html code. The marked-up
-text gets *converted* to html, replacing the marks with the proper
-html code.
-
-For now, let's delete all of the stuff that's there and write a bit of
-markdown.
-
-You make things **bold** using two asterisks, like this: `**bold**`,
-and you make things *italics* by using underscores, like this:
-`_italics_`.
-
-You can make a bulleted list by writing a list with hyphens or
-asterisks with a space between the list and other text, like this:
-
-```
-A list:
-
-* bold with double-asterisks
-* italics with underscores
-* code-type font with backticks
-```
-
-or like this:
-
-```
-A second list:
-
-- bold with double-asterisks
-- italics with underscores
-- code-type font with backticks
-```
-
-Each will appear as:
-
-- bold with double-asterisks
-- italics with underscores
-- code-type font with backticks
-
-You can use whatever method you prefer, but *be consistent*. This maintains the
-readability of your code.
-
-You can make a numbered list by just using numbers. You can even use the
-same number over and over if you want:
-
-```
-1. bold with double-asterisks
-1. italics with underscores
-1. code-type font with backticks
-```
-
-This will appear as:
-
-1. bold with double-asterisks
-2. italics with underscores
-3. code-type font with backticks
-
-You can make section headers of different sizes by initiating a line
-with some number of `#` symbols:
-
-```
-# Title
-## Main section
-### Sub-section
-#### Sub-sub section
-```
-
-You *compile* the R Markdown document to an html webpage by clicking
-the "Knit" button in the upper-left.
+Markdownは、メールを書くようにテキストをマークアップすることでWebページを作成するシステムです。マークアップされたテキストは*HTMLコード*に変換され、適切なHTMLコードに置き換えられます。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 1
+## チャレンジ 1
 
-Create a new R Markdown document. Delete all of the R code chunks
-and write a bit of Markdown (some sections, some italicized
-text, and an itemized list).
+新しいR Markdown文書を作成してください。すべてのRコードチャンクを削除し、Markdownの一部（セクション、斜体のテキスト、箇条書きリスト）を記述します。
 
-Convert the document to a webpage.
+文書をWebページに変換してください。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 1
+## チャレンジ 1 の解答
 
-In RStudio, select File > New file > R Markdown...
+RStudioで、[File] → [New File] → [R Markdown...] を選択します。
 
-Delete the placeholder text and add the following:
+プレースホルダーテキストを削除し、以下を追加します：
 
 ```
 # Introduction
 
 ## Background on Data
 
-This report uses the *gapminder* dataset, which has columns that include:
+このレポートでは、*gapminder* データセットを使用しています。このデータセットには次の列が含まれます：
 
 * country
 * continent
@@ -212,44 +114,37 @@ This report uses the *gapminder* dataset, which has columns that include:
 
 ```
 
-Then click the 'Knit' button on the toolbar to generate an html document (webpage).
-
-
+その後、ツールバーの「Knit」ボタンをクリックして、HTMLドキュメント（Webページ）を生成します。
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## A bit more Markdown
+## もう少しMarkdownについて
 
-You can make a hyperlink like this:
-`[Carpentries Home Page](https://carpentries.org/)`.
+ハイパーリンクを作成するには、以下のように記述します：
+`[Carpentries ホームページ](https://carpentries.org/)`。
 
-You can include an image file like this: `![The Carpentries Logo](https://carpentries.org/assets/img/TheCarpentries.svg)`
+画像ファイルを挿入するには、以下のように記述します：
+`![The Carpentries Logo](https://carpentries.org/assets/img/TheCarpentries.svg)`
 
-You can do subscripts (e.g., F~2~) with `F~2~` and superscripts (e.g.,
-F^2^) with `F^2^`.
+添字（例：F~2~）は `F~2~`、上付き文字（例：F^2^）は `F^2^` と記述します。
 
-If you know how to write equations in
-[LaTeX](https://www.latex-project.org/), you can use `$ $` and `$$ $$` to insert math equations, like
-`$E = mc^2$` and
+[LaTeX](https://www.latex-project.org/)で方程式を書く方法を知っていれば、`$ $` や `$$ $$` を使って数式を挿入できます。
+例えば、`$E = mc^2$` または次のような形で記述できます：
 
 ```
 $$y = \mu + \sum_{i=1}^p \beta_i x_i + \epsilon$$
 ```
 
-You can review Markdown syntax by navigating to the
-"Markdown Quick Reference" under the "Help" field in the
-toolbar at the top of RStudio.
+Markdownの構文は、RStudioのツールバーの「Help」フィールドにある
+"Markdown Quick Reference" で確認できます。
 
-## R code chunks
+## Rコードチャンク
 
-The real power of Markdown comes from
-mixing markdown with chunks of code. This is R Markdown. When
-processed, the R code will be executed; if they produce figures, the
-figures will be inserted in the final document.
+Markdownの真の力は、マークダウンにコードチャンクを組み合わせるところにあります。これがR Markdownです。処理されると、Rコードは実行され、生成される図などが最終文書に挿入されます。
 
-The main code chunks look like this:
+基本的なコードチャンクは以下のようになります：
 
 <pre>
 &#96;&#96;&#96;{r load_data}
@@ -257,26 +152,21 @@ gapminder <- read.csv("gapminder.csv")
 &#96;&#96;&#96;
 </pre>
 
-That is, you place a chunk of R code between <code>\`\`\`{r chunk\_name}</code>
-and <code>\`\`\`</code>. You should give each chunk
-a unique name, as they will help you to fix errors and, if any graphs are
-produced, the file names are based on the name of the code chunk that
-produced them. You can create code chunks quickly in RStudio using the shortcuts
-<kbd>Ctrl</kbd>\+<kbd>Alt</kbd>\+<kbd>I</kbd> on Windows and Linux, or <kbd>Cmd</kbd>\+<kbd>Option</kbd>\+<kbd>I</kbd> on Mac.
+つまり、<code>\`\`\`{r chunk\_name}</code> と <code>\`\`\`</code> の間にRコードを記述します。各チャンクには一意の名前を付けるべきです。これによりエラーの修正が容易になり、図が生成される場合、生成されるファイル名はそのコードチャンクの名前に基づきます。RStudioでは、ショートカット <kbd>Ctrl</kbd>\+<kbd>Alt</kbd>\+<kbd>I</kbd>（WindowsおよびLinux）、または <kbd>Cmd</kbd>\+<kbd>Option</kbd>\+<kbd>I</kbd>（Mac）を使用してコードチャンクを素早く作成できます。
 
-:::::::::::::::::::::::::::::::::::::::  challenge
+:::::::::::::::::::::::::::::::::::::::  チャレンジ
 
-## Challenge 2
+## チャレンジ 2
 
-Add code chunks to:
+以下のコードチャンクを追加してください：
 
-- Load the ggplot2 package
-- Read the gapminder data
-- Create a plot
+- ggplot2パッケージをロードする
+- gapminderデータを読み込む
+- プロットを作成する
 
-:::::::::::::::  solution
+:::::::::::::::  解答
 
-## Solution to Challenge 2
+## チャレンジ 2 の解答
 
 <pre>
 &#96;&#96;&#96;{r load-ggplot2}
@@ -300,34 +190,25 @@ plot(lifeExp ~ year, data = gapminder)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## How things get compiled
+## コンパイルの仕組み
 
-When you press the "Knit" button, the R Markdown document is
-processed by [`knitr`](https://yihui.name/knitr) and a plain Markdown
-document is produced (as well as, potentially, a set of figure files): the R code is executed
-and replaced by both the input and the output; if figures are
-produced, links to those figures are included.
+「Knit」ボタンを押すと、R Markdown文書は[`knitr`](https://yihui.name/knitr)によって処理され、プレーンなMarkdown文書（および必要に応じて一連の図ファイル）が生成されます。Rコードは実行され、その入力と出力に置き換えられます。図が生成される場合、それらのリンクが文書に含まれます。
 
-The Markdown and figure documents are then processed by the tool
-[`pandoc`](https://pandoc.org/), which converts the Markdown file into an
-html file, with the figures embedded.
+その後、Markdown文書と図ファイルは[`pandoc`](https://pandoc.org/)ツールによって処理され、図が埋め込まれたHTMLファイルに変換されます。
 
 <img src="fig/14-knitr-markdown-rendered-rmd_to_html_fig-1.png" style="display: block; margin: auto auto auto 0;" />
 
-## Chunk options
+## チャンクオプション
 
-There are a variety of options to affect how the code chunks are
-treated. Here are some examples:
+コードチャンクの処理方法を変更するためのオプションがさまざま用意されています。例：
 
-- Use `echo=FALSE` to avoid having the code itself shown.
-- Use `results="hide"` to avoid having any results printed.
-- Use `eval=FALSE` to have the code shown but not evaluated.
-- Use `warning=FALSE` and `message=FALSE` to hide any warnings or
-  messages produced.
-- Use `fig.height` and `fig.width` to control the size of the figures
-  produced (in inches).
+- `echo=FALSE`を使用してコード自体を非表示にする。
+- `results="hide"`を使用して結果の印刷を抑制する。
+- `eval=FALSE`を使用してコードを表示するが評価しない。
+- `warning=FALSE`や`message=FALSE`を使用して警告やメッセージを非表示にする。
+- `fig.height`や`fig.width`を使用して生成される図のサイズ（インチ単位）を制御する。
 
-So you might write:
+たとえば、以下のように記述します：
 
 <pre>
 &#96;&#96;&#96;{r load_libraries, echo=FALSE, message=FALSE}
@@ -336,34 +217,15 @@ library("ggplot2")
 &#96;&#96;&#96;
 </pre>
 
-Often there will be particular options that you'll want to use
-repeatedly; for this, you can set *global* chunk options, like so:
+:::::::::::::::::::::::::::::::::::::::  チャレンジ
 
-<pre>
-&#96;&#96;&#96;{r global_options, echo=FALSE}
-knitr::opts_chunk$set(fig.path="Figs/", message=FALSE, warning=FALSE,
-                      echo=FALSE, results="hide", fig.width=11)
-&#96;&#96;&#96;
-</pre>
+## チャレンジ 3
 
-The `fig.path` option defines where the figures will be saved. The `/`
-here is really important; without it, the figures would be saved in
-the standard place but just with names that begin with `Figs`.
+チャンクオプションを使用して図のサイズを制御し、コードを非表示にしてください。
 
-If you have multiple R Markdown files in a common directory, you might
-want to use `fig.path` to define separate prefixes for the figure file
-names, like `fig.path="Figs/cleaning-"` and `fig.path="Figs/analysis-"`.
+:::::::::::::::  解答
 
-:::::::::::::::::::::::::::::::::::::::  challenge
-
-## Challenge 3
-
-Use chunk options to control the size of a figure and to hide the
-code.
-
-:::::::::::::::  solution
-
-## Solution to Challenge 3
+## チャレンジ 3 の解答
 
 <pre>
 &#96;&#96;&#96;{r echo = FALSE, fig.width = 3}
@@ -375,100 +237,87 @@ plot(faithful)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-You can review all of the `R` chunk options by navigating to
-the "R Markdown Cheat Sheet" under the "Cheatsheets" section
-of the "Help" field in the toolbar at the top of RStudio.
+R Markdownのすべてのチャンクオプションは、RStudioのツールバーの「Help」フィールド内「Cheatsheets」セクションにある「R Markdown Cheat Sheet」で確認できます。
 
-## Inline R code
+## インラインRコード
 
-You can make *every* number in your report reproducible. Use
-<code>\`r</code> and <code>\`</code> for an in-line code chunk,
-like so: ``` `r round(some_value, 2)` ```. The code will be
-executed and replaced with the *value* of the result.
+レポート内の*すべての*数値を再現可能にすることができます。  
+<code>\`r</code> と <code>\`</code> を使用してインラインコードチャンクを作成します。  
+例: ``` `r round(some_value, 2)` ```. このコードは実行され、結果の*値*に置き換えられます。
 
-Don't let these in-line chunks get split across lines.
+インラインチャンクが行をまたいで分割されないように注意してください。
 
-Perhaps precede the paragraph with a larger code chunk that does
-calculations and defines variables, with `include=FALSE` for that larger
-chunk (which is the same as `echo=FALSE` and `results="hide"`).
+計算や変数の定義を行う大きなコードチャンクを、`include=FALSE` を指定して記述するのが良いでしょう  
+（これは `echo=FALSE` と `results="hide"` を指定するのと同じです）。
 
-Rounding can produce differences in output in such situations. You may want
-`2.0`, but `round(2.03, 1)` will give just `2`.
+丸め処理は、場合によって出力に差異を生じさせることがあります。たとえば `2.0` を期待していても、`round(2.03, 1)` は `2` だけを返します。
 
-The
-[`myround`](https://github.com/kbroman/broman/blob/master/R/myround.R)
-function in the [R/broman](https://github.com/kbroman/broman) package handles
-this.
+[R/broman](https://github.com/kbroman/broman) パッケージの  
+[`myround`](https://github.com/kbroman/broman/blob/master/R/myround.R) 関数は、この問題を処理します。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 4
+## チャレンジ 4
 
-Try out a bit of in-line R code.
+インラインRコードを少し試してみましょう。
 
 :::::::::::::::  solution
 
-## Solution to Challenge 4
+## チャレンジ 4 の解答
 
-Here's some inline code to determine that 2 + 2 = ``4``.
+以下は、2 + 2 = ``4`` を求めるインラインコードの例です。
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Other output options
+## 他の出力オプション
 
-You can also convert R Markdown to a PDF or a Word document. Click the
-little triangle next to the "Knit" button to get a drop-down
-menu. Or you could put `pdf_document` or `word_document` in the initial header
-of the file.
+R Markdown を PDF または Word ドキュメントに変換することもできます。  
+"ニット" ボタン横の小さな三角形をクリックすると、ドロップダウンメニューが表示されます。  
+または、ファイルの冒頭ヘッダーに `pdf_document` または `word_document` を指定することも可能です。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Creating PDF documents
+## ヒント: PDFドキュメントの作成
 
-Creating .pdf documents may require installation of some extra software. The R
-package `tinytex` provides some tools to help make this process easier for R users.
-With `tinytex` installed, run `tinytex::install_tinytex()` to install the required
-software (you'll only need to do this once) and then when you knit to pdf `tinytex`
-will automatically detect and install any additional LaTeX packages that are needed to
-produce the pdf document. Visit the [tinytex website](https://yihui.org/tinytex/)
-for more information.
+PDF ドキュメント（.pdf）を作成するには、追加のソフトウェアが必要になる場合があります。  
+Rパッケージ `tinytex` は、このプロセスを簡単にするツールを提供します。  
+`tinytex` をインストールした後、`tinytex::install_tinytex()` を実行して必要なソフトウェアをインストールしてください（この作業は一度だけでOKです）。  
+その後、PDFにニットする際に `tinytex` が自動的に必要な LaTeX パッケージを検出し、インストールします。  
+詳細については、[tinytexの公式ウェブサイト](https://yihui.org/tinytex/) をご覧ください。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Visual markdown editing in RStudio
+## ヒント: RStudio のビジュアルマークダウン編集
 
-RStudio versions 1.4 and later include visual markdown editing mode.
-In visual editing mode, markdown expressions (like `**bold words**`) are
-transformed to the formatted appearance (**bold words**) as you type.
-This mode also includes a toolbar at the top with basic formatting buttons,
-similar to what you might see in common word processing software programs.
-You can turn visual editing on and off by pressing
-the ![](fig/visual_mode_icon.png){alt='Icon for turning on and off the visual editing mode in RStudio, which looks like a pair of compasses'}
-button in the top right corner of your R Markdown document.
+RStudio バージョン 1.4 以降には、ビジュアルマークダウン編集モードが含まれています。  
+このモードでは、マークダウン表記（例: `**太字**`）が入力中にフォーマットされた外観（**太字**）に変換されます。  
+また、このモードには上部に基本的なフォーマットボタンを含むツールバーがあり、一般的なワープロソフトに似た操作が可能です。  
+ビジュアル編集モードは、R Markdown ドキュメントの右上隅にある  
+![](fig/visual_mode_icon.png){alt='RStudio のビジュアル編集モードのオンオフ切り替えボタンのアイコン（コンパスのような形）'} ボタンを押すことでオン/オフを切り替えられます。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Resources
+## リソース
 
 - [Knitr in a knutshell tutorial](https://kbroman.org/knitr_knutshell)
-- [Dynamic Documents with R and knitr](https://www.amazon.com/exec/obidos/ASIN/1482203537/7210-20) (book)
+- [Dynamic Documents with R and knitr](https://www.amazon.com/exec/obidos/ASIN/1482203537/7210-20) (書籍)
 - [R Markdown documentation](https://rmarkdown.rstudio.com)
 - [R Markdown cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
 - [Getting started with R Markdown](https://www.rstudio.com/resources/webinars/getting-started-with-r-markdown/)
-- [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) (book by Rstudio team)
+- [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) (Rstudio チームの書籍)
 - [Reproducible Reporting](https://www.rstudio.com/resources/webinars/reproducible-reporting/)
 - [The Ecosystem of R Markdown](https://www.rstudio.com/resources/webinars/the-ecosystem-of-r-markdown/)
 - [Introducing Bookdown](https://www.rstudio.com/resources/webinars/introducing-bookdown/)
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Mix reporting written in R Markdown with software written in R.
-- Specify chunk options to control formatting.
-- Use `knitr` to convert these documents into PDF and other formats.
+- R Markdown で作成したレポートに、R で書かれたソフトウェアを組み合わせる。
+- チャンクオプションを指定してフォーマットを制御する。
+- `knitr` を使用して、これらのドキュメントを PDF や他の形式に変換する。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

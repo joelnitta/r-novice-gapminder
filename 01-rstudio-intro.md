@@ -1,5 +1,5 @@
 ---
-title: Introduction to R and RStudio
+title: RとRStudio入門
 teaching: 45
 exercises: 10
 source: Rmd
@@ -7,143 +7,110 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Describe the purpose and use of each pane in RStudio 
-- Locate buttons and options in RStudio 
-- Define a variable
-- Assign data to a variable
-- Manage a workspace in an interactive R session
-- Use mathematical and comparison operators
-- Call functions
-- Manage packages
+- RStudioの各ペインの目的と使用方法を説明する
+- RStudio内のボタンやオプションの場所を見つける
+- 変数を定義する
+- データを変数に代入する
+- インタラクティブなRセッションでワークスペースを管理する
+- 数学および比較演算子を使用する
+- 関数を呼び出す
+- パッケージを管理する
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How to find your way around RStudio?
-- How to interact with R?
-- How to manage your environment?
-- How to install packages?
+- RStudio内でどのように操作するのか？
+- Rとの対話方法は？
+- 環境をどのように管理するのか？
+- パッケージをどのようにインストールするのか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-## Before Starting The Workshop
+## ワークショップを始める前に
 
-Please ensure you have the latest version of R and RStudio installed on your machine. This is important, as some packages used in the workshop may not install correctly (or at all) if R is not up to date.
+ワークショップで使用する一部のパッケージが正しくインストールされない（または全くインストールされない）場合があるため、お使いのマシンにRとRStudioの最新バージョンがインストールされていることを確認してください。
 
-- [Download and install the latest version of R here](https://www.r-project.org/)
-- [Download and install RStudio here](https://www.rstudio.com/products/rstudio/download/#download)
-
-
-## Why use R and R studio?
-
-Welcome to the R portion of the Software Carpentry workshop!
-
-Science is a multi-step process: once you've designed an experiment and collected
-data, the real fun begins with analysis! Throughout this lesson, we're going to teach you some of the fundamentals of the R language as well as some best practices for organizing code for scientific projects that will make your life easier.
-
-Although we could use a spreadsheet in Microsoft Excel or Google sheets to analyze our data, these tools are limited in their flexibility and accessibility. Critically, they also are difficult to share steps which explore and change the raw data, which is key to ["reproducible" research](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285). 
-
-Therefore, this lesson will teach you how to begin exploring your data using R and RStudio. The R program is available for Windows, Mac, and Linux operating systems, and is a freely-available where you downloaded it above. To run R, all you need is the R program. 
-
-However, to make using R easier, we will use the program RStudio, which we also downloaded above. RStudio is a free, open-source, Integrated Development
-Environment (IDE). It provides a built-in editor, works on all platforms (including
-on servers) and provides many advantages such as integration with version
-control and project management.
-
-## Overview  
-
-We will begin with raw data, perform exploratory analyses, and learn how to plot results graphically. This example starts with a dataset from [gapminder.org](https://www.gapminder.org) containing population information for many
-countries through time. Can you read the data into R? Can you plot the population for
-Senegal? Can you calculate the average income for countries on the continent of Asia?
-By the end of these lessons you will be able to do things like plot the populations
-for all of these countries in under a minute!
+- [最新バージョンのRをこちらからダウンロードしてインストールしてください](https://www.r-project.org/)
+- [RStudioをこちらからダウンロードしてインストールしてください](https://www.rstudio.com/products/rstudio/download/#download)
 
 
-**Basic layout**
+## なぜRとRStudioを使うのか？
 
-When you first open RStudio, you will be greeted by three panels:
+Software CarpentryワークショップのRセクションへようこそ！
 
-- The interactive R console/Terminal (entire left)
-- Environment/History/Connections (tabbed in upper right)
-- Files/Plots/Packages/Help/Viewer (tabbed in lower right)
+科学は多段階のプロセスです。
+実験を設計してデータを収集した後、本当の楽しみは分析から始まります！このレッスンでは、R言語の基本を教えるとともに、科学プロジェクトのためのコードを整理するベストプラクティスを学び、作業をより簡単にする方法を紹介します。
 
-![](fig/01-rstudio.png){alt='RStudio layout'}
+データを分析するためにMicrosoft ExcelやGoogleスプレッドシートを使用することもできますが、これらのツールは柔軟性やアクセス性に限界があります。さらに、元データの変更や探索の手順を共有することが難しいため、これは「再現可能な」研究にとって重要なポイントです（[再現可能な研究についてはこちら](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285)）。
 
-Once you open files, such as R scripts, an editor panel will also open
-in the top left.
+したがって、このレッスンでは、RとRStudioを使用してデータの探索を始める方法を学びます。RプログラムはWindows、Mac、Linuxオペレーティングシステムで利用可能で、上記のリンクから無料でダウンロードできます。Rを実行するために必要なのはRプログラムだけです。
 
-![](fig/01-rstudio-script.png){alt='RStudio layout with .R file open'}
+しかし、Rをより使いやすくするために、同じくダウンロードしたRStudioというプログラムを使用します。RStudioは無料でオープンソースの統合開発環境（IDE）で、組み込みエディタを提供し、すべてのプラットフォームで動作します（サーバー上でも利用可能）。バージョン管理やプロジェクト管理との統合など、多くの利点があります。
+
+## 概要  
+
+生データから始め、探索的な分析を行い、結果をグラフでプロットする方法を学びます。この例では、[gapminder.org](https://www.gapminder.org)のデータセットを使用し、時間を通じた各国の人口情報を扱います。データをRに読み込むことができますか？セネガルの人口をプロットできますか？アジア大陸の国々の平均所得を計算できますか？このレッスンの終わりまでに、これらの国々の人口を1分以内にプロットできるようになります！
+
+
+**基本レイアウト**
+
+RStudioを初めて開くと、次の3つのパネルが表示されます：
+
+- インタラクティブなRコンソール/ターミナル（左全体）
+- 環境/履歴/接続（右上のタブ）
+- ファイル/プロット/パッケージ/ヘルプ/ビューア（右下のタブ）
+
+![](fig/01-rstudio.png){alt='RStudioのレイアウト'}
+
+ファイル（例えばRスクリプト）を開くと、上部左にエディタパネルも表示されます。
+
+![](fig/01-rstudio-script.png){alt='RStudioで.Rファイルを開いたレイアウト'}
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## R scripts
+## Rスクリプト
 
-Any commands that you write in the R console can be saved to a file
-to be re-run again.  Files containing R code to be ran in this way are
-called R scripts.  R scripts have `.R` at the end of their names to
-let you know what they are.
-
+Rコンソールに書いたコマンドはファイルに保存し、再実行することができます。このようなRコードを含むファイルをRスクリプトと呼びます。Rスクリプトは名前の末尾が`.R`となっており、それがRスクリプトであることを示します。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Workflow within RStudio
+## RStudio内でのワークフロー
 
-There are two main ways one can work within RStudio:
+RStudio内で作業する主な方法は2つあります：
 
-1. Test and play within the interactive R console then copy code into
-  a .R file to run later.
-  - This works well when doing small tests and initially starting off.
-  - It quickly becomes laborious
-2. Start writing in a .R file and use RStudio's short cut keys for the Run command
-  to push the current line, selected lines or modified lines to the
-  interactive R console.
-  - This is a great way to start; all your code is saved for later
-  - You will be able to run the file you create from within RStudio
-    or using R's `source()`  function.
+1. インタラクティブなRコンソール内でテストや試行を行い、そのコードをコピーして.Rファイルに貼り付け、後で実行する。
+   - 小規模なテストや初期の段階では効果的です。
+   - しかし、すぐに手間がかかるようになります。
+2. 最初から.Rファイルに記述し、RStudioのショートカットキーを使用して「Run」コマンドを実行し、現在の行、選択した行、または変更した行をインタラクティブなRコンソールに送る。
+   - これは作業を始める良い方法です。すべてのコードが後で使用するために保存されます。
+   - RStudio内またはRの`source()`関数を使用して作成したファイルを実行できます。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Running segments of your code
+## ヒント：コードのセグメントを実行する
 
-RStudio offers you great flexibility in running code from within the editor
-window. There are buttons, menu choices, and keyboard shortcuts. To run the
-current line, you can
+RStudioでは、エディタウィンドウからコードを実行する柔軟性があります。ボタン、メニューオプション、およびキーボードショートカットがあります。現在の行を実行するには、次の方法があります：
 
-1. click on the `Run` button above the editor panel, or
-2. select "Run Lines" from the "Code" menu, or
-3. hit <kbd>Ctrl</kbd>\+<kbd>Return</kbd> in Windows or Linux
-  or <kbd>⌘</kbd>\+<kbd>Return</kbd> on OS X.
-  (This shortcut can also be seen by hovering
-  the mouse over the button). To run a block of code, select it and then `Run`.
-  If you have modified a line of code within a block of code you have just run,
-  there is no need to reselect the section and `Run`, you can use the next button
-  along, `Re-run the previous region`. This will run the previous code block
-  including the modifications you have made.
-  
+1. エディタパネルの上部にある「Run」ボタンをクリックする
+2. 「Code」メニューから「Run Lines」を選択する
+3. WindowsまたはLinuxでは<kbd>Ctrl</kbd>\+<kbd>Return</kbd>、OS Xでは<kbd>⌘</kbd>\+<kbd>Return</kbd>を押す
+   （このショートカットはボタンの上にマウスをホバーさせると確認できます）。コードブロックを実行するには、選択して「Run」をクリックします。
+   最近実行したコードブロックを修正した場合、セクションを再選択して「Run」を押す必要はありません。次のボタン「Re-run the previous region」を使用すると、修正を含む前のコードブロックを実行できます。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Introduction to R
+## R入門
 
-Much of your time in R will be spent in the R interactive
-console. This is where you will run all of your code, and can be a
-useful environment to try out ideas before adding them to an R script
-file. This console in RStudio is the same as the one you would get if
-you typed in `R` in your command-line environment.
+Rでの作業の多くは、インタラクティブなRコンソール内で行います。ここでは、すべてのコードを実行し、Rスクリプトファイルに追加する前にアイデアを試すのに便利な環境です。RStudioのコンソールは、コマンドライン環境で`R`と入力した場合と同じです。
 
-The first thing you will see in the R interactive session is a bunch
-of information, followed by a ">" and a blinking cursor. In many ways
-this is similar to the shell environment you learned about during the
-shell lessons: it operates on the same idea of a "Read, evaluate,
-print loop": you type in commands, R tries to execute them, and then
-returns a result.
+Rのインタラクティブセッションを開くと、最初に情報が表示され、その後に「>」と点滅するカーソルが現れます。これは、シェルレッスンで学んだシェル環境と多くの点で似ています。「Read, evaluate, print loop」（読み取り、評価、印刷ループ）の考え方に基づいて動作します：コマンドを入力すると、Rがそれを実行し、結果を返します。
 
-## Using R as a calculator
+## Rを計算機として使う
 
-The simplest thing you could do with R is to do arithmetic:
+Rで最も簡単なことは、算術を行うことです：
 
 
 ``` r
@@ -154,12 +121,11 @@ The simplest thing you could do with R is to do arithmetic:
 [1] 101
 ```
 
-And R will print out the answer, with a preceding "[1]". [1] is the index of
-the first element of the line being printed in the console. For more information
-on indexing vectors, see [Episode 6: Subsetting Data](https://swcarpentry.github.io/r-novice-gapminder/06-data-subsetting/index.html).
+Rは答えを表示し、その前に"[1]"を付けます。[1]はコンソールに表示される行の最初の要素のインデックスを示します。ベクトルのインデックスについての詳細は、[エピソード6：データのサブセット化](https://swcarpentry.github.io/r-novice-gapminder/06-data-subsetting/index.html)を参照してください。
 
-If you type in an incomplete command, R will wait for you to
-complete it. If you are familiar with Unix Shell's bash, you may recognize this behavior from bash.
+不完全なコマンドを入力すると、R
+
+は完了を待機します。Unix Shellのbashに慣れている場合、この動作をbashで見たことがあるかもしれません。
 
 ```r
 > 1 +
@@ -169,36 +135,28 @@ complete it. If you are familiar with Unix Shell's bash, you may recognize this 
 +
 ```
 
-Any time you hit return and the R session shows a "+" instead of a ">", it
-means it's waiting for you to complete the command. If you want to cancel
-a command you can hit <kbd>Esc</kbd> and RStudio will give you back the ">" prompt.
+「>」ではなく「+」が表示された場合、Rはコマンドの完了を待機しています。コマンドをキャンセルしたい場合は<kbd>Esc</kbd>を押すと、RStudioは「>」プロンプトに戻ります。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Canceling commands
+## ヒント：コマンドのキャンセル
 
-If you're using R from the command line instead of from within RStudio,
-you need to use <kbd>Ctrl</kbd>\+<kbd>C</kbd> instead of <kbd>Esc</kbd>
-to cancel the command. This applies to Mac users as well!
+コマンドラインからRを使用している場合は、RStudioの代わりに<kbd>Esc</kbd>ではなく<kbd>Ctrl</kbd>\+<kbd>C</kbd>を使用してコマンドをキャンセルする必要があります。これはMacユーザーにも適用されます！
 
-Canceling a command isn't only useful for killing incomplete commands:
-you can also use it to tell R to stop running code (for example if it's
-taking much longer than you expect), or to get rid of the code you're
-currently writing.
+コマンドのキャンセルは、不完全なコマンドを終了させるだけでなく、予想以上に時間がかかる場合にコードの実行を停止したり、現在書いているコードを削除したりするためにも役立ちます。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-When using R as a calculator, the order of operations is the same as you
-would have learned back in school.
+Rを計算機として使用する場合、演算の順序は学校で学んだものと同じです。
 
-From highest to lowest precedence:
+優先順位が高いものから低いものへ：
 
-- Parentheses: `(`, `)`
-- Exponents: `^` or `**`
-- Multiply: `*`
-- Divide: `/`
-- Add: `+`
-- Subtract: `-`
+- 括弧：`(`, `)`
+- 累乗：`^`または`**`
+- 乗算：`*`
+- 除算：`/`
+- 加算：`+`
+- 減算：`-`
 
 
 ``` r
@@ -209,9 +167,7 @@ From highest to lowest precedence:
 [1] 13
 ```
 
-Use parentheses to group operations in order to force the order of
-evaluation if it differs from the default, or to make clear what you
-intend.
+評価の順序を変更したい場合や意図を明確にしたい場合は、括弧を使用してグループ化します。
 
 
 ``` r
@@ -222,21 +178,18 @@ intend.
 [1] 16
 ```
 
-This can get unwieldy when not needed, but clarifies your intentions.
-Remember that others may later read your code.
+必要ない場合は煩雑になりますが、意図を明確にできます。他の人が後でコードを読むかもしれないことを忘れないでください。
 
 
 ``` r
-(3 + (5 * (2 ^ 2))) # hard to read
-3 + 5 * 2 ^ 2       # clear, if you remember the rules
-3 + 5 * (2 ^ 2)     # if you forget some rules, this might help
+(3 + (5 * (2 ^ 2))) # 読みにくい
+3 + 5 * 2 ^ 2       # 規則を覚えていれば明快
+3 + 5 * (2 ^ 2)     # 規則を忘れた場合はこれが助けになる
 ```
 
-The text after each line of code is called a
-"comment". Anything that follows after the hash (or octothorpe) symbol
-`#` is ignored by R when it executes code.
+各コード行の後にあるテキストは「コメント」と呼ばれます。ハッシュ記号`#`の後に続く内容は、コードを実行する際にRによって無視されます。
 
-Really small or large numbers get a scientific notation:
+非常に小さいまたは大きい数値は、科学表記法で表示されます：
 
 
 ``` r
@@ -247,36 +200,33 @@ Really small or large numbers get a scientific notation:
 [1] 2e-04
 ```
 
-Which is shorthand for "multiplied by `10^XX`". So `2e-4`
-is shorthand for `2 * 10^(-4)`.
+これは「`10^XX`で掛ける」という短縮形です。したがって、`2e-4`は`2 * 10^(-4)`の短縮形です。
 
-You can write numbers in scientific notation too:
+科学表記法で数値を書くこともできます：
 
 
 ``` r
-5e3  # Note the lack of minus here
+5e3  # マイナスがない点に注意
 ```
 
 ``` output
 [1] 5000
 ```
 
-## Mathematical functions
+## 数学関数
 
-R has many built in mathematical functions. To call a function,
-we can type its name, followed by open and closing parentheses.
-Functions take arguments as inputs, anything we type inside the parentheses of a function is considered an argument. Depending on the function, the number of arguments can vary from none to multiple. For example:
+Rには多くの組み込み数学関数があります。関数を呼び出すには、関数名を入力し、その後に開き括弧と閉じ括弧を続けます。関数は引数を入力として受け取ります。関数の括弧内に入力したものはすべて引数と見なされます。関数によって引数の数は異なり、引数を必要としないものから複数の引数を必要とするものまであります。例：
 
 
 ``` r
-getwd() #returns an absolute filepath
+getwd() # 絶対パスを返す
 ```
 
-doesn't require an argument, whereas for the next set of mathematical functions we will need to supply the function a value in order to compute the result.
+この例では引数は不要ですが、以下の数学関数では結果を計算するために値を渡す必要があります。
 
 
 ``` r
-sin(1)  # trigonometry functions
+sin(1)  # 三角関数
 ```
 
 ``` output
@@ -285,7 +235,7 @@ sin(1)  # trigonometry functions
 
 
 ``` r
-log(1)  # natural logarithm
+log(1)  # 自然対数
 ```
 
 ``` output
@@ -294,7 +244,7 @@ log(1)  # natural logarithm
 
 
 ``` r
-log10(10) # base-10 logarithm
+log10(10) # 常用対数（底10）
 ```
 
 ``` output
@@ -310,30 +260,19 @@ exp(0.5) # e^(1/2)
 [1] 1.648721
 ```
 
-Don't worry about trying to remember every function in R. You
-can look them up on Google, or if you can remember the
-start of the function's name, use the tab completion in RStudio.
+Rのすべての関数を覚えようとする必要はありません。Googleで検索するか、関数名の最初の数文字を覚えていれば、RStudioのタブ補完機能を使うことができます。
 
-This is one advantage that RStudio has over R on its own, it
-has auto-completion abilities that allow you to more easily
-look up functions, their arguments, and the values that they
-take.
+RStudioの大きな利点の一つは、オートコンプリート機能があることです。これにより、関数、引数、および受け取る値を簡単に調べることができます。
 
-Typing a `?` before the name of a command will open the help page
-for that command. When using RStudio, this will open the 'Help' pane;
-if using R in the terminal, the help page will open in your browser.
-The help page will include a detailed description of the command and
-how it works. Scrolling to the bottom of the help page will usually
-show a collection of code examples which illustrate command usage.
-We'll go through an example later.
+コマンド名の前に`?`を付けると、そのコマンドのヘルプページが開きます。RStudioを使用している場合、'Help'ペインに表示されます。ターミナルでRを使用している場合は、ブラウザでヘルプページが開きます。ヘルプページにはコマンドの詳細な説明と動作の仕組みが含まれています。ページの下部までスクロールすると、通常、コマンドの使用例が掲載されています。後ほど例を見ていきます。
 
-## Comparing things
+## 比較演算
 
-We can also do comparisons in R:
+Rでは比較を行うこともできます：
 
 
 ``` r
-1 == 1  # equality (note two equals signs, read as "is equal to")
+1 == 1  # 等しい（等号が2つ、"等しい"と読む）
 ```
 
 ``` output
@@ -342,7 +281,7 @@ We can also do comparisons in R:
 
 
 ``` r
-1 != 2  # inequality (read as "is not equal to")
+1 != 2  # 等しくない（"等しくない"と読む）
 ```
 
 ``` output
@@ -351,7 +290,7 @@ We can also do comparisons in R:
 
 
 ``` r
-1 < 2  # less than
+1 < 2  # より小さい
 ```
 
 ``` output
@@ -360,7 +299,7 @@ We can also do comparisons in R:
 
 
 ``` r
-1 <= 1  # less than or equal to
+1 <= 1  # 以下
 ```
 
 ``` output
@@ -369,7 +308,7 @@ We can also do comparisons in R:
 
 
 ``` r
-1 > 0  # greater than
+1 > 0  # より大きい
 ```
 
 ``` output
@@ -378,7 +317,7 @@ We can also do comparisons in R:
 
 
 ``` r
-1 >= -9 # greater than or equal to
+1 >= -9 # 以上
 ```
 
 ``` output
@@ -387,37 +326,28 @@ We can also do comparisons in R:
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Comparing Numbers
+## ヒント：数値の比較
 
-A word of warning about comparing numbers: you should
-never use `==` to compare two numbers unless they are
-integers (a data type which can specifically represent
-only whole numbers).
+数値を比較する際の注意点として、整数（小数を含まない数値型）以外を比較する場合は、`==`を使用しないでください。
 
-Computers may only represent decimal numbers with a
-certain degree of precision, so two numbers which look
-the same when printed out by R, may actually have
-different underlying representations and therefore be
-different by a small margin of error (called Machine
-numeric tolerance).
+コンピュータは小数を特定の精度でしか表現できないため、Rが表示する際に同じに見える2つの数値が、内部表現では異なる場合があります。このわずかな差異は「数値計算誤差（Machine numeric tolerance）」と呼ばれます。
 
-Instead you should use the `all.equal` function.
+代わりに`all.equal`関数を使用してください。
 
-Further reading: [http://floating-point-gui.de/](https://floating-point-gui.de/)
+さらに詳しく知りたい方はこちら：[http://floating-point-gui.de/](https://floating-point-gui.de/)
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Variables and assignment
+## 変数と代入
 
-We can store values in variables using the assignment operator `<-`, like this:
+代入演算子`<-`を使用して、値を変数に格納できます：
 
 
 ``` r
 x <- 1/40
 ```
 
-Notice that assignment does not print a value. Instead, we stored it for later
-in something called a **variable**. `x` now contains the **value** `0.025`:
+代入は値を表示しません。代わりに、それを後で使用するために**変数**というものに格納します。この場合、`x`には値`0.025`が格納されています：
 
 
 ``` r
@@ -428,11 +358,9 @@ x
 [1] 0.025
 ```
 
-More precisely, the stored value is a *decimal approximation* of
-this fraction called a [floating point number](https://en.wikipedia.org/wiki/Floating_point).
+正確には、この格納された値は[浮動小数点数](https://en.wikipedia.org/wiki/Floating_point)と呼ばれる分数の*10進数近似値*です。
 
-Look for the `Environment` tab in the top right panel of RStudio, and you will see that `x` and its value
-have appeared. Our variable `x` can be used in place of a number in any calculation that expects a number:
+RStudioの右上ペインにある`Environment`タブを確認すると、`x`とその値が表示されていることがわかります。変数`x`は、数値を期待する計算の中で数値の代わりに使用できます：
 
 
 ``` r
@@ -443,54 +371,49 @@ log(x)
 [1] -3.688879
 ```
 
-Notice also that variables can be reassigned:
+また、変数には再代入も可能です：
 
 
 ``` r
 x <- 100
 ```
 
-`x` used to contain the value 0.025 and now it has the value 100.
+以前は`x`に0.025が格納されていましたが、現在は100が格納されています。
 
-Assignment values can contain the variable being assigned to:
+代入値には、代入先の変数を含めることもできます：
 
 
 ``` r
-x <- x + 1 #notice how RStudio updates its description of x on the top right tab
+x <- x + 1 # RStudioの右上タブでxの説明が更新されることに注目
 y <- x * 2
 ```
 
-The right hand side of the assignment can be any valid R expression.
-The right hand side is *fully evaluated* before the assignment occurs.
+代入の右辺には有効なR式を使用できます。右辺は代入が行われる前に*完全に評価*されます。
 
-Variable names can contain letters, numbers, underscores and periods but no spaces. They
-must start with a letter or a period followed by a letter (they cannot start with a number nor an underscore).
-Variables beginning with a period are hidden variables.
-Different people use different conventions for long variable names, these include
+変数名には、文字、数字、アンダースコア、ピリオドを含めることができますが、スペースは含められません。また、変数名は文字またはピリオドで始める必要があります（数字やアンダースコアでは始めることはできません）。ピリオドで始まる変数は隠し変数と見なされます。
+
+長い変数名については、異なる人が異なる規約を使用します。その例として：
 
 - periods.between.words
-- underscores\_between\_words
+- underscores_between_words
 - camelCaseToSeparateWords
 
-What you use is up to you, but **be consistent**.
+どれを使用するかは自由ですが、**一貫性を保つ**ことが重要です。
 
-It is also possible to use the `=` operator for assignment:
+代入には`=`演算子を使用することも可能です：
 
 
 ``` r
 x = 1/40
 ```
 
-But this is much less common among R users.  The most important thing is to
-**be consistent** with the operator you use. There are occasionally places
-where it is less confusing to use `<-` than `=`, and it is the most common
-symbol used in the community. So the recommendation is to use `<-`.
+しかし、これはRユーザーの間ではあまり一般的ではありません。最も重要なのは、使用する演算子に**一貫性を持つ**ことです。`<-`を使用したほうが混乱が少ない場合もあり、コミュニティでは最も一般的に使われています。そのため、`<-`を使用することを推奨します。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 1
+## チャレンジ 1
 
-Which of the following are valid R variable names?
+次の中で有効なRの変数名はどれですか？
 
 
 ``` r
@@ -506,9 +429,9 @@ celsius2kelvin
 
 :::::::::::::::  solution
 
-## Solution to challenge 1
+## チャレンジ1の解答
 
-The following can be used as R variables:
+次のものはR変数として使用できます：
 
 
 ``` r
@@ -518,14 +441,14 @@ MaxLength
 celsius2kelvin
 ```
 
-The following creates a hidden variable:
+次のものは隠し変数を作成します：
 
 
 ``` r
 .mass
 ```
 
-The following will not be able to be used to create a variable
+次のものは変数を作成できません：
 
 
 ``` r
@@ -538,12 +461,9 @@ min-length
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Vectorization
+## ベクトル化
 
-One final thing to be aware of is that R is *vectorized*, meaning that
-variables and functions can have vectors as values. In contrast to physics and
-mathematics, a vector in R describes a set of values in a certain order of the
-same data type. For example:
+Rの特徴の1つに、Rが**ベクトル化**されているという点があります。つまり、変数や関数にベクトルを値として持たせることができます。物理学や数学におけるベクトルとは異なり、Rにおけるベクトルは同じデータ型の値が順序付けられた集合を指します。例：
 
 
 ``` r
@@ -571,15 +491,13 @@ x <- 1:5
 [1]  2  4  8 16 32
 ```
 
-This is incredibly powerful; we will discuss this further in an
-upcoming lesson.
+この機能は非常に強力で、今後のレッスンでさらに詳しく説明します。
 
-## Managing your environment
+## 環境の管理
 
-There are a few useful commands you can use to interact with the R session.
+Rセッションとやり取りするための便利なコマンドがいくつかあります。
 
-`ls` will list all of the variables and functions stored in the global environment
-(your working R session):
+`ls`を使用すると、グローバル環境（現在のRセッション）に保存されているすべての変数と関数を一覧表示できます：
 
 
 ``` r
@@ -593,18 +511,15 @@ ls()
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: hidden objects
+## ヒント：隠しオブジェクト
 
-Like in the shell, `ls` will hide any variables or functions starting
-with a "." by default. To list all objects, type `ls(all.names=TRUE)`
-instead
+シェルと同様に、`ls`ではデフォルトで"."で始まる変数や関数は表示されません。すべてのオブジェクトを一覧表示するには、`ls(all.names=TRUE)`と入力してください。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Note here that we didn't give any arguments to `ls`, but we still
-needed to give the parentheses to tell R to call the function.
+ここでは、`ls`に引数を渡していませんが、関数を呼び出すために括弧は必要です。
 
-If we type `ls` by itself, R prints a bunch of code instead of a listing of objects.
+`ls`だけを入力すると、オブジェクト一覧ではなくコードが表示されます：
 
 
 ``` r
@@ -643,15 +558,13 @@ function (name, pos = -1L, envir = as.environment(pos), all.names = FALSE,
     }
     else all.names
 }
-<bytecode: 0x556c03d19d60>
+<bytecode: 0x55aea48f6e20>
 <environment: namespace:base>
 ```
 
-What's going on here?
+これはどういうことでしょうか？
 
-Like everything in R, `ls` is the name of an object, and entering the name of
-an object by itself prints the contents of the object. The object `x` that we
-created earlier contains 1, 2, 3, 4, 5:
+Rではすべてがオブジェクトであり、オブジェクト名だけを入力すると、その内容が表示されます。先ほど作成したオブジェクト`x`には1, 2, 3, 4, 5が格納されています：
 
 
 ``` r
@@ -662,32 +575,27 @@ x
 [1] 1 2 3 4 5
 ```
 
-The object `ls` contains the R code that makes the `ls` function work! We'll talk
-more about how functions work and start writing our own later.
+オブジェクト`ls`には、`ls`関数を動作させるRコードが格納されています！関数の仕組みや作成方法については後のレッスンで説明します。
 
-You can use `rm` to delete objects you no longer need:
+不要になったオブジェクトを削除するには、`rm`を使用します：
 
 
 ``` r
 rm(x)
 ```
 
-If you have lots of things in your environment and want to delete all of them,
-you can pass the results of `ls` to the `rm` function:
+多くのオブジェクトが環境にあり、それらをすべて削除したい場合は、`ls`の結果を`rm`関数に渡します：
 
 
 ``` r
 rm(list = ls())
 ```
 
-In this case we've combined the two. Like the order of operations, anything
-inside the innermost parentheses is evaluated first, and so on.
+この場合、2つの関数を組み合わせています。演算の順序と同様に、最も内側の括弧内の内容が最初に評価されます。
 
-In this case we've specified that the results of `ls` should be used for the
-`list` argument in `rm`. When assigning values to arguments by name, you *must*
-use the `=` operator!!
+この場合、`ls`の結果が`rm`の`list`引数として使用されるよう指定しています。引数に値を名前で割り当てる場合、**必ず`=`演算子を使用**する必要があります！
 
-If instead we use `<-`, there will be unintended side effects, or you may get an error message:
+代わりに`<-`を使用すると、予期しない副作用が発生するか、エラーメッセージが表示される可能性があります：
 
 
 ``` r
@@ -700,43 +608,33 @@ Error in rm(list <- ls()): ... must contain names or character strings
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Warnings vs. Errors
+## ヒント：警告とエラー
 
-Pay attention when R does something unexpected! Errors, like above,
-are thrown when R cannot proceed with a calculation. Warnings on the
-other hand usually mean that the function has run, but it probably
-hasn't worked as expected.
+Rが予期しない動作をした場合は注意してください！エラーはRが計算を続行できない場合に発生します。一方、警告は通常、関数が実行されたものの、期待通りに動作しなかったことを意味します。
 
-In both cases, the message that R prints out usually give you clues
-how to fix a problem.
+どちらの場合も、Rが表示するメッセージには問題を解決するための手がかりが含まれていることが多いです。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## R Packages
+## Rパッケージ
 
-It is possible to add functions to R by writing a package, or by
-obtaining a package written by someone else. As of this writing, there
-are over 10,000 packages available on CRAN (the comprehensive R archive
-network). R and RStudio have functionality for managing packages:
+Rにはパッケージを作成することで関数を追加することができます。また、他の人が作成したパッケージを利用することも可能です。この執筆時点で、CRAN（Comprehensive R Archive Network）には10,000を超えるパッケージが利用可能です。RとRStudioにはパッケージを管理するための機能があります：
 
-- You can see what packages are installed by typing
-  `installed.packages()`
-- You can install packages by typing `install.packages("packagename")`,
-  where `packagename` is the package name, in quotes.
-- You can update installed packages by typing `update.packages()`
-- You can remove a package with `remove.packages("packagename")`
-- You can make a package available for use with `library(packagename)`
+- インストールされているパッケージを確認するには、`installed.packages()`を入力します。
+- パッケージをインストールするには、`install.packages("packagename")`と入力します。ここで`packagename`はパッケージ名で、引用符で囲みます。
+- インストール済みのパッケージを更新するには、`update.packages()`を入力します。
+- パッケージを削除するには、`remove.packages("packagename")`を使用します。
+- パッケージを利用可能にするには、`library(packagename)`を入力します。
 
-Packages can also be viewed, loaded, and detached in the Packages tab of the lower right panel in RStudio. Clicking on this tab will display all of the installed packages with a checkbox next to them. If the box next to a package name is checked, the package is loaded and if it is empty, the package is not loaded. Click an empty box to load that package and click a checked box to detach that package.
+RStudioの右下ペインの「Packages」タブからもパッケージを表示、ロード、デタッチすることができます。このタブをクリックすると、インストール済みのパッケージがチェックボックス付きで表示されます。パッケージ名の横にあるチェックボックスがオンの場合、そのパッケージはロードされており、オフの場合はロードされていません。空のボックスをクリックするとそのパッケージがロードされ、チェックボックスをクリックするとパッケージがデタッチされます。
 
-Packages can be installed and updated from the Package tab with the Install and Update buttons at the top of the tab.
+また、「Packages」タブの上部にある「Install」ボタンと「Update」ボタンを使用して、パッケージをインストールおよび更新できます。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 2
+## チャレンジ 2
 
-What will be the value of each variable  after each
-statement in the following program?
+次のプログラムの各文の後で、各変数の値はどうなるでしょうか？
 
 
 ``` r
@@ -748,39 +646,35 @@ age <- age - 20
 
 :::::::::::::::  solution
 
-## Solution to challenge 2
+## チャレンジ2の解答
 
 
 ``` r
 mass <- 47.5
 ```
 
-This will give a value of 47.5 for the variable mass
+この時点で変数`mass`の値は47.5になります。
 
 
 ``` r
 age <- 122
 ```
 
-This will give a value of 122 for the variable age
+この時点で変数`age`の値は122になります。
 
 
 ``` r
 mass <- mass * 2.3
 ```
 
-This will multiply the existing value of 47.5 by 2.3 to give a new value of
-109.25 to the variable mass.
+既存の値47.5に2.3を掛け、新しい値109.25を`mass`に格納します。
 
 
 ``` r
 age <- age - 20
 ```
 
-This will subtract 20 from the existing value of 122 to give a new value
-of 102 to the variable age.
-
-
+既存の値122から20を引き、新しい値102を`age`に格納します。
 
 :::::::::::::::::::::::::
 
@@ -788,16 +682,15 @@ of 102 to the variable age.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 3
+## チャレンジ 3
 
-Run the code from the previous challenge, and write a command to
-compare mass to age. Is mass larger than age?
+前のチャレンジのコードを実行し、massとageを比較するコマンドを書きなさい。massはageより大きいですか？
 
 :::::::::::::::  solution
 
-## Solution to challenge 3
+## チャレンジ3の解答
 
-One way of answering this question in R is to use the `>` to set up the following:
+この質問に答える方法の1つとして、次のように`>`を使用できます：
 
 
 ``` r
@@ -808,9 +701,7 @@ mass > age
 [1] TRUE
 ```
 
-This should yield a boolean value of TRUE since 109.25 is greater than 102.
-
-
+このコードは、109.25が102より大きいため、論理値`TRUE`を返すはずです。
 
 :::::::::::::::::::::::::
 
@@ -818,16 +709,15 @@ This should yield a boolean value of TRUE since 109.25 is greater than 102.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 4
+## チャレンジ 4
 
-Clean up your working environment by deleting the mass and age
-variables.
+作業環境を整理し、massとageの変数を削除しなさい。
 
 :::::::::::::::  solution
 
-## Solution to challenge 4
+## チャレンジ4の解答
 
-We can use the `rm` command to accomplish this task
+このタスクを達成するには、`rm`コマンドを使用します：
 
 
 ``` r
@@ -840,15 +730,15 @@ rm(age, mass)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 5
+## チャレンジ 5
 
-Install the following packages: `ggplot2`, `plyr`, `gapminder`
+以下のパッケージをインストールしなさい：`ggplot2`, `plyr`, `gapminder`
 
 :::::::::::::::  solution
 
-## Solution to challenge 5
+## チャレンジ5の解答
 
-We can use the `install.packages()` command to install the required packages.
+必要なパッケージをインストールするには、`install.packages()`コマンドを使用します。
 
 
 ``` r
@@ -857,7 +747,9 @@ install.packages("plyr")
 install.packages("gapminder")
 ```
 
-An alternate solution, to install multiple packages with a single `install.packages()` command is:
+1つの`install.packages()`コマンドで複数のパッケージ
+
+をインストールする別の方法は次のとおりです：
 
 
 ``` r
@@ -870,7 +762,7 @@ install.packages(c("ggplot2", "plyr", "gapminder"))
 
 ::::::::::::::::::::::::::::::::::::: instructor
 
-When installing ggplot2, it may be required for some users to use the dependencies flag as a result of lazy loading affecting the install. This suggestion is not tied to any known bug discussion, and is advised based off instructor feedback/experience in resolving stochastic occurences of errors identified through delivery of this workshop:
+`ggplot2`をインストールする際、一部のユーザーは依存関係フラグを使用する必要がある場合があります。これは既知のバグではなく、ワークショップの実施中に確認されたエラーを解決するための推奨事項です：
 
 
 ``` r
@@ -881,12 +773,12 @@ install.packages("ggplot2", dependencies = TRUE)
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use RStudio to write and run R programs.
-- R has the usual arithmetic operators and mathematical functions.
-- Use `<-` to assign values to variables.
-- Use `ls()` to list the variables in a program.
-- Use `rm()` to delete objects in a program.
-- Use `install.packages()` to install packages (libraries).
+- RStudioを使用してRプログラムを作成および実行します。
+- Rには通常の算術演算子と数学関数があります。
+- `<-`を使用して変数に値を代入します。
+- `ls()`を使用してプログラム内の変数を一覧表示します。
+- `rm()`を使用してプログラム内のオブジェクトを削除します。
+- `install.packages()`を使用してパッケージ（ライブラリ）をインストールします。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
