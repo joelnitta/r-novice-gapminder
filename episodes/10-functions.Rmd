@@ -1,5 +1,5 @@
 ---
-title: Functions Explained
+title: 関数の説明
 teaching: 45
 exercises: 15
 source: Rmd
@@ -7,18 +7,18 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Define a function that takes arguments.
-- Return a value from a function.
-- Check argument conditions with `stopifnot()` in functions.
-- Test a function.
-- Set default values for function arguments.
-- Explain why we should divide programs into small, single-purpose functions.
+- 引数を受け取る関数を定義する。
+- 関数から値を返す。
+- 関数内で `stopifnot()` を使って引数の条件を確認する。
+- 関数をテストする。
+- 関数引数のデフォルト値を設定する。
+- プログラムを小さく、単一目的の関数に分割する理由を説明する。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- How can I write a new function in R?
+- Rで新しい関数を書くにはどうすればよいですか？
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -26,50 +26,43 @@ source: Rmd
 gapminder <- read.csv("data/gapminder_data.csv", header = TRUE)
 ```
 
-If we only had one data set to analyze, it would probably be faster to load the
-file into a spreadsheet and use that to plot simple statistics. However, the
-gapminder data is updated periodically, and we may want to pull in that new
-information later and re-run our analysis again. We may also obtain similar data
-from a different source in the future.
+1つのデータセットだけを分析するのであれば、スプレッドシートにデータをロードして単純な統計をプロットする方が速いかもしれません。
+しかし、gapminder データは定期的に更新されるため、将来的に新しい情報を取得して分析を再実行する必要があるかもしれません。
+また、別のソースから類似のデータを取得することも考えられます。
 
-In this lesson, we'll learn how to write a function so that we can repeat
-several operations with a single command.
+このレッスンでは、関数の書き方を学び、複数の操作を1つのコマンドで繰り返せるようにします。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## What is a function?
+## 関数とは？
 
-Functions gather a sequence of operations into a whole, preserving it for
-ongoing use. Functions provide:
+関数は一連の操作をまとめ、継続的に使用できるようにします。
+関数には以下の利点があります：
 
-- a name we can remember and invoke it by
-- relief from the need to remember the individual operations
-- a defined set of inputs and expected outputs
-- rich connections to the larger programming environment
+- 覚えやすい名前で呼び出すことができる。
+- 個々の操作を覚える必要がなくなる。
+- 定義された入力と期待される出力がある。
+- プログラミング環境全体との豊かな接続が得られる。
 
-As the basic building block of most programming languages, user-defined
-functions constitute "programming" as much as any single abstraction can. If
-you have written a function, you are a computer programmer.
-
+ほとんどのプログラミング言語の基本的な構成要素として、ユーザー定義関数は「プログラミング」を代表する抽象概念と言えます。
+関数を書いたことがあれば、あなたはコンピュータープログラマーです。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Defining a function
+## 関数の定義
 
-Let's open a new R script file in the `functions/` directory and call it
-functions-lesson.R.
+`functions/` ディレクトリ内に新しい R スクリプトファイルを開き、`functions-lesson.R` という名前を付けます。
 
-The general structure of a function is:
+関数の一般的な構造は次のようになります：
 
 ```{r}
 my_function <- function(parameters) {
-  # perform action
-  # return value
+  # 操作を実行
+  # 値を返す
 }
 ```
 
-Let's define a function `fahr_to_kelvin()` that converts temperatures from
-Fahrenheit to Kelvin:
+Fahrenheit から Kelvin に温度を変換する関数 `fahr_to_kelvin()` を定義してみましょう：
 
 ```{r}
 fahr_to_kelvin <- function(temp) {
@@ -78,61 +71,54 @@ fahr_to_kelvin <- function(temp) {
 }
 ```
 
-We define `fahr_to_kelvin()` by assigning it to the output of `function`. The
-list of argument names are contained within parentheses.   Next, the
-[body](../learners/reference.md#body) of the function--the
-statements that are executed when it runs--is contained within curly braces
-(`{}`). The statements in the body are indented by two spaces. This makes the
-code easier to read but does not affect how the code operates.
+`fahr_to_kelvin()` を `function` の出力として割り当てることで定義します。
+引数名のリストは括弧内に含まれています。
+次に、関数の[本体](../learners/reference.md#body)である実行される文を波括弧 (`{}`) 内に記述します。
+本体内の文はインデント（スペース2つ）されています。これによりコードが読みやすくなりますが、コードの動作には影響しません。
 
-It is useful to think of creating functions like writing a cookbook. First you define the "ingredients" that your function needs. In this case, we only need one ingredient to use our function: "temp". After we list our ingredients, we then say what we will do with them, in this case, we are taking our ingredient and applying a set of mathematical operators to it.
+関数を作成することはレシピを書くことに似ています。
+最初に関数が必要とする「材料」を定義します。この場合、材料は「temp」の1つだけです。
+次に、材料をどのように処理するかを記述します。この例では、材料に数値操作を適用しています。
 
-When we call the function, the values we pass to it as arguments are assigned to
-those variables so that we can use them inside the function. Inside the
-function, we use a [return
-statement](../learners/reference.md#return-statement) to send a result back to
-whoever asked for it.
+関数を呼び出すとき、引数として渡された値は関数内で使用できる変数に割り当てられます。
+関数内では[return文](../learners/reference.md#return-statement)を使用して、呼び出し元に結果を返します。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip
+## ヒント
 
-One feature unique to R is that the return statement is not required.
-R automatically returns whichever variable is on the last line of the body
-of the function. But for clarity, we will explicitly define the
-return statement.
-
+Rの特有の機能として、return文は必須ではありません。
+Rは関数本体の最後の行にある変数を自動的に返します。
+ただし、明示的に return 文を定義することでコードがより明確になります。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Let's try running our function.
-Calling our own function is no different from calling any other function:
+関数を実行してみましょう。
+自分で定義した関数を呼び出すのは、他の関数を呼び出すのと同じです：
 
 ```{r}
-# freezing point of water
+# 水の凝固点
 fahr_to_kelvin(32)
 ```
 
 ```{r}
-# boiling point of water
+# 水の沸点
 fahr_to_kelvin(212)
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 1
+## チャレンジ 1
 
-Write a function called `kelvin_to_celsius()` that takes a temperature in
-Kelvin and returns that temperature in Celsius.
+Kelvin の温度を受け取り、Celsius に変換して返す関数 `kelvin_to_celsius()` を作成してください。
 
-Hint: To convert from Kelvin to Celsius you subtract 273.15
+ヒント: Kelvin を Celsius に変換するには、273.15 を引きます。
 
 :::::::::::::::  solution
 
-## Solution to challenge 1
+## チャレンジ 1 の解答
 
-Write a function called `kelvin_to_celsius` that takes a temperature in Kelvin
-and returns that temperature in Celsius
+Kelvin の温度を受け取り、Celsius に変換して返す関数 `kelvin_to_celsius` を作成します：
 
 ```{r}
 kelvin_to_celsius <- function(temp) {
@@ -145,13 +131,11 @@ kelvin_to_celsius <- function(temp) {
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Combining functions
+## 関数の組み合わせ
 
-The real power of functions comes from mixing, matching and combining them
-into ever-larger chunks to get the effect we want.
+関数の本当の力は、目的に応じて組み合わせたり再利用したりすることで得られます。
 
-Let's define two functions that will convert temperature from Fahrenheit to
-Kelvin, and Kelvin to Celsius:
+Fahrenheit を Kelvin に、Kelvin を Celsius に変換する2つの関数を定義してみましょう：
 
 ```{r}
 fahr_to_kelvin <- function(temp) {
@@ -167,18 +151,15 @@ kelvin_to_celsius <- function(temp) {
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 2
+## チャレンジ 2
 
-Define the function to convert directly from Fahrenheit to Celsius,
-by reusing the two functions above (or using your own functions if you
-prefer).
+上記の2つの関数を再利用して、Fahrenheit を直接 Celsius に変換する関数を定義してください。
 
 :::::::::::::::  solution
 
-## Solution to challenge 2
+## チャレンジ 2 の解答
 
-Define the function to convert directly from Fahrenheit to Celsius,
-by reusing these two functions above
+Fahrenheit を直接 Celsius に変換する関数を定義します：
 
 ```{r}
 fahr_to_celsius <- function(temp) {
@@ -192,59 +173,15 @@ fahr_to_celsius <- function(temp) {
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## Interlude: Defensive Programming
+## インタールード: 防御的プログラミング
 
-Now that we've begun to appreciate how writing functions provides an efficient
-way to make R code re-usable and modular, we should note that it is important
-to ensure that functions only work in their intended use-cases. Checking
-function parameters is related to the concept of *defensive programming*.
-Defensive programming encourages us to frequently check conditions and throw an
-error if something is wrong. These checks are referred to as assertion
-statements because we want to assert some condition is `TRUE` before proceeding.
-They make it easier to debug because they give us a better idea of where the
-errors originate.
+関数を書くことで R コードを再利用可能かつモジュール化できる効率的な方法を理解したところで、関数が意図した用途でのみ動作するようにすることが重要です。
+引数の条件を確認することは、防御的プログラミングの概念に関連しています。
+防御的プログラミングでは、頻繁に条件を確認し、何か問題があればエラーをスローします。
 
-### Checking conditions with `stopifnot()`
+### `stopifnot()` を使った条件の確認
 
-Let's start by re-examining `fahr_to_kelvin()`, our function for converting
-temperatures from Fahrenheit to Kelvin. It was defined like so:
-
-```{r}
-fahr_to_kelvin <- function(temp) {
-  kelvin <- ((temp - 32) * (5 / 9)) + 273.15
-  return(kelvin)
-}
-```
-
-For this function to work as intended, the argument `temp` must be a `numeric`
-value; otherwise, the mathematical procedure for converting between the two
-temperature scales will not work. To create an error, we can use the function
-`stop()`. For example, since the argument `temp` must be a `numeric` vector, we
-could check for this condition with an `if` statement and throw an error if the
-condition was violated. We could augment our function above like so:
-
-```{r}
-fahr_to_kelvin <- function(temp) {
-  if (!is.numeric(temp)) {
-    stop("temp must be a numeric vector.")
-  }
-  kelvin <- ((temp - 32) * (5 / 9)) + 273.15
-  return(kelvin)
-}
-```
-
-If we had multiple conditions or arguments to check, it would take many lines
-of code to check all of them. Luckily R provides the convenience function
-`stopifnot()`. We can list as many requirements that should evaluate to `TRUE`;
-`stopifnot()` throws an error if it finds one that is `FALSE`. Listing these
-conditions also serves a secondary purpose as extra documentation for the
-function.
-
-Let's try out defensive programming with `stopifnot()` by adding assertions to
-check the input to our function `fahr_to_kelvin()`.
-
-We want to assert the following: `temp` is a numeric vector. We may do that like
-so:
+例えば、`fahr_to_kelvin()` を以下のように改良できます：
 
 ```{r}
 fahr_to_kelvin <- function(temp) {
@@ -254,36 +191,19 @@ fahr_to_kelvin <- function(temp) {
 }
 ```
 
-It still works when given proper input.
-
-```{r}
-# freezing point of water
-fahr_to_kelvin(temp = 32)
-```
-
-But fails instantly if given improper input.
-
-```{r}
-# Metric is a factor instead of numeric
-fahr_to_kelvin(temp = as.factor(32))
-```
+適切な入力では正常に動作しますが、不適切な入力では即座にエラーをスローします。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 3
+## チャレンジ 3
 
-Use defensive programming to ensure that our `fahr_to_celsius()` function
-throws an error immediately if the argument `temp` is specified
-inappropriately.
+`fahr_to_celsius()` 関数で、防御的プログラミングを使用して、引数 `temp` が不適切に指定された場合にエラーをスローするようにしてください。
 
 :::::::::::::::  solution
 
-## Solution to challenge 3
+## チャレンジ 3 の解答
 
-Extend our previous definition of the function by adding in an explicit call
-to `stopifnot()`. Since `fahr_to_celsius()` is a composition of two other
-functions, checking inside here makes adding checks to the two component
-functions redundant.
+`stopifnot()` を追加して、引数を明示的に確認するようにします：
 
 ```{r}
 fahr_to_celsius <- function(temp) {
@@ -298,45 +218,39 @@ fahr_to_celsius <- function(temp) {
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## More on combining functions
+## 関数の組み合わせについてさらに詳しく
 
-Now, we're going to define a function that calculates the Gross Domestic Product
-of a nation from the data available in our dataset:
+次に、データセットから国の国内総生産（GDP）を計算する関数を定義します：
 
 ```{r}
-# Takes a dataset and multiplies the population column
-# with the GDP per capita column.
+# データセットを受け取り、人口列と
+# 1人当たりGDP列を掛け合わせます。
 calcGDP <- function(dat) {
   gdp <- dat$pop * dat$gdpPercap
   return(gdp)
 }
 ```
 
-We define `calcGDP()` by assigning it to the output of `function`. The list of
-argument names are contained within parentheses. Next, the body of the function
-\-- the statements executed when you call the function -- is contained within
-curly braces (`{}`).
+`calcGDP()` は `function` の出力として定義されます。
+引数名のリストは括弧内に含まれています。
+次に、関数を呼び出したときに実行される文（関数の本体）は波括弧 (`{}`) 内に記述されます。
 
-We've indented the statements in the body by two spaces. This makes the code
-easier to read but does not affect how it operates.
+本体内の文をインデント（スペース2つ）しました。これにより、コードが読みやすくなりますが、動作には影響しません。
 
-When we call the function, the values we pass to it are assigned to the
-arguments, which become variables inside the body of the function.
+関数を呼び出すと、渡された値が引数に割り当てられ、それが関数の本体内の変数になります。
 
-Inside the function, we use the `return()` function to send back the result.
-This `return()` function is optional: R will automatically return the results of
-whatever command is executed on the last line of the function.
+関数内では、`return()` 関数を使用して結果を返します。
+ただし、`return()` 関数は任意です。Rは関数本体の最後の行にあるコマンドの結果を自動的に返します。
 
 ```{r}
 calcGDP(head(gapminder))
 ```
 
-That's not very informative. Let's add some more arguments so we can extract
-that per year and country.
+あまり情報量が多くありませんね。では、引数を追加して、年や国ごとにデータを抽出できるようにしましょう。
 
 ```{r}
-# Takes a dataset and multiplies the population column
-# with the GDP per capita column.
+# データセットを受け取り、人口列と
+# 1人当たりGDP列を掛け合わせます。
 calcGDP <- function(dat, year=NULL, country=NULL) {
   if(!is.null(year)) {
     dat <- dat[dat$year %in% year, ]
@@ -351,50 +265,48 @@ calcGDP <- function(dat, year=NULL, country=NULL) {
 }
 ```
 
-If you've been writing these functions down into a separate R script
-(a good idea!), you can load in the functions into our R session by using the
-`source()` function:
+これらの関数を別の R スクリプトに書き出している場合（おすすめです！）、`source()` 関数を使用してRセッションに読み込むことができます：
 
 ```{r, eval=FALSE}
 source("functions/functions-lesson.R")
 ```
 
-Ok, so there's a lot going on in this function now. In plain English, the
-function now subsets the provided data by year if the year argument isn't empty,
-then subsets the result by country if the country argument isn't empty. Then it
-calculates the GDP for whatever subset emerges from the previous two steps. The
-function then adds the GDP as a new column to the subsetted data and returns
-this as the final result. You can see that the output is much more informative
-than a vector of numbers.
+では、この関数で行われる処理について簡単に説明します。
+英語でいうと、次のような流れです：
 
-Let's take a look at what happens when we specify the year:
+1. 提供されたデータを年で絞り込みます（`year` 引数が空でない場合）。
+2. その結果を国でさらに絞り込みます（`country` 引数が空でない場合）。
+3. 上記の2つの手順から得られたサブセットに対してGDPを計算します。
+4. サブセットにGDP列を新しい列として追加し、これを最終結果として返します。
+
+この出力は、単なる数値ベクトルよりもはるかに有用です。
+
+年を指定するとどうなるか見てみましょう：
 
 ```{r}
 head(calcGDP(gapminder, year=2007))
 ```
 
-Or for a specific country:
+特定の国の場合：
 
 ```{r}
 calcGDP(gapminder, country="Australia")
 ```
 
-Or both:
+または、両方を指定する場合：
 
 ```{r}
 calcGDP(gapminder, year=2007, country="Australia")
 ```
 
-Let's walk through the body of the function:
+関数の本体を詳しく見てみましょう：
 
 ```{r, eval=FALSE}
 calcGDP <- function(dat, year=NULL, country=NULL) {
 ```
 
-Here we've added two arguments, `year`, and `country`. We've set
-*default arguments* for both as `NULL` using the `=` operator
-in the function definition. This means that those arguments will
-take on those values unless the user specifies otherwise.
+ここでは、`year` と `country` の2つの引数を追加しました。
+これらにはデフォルト引数として `NULL` を設定しています。これは、ユーザーが別の値を指定しない限り、引数がこの値を取ることを意味します。
 
 ```{r, eval=FALSE}
   if(!is.null(year)) {
@@ -405,48 +317,38 @@ take on those values unless the user specifies otherwise.
   }
 ```
 
-Here, we check whether each additional argument is set to `null`, and whenever
-they're not `null` overwrite the dataset stored in `dat` with a subset given by
-the non-`null` argument.
+ここでは、各追加引数が `NULL` かどうかを確認し、`NULL` でない場合は、`dat` に格納されているデータセットを該当する引数に基づいて絞り込みます。
 
-Building these conditionals into the function makes it more flexible for later.
-Now, we can use it to calculate the GDP for:
+条件を組み込むことで、関数を柔軟に使用できるようにしました。
+これで以下の用途に対応できます：
 
-- The whole dataset;
-- A single year;
-- A single country;
-- A single combination of year and country.
+- データセット全体の計算
+- 単一の年の計算
+- 単一の国の計算
+- 年と国の組み合わせの計算
 
-By using `%in%` instead, we can also give multiple years or countries to those
-arguments.
+さらに `%in%` を使用することで、複数の年や国を引数に渡すこともできます。
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Pass by value
+## ヒント：値渡し (Pass by value)
 
-Functions in R almost always make copies of the data to operate on
-inside of a function body. When we modify `dat` inside the function
-we are modifying the copy of the gapminder dataset stored in `dat`,
-not the original variable we gave as the first argument.
+R の関数はほぼ常に、関数本体内で操作するためにデータをコピーします。
+関数内で `dat` を変更しても、それは関数に渡されたオリジナルの `gapminder` データセットではなく、コピーされた `dat` に対してのみ適用されます。
 
-This is called "pass-by-value" and it makes writing code much safer:
-you can always be sure that whatever changes you make within the
-body of the function, stay inside the body of the function.
-
+これは「値渡し」と呼ばれ、コードを書く際に安全性が高まります。
+関数本体内で行った変更は、本体内にとどまることが保証されます。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Function scope
+## ヒント：関数スコープ (Function scope)
 
-Another important concept is scoping: any variables (or functions!) you
-create or modify inside the body of a function only exist for the lifetime
-of the function's execution. When we call `calcGDP()`, the variables `dat`,
-`gdp` and `new` only exist inside the body of the function. Even if we
-have variables of the same name in our interactive R session, they are
-not modified in any way when executing a function.
-
+もう1つの重要な概念はスコープです。
+関数本体内で作成または変更された変数（または関数）は、その関数の実行中にのみ存在します。
+たとえば、`calcGDP()` を呼び出すと、変数 `dat`、`gdp`、`new` は関数本体内にのみ存在します。
+同じ名前の変数がインタラクティブRセッション内にあっても、それらは実行中の関数に影響を受けません。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -457,31 +359,27 @@ not modified in any way when executing a function.
 }
 ```
 
-Finally, we calculated the GDP on our new subset, and created a new data frame
-with that column added. This means when we call the function later we can see
-the context for the returned GDP values, which is much better than in our first
-attempt where we got a vector of numbers.
+最後に、新しいサブセットに基づいてGDPを計算し、その列を追加した新しいデータフレームを作成しました。
+このようにすると、関数を後で呼び出したときに、返されたGDP値の文脈を確認でき、最初の試行で得られた数値ベクトルよりもはるかに有用です。
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 4
+## チャレンジ 4
 
-Test out your GDP function by calculating the GDP for New Zealand in 1987. How
-does this differ from New Zealand's GDP in 1952?
+1987年のニュージーランドのGDPを計算してみましょう。
+1952年のニュージーランドのGDPとどう違いますか？
 
 :::::::::::::::  solution
 
-## Solution to challenge 4
+## チャレンジ 4 の解答
 
 ```{r, eval=FALSE}
   calcGDP(gapminder, year = c(1952, 1987), country = "New Zealand")
 ```
 
-GDP for New Zealand in 1987: 65050008703
+1987年のニュージーランドのGDP： 65,050,008,703
 
-GDP for New Zealand in 1952: 21058193787
-
-
+1952年のニュージーランドのGDP： 21,058,193,787
 
 :::::::::::::::::::::::::
 
@@ -489,33 +387,29 @@ GDP for New Zealand in 1952: 21058193787
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Challenge 5
+## チャレンジ 5
 
-The `paste()` function can be used to combine text together, e.g:
+`paste()` 関数は、テキストを結合するために使用できます。例：
 
 ```{r}
 best_practice <- c("Write", "programs", "for", "people", "not", "computers")
 paste(best_practice, collapse=" ")
 ```
 
-Write a function called `fence()` that takes two vectors as arguments, called
-`text` and `wrapper`, and prints out the text wrapped with the `wrapper`:
+2つの引数 `text` と `wrapper` を取る関数 `fence()` を作成し、`text` を `wrapper` で囲んだテキストを出力してください：
 
 ```{r, eval=FALSE}
 fence(text=best_practice, wrapper="***")
 ```
 
-*Note:* the `paste()` function has an argument called `sep`, which specifies
-the separator between text. The default is a space: " ". The default for
-`paste0()` is no space "".
+*注:* `paste()` 関数には `sep` という引数があり、テキスト間の区切り文字を指定します。
+デフォルトはスペース `" "` です。`paste0()` のデフォルトはスペースなしの `""` です。
 
 :::::::::::::::  solution
 
-## Solution to challenge 5
+## チャレンジ 5 の解答
 
-Write a function called `fence()` that takes two vectors as arguments,
-called `text` and `wrapper`, and prints out the text wrapped with the
-`wrapper`:
+2つの引数 `text` と `wrapper` を取る関数 `fence()` を作成し、`text` を `wrapper` で囲んだテキストを出力します：
 
 ```{r}
 fence <- function(text, wrapper){
@@ -533,52 +427,38 @@ fence(text=best_practice, wrapper="***")
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip
+## ヒント
 
-R has some unique aspects that can be exploited when performing more
-complicated operations. We will not be writing anything that requires
-knowledge of these more advanced concepts. In the future when you are
-comfortable writing functions in R, you can learn more by reading the
-[R Language Manual][man] or this [chapter] from
-[Advanced R Programming][adv-r] by Hadley Wickham.
-
+Rには、複雑な操作を行う際に活用できる独自の機能があります。
+ここでは、これらの高度な概念を必要とする内容を書くことはありません。
+将来的にRで関数を書くことに慣れたら、[R言語マニュアル][man] や
+Hadley Wickham の [Advanced R Programming][adv-r] にあるこの[章][chapter]を読んで学びを深めてください。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## Tip: Testing and documenting
+## ヒント：テストとドキュメント
 
-It's important to both test functions and document them:
-Documentation helps you, and others, understand what the
-purpose of your function is, and how to use it, and its
-important to make sure that your function actually does
-what you think.
+関数をテストしてドキュメント化することは非常に重要です：
+ドキュメントは、関数の目的、使い方を理解する助けとなり、関数が意図した通りに動作するか確認することも重要です。
 
-When you first start out, your workflow will probably look a lot
-like this:
+初めのうちは、ワークフローは以下のようになるでしょう：
 
-1. Write a function
-2. Comment parts of the function to document its behaviour
-3. Load in the source file
-4. Experiment with it in the console to make sure it behaves
-  as you expect
-5. Make any necessary bug fixes
-6. Rinse and repeat.
+1. 関数を書く
+2. 関数の動作をドキュメント化するためにコメントを追加する
+3. ソースファイルを読み込む
+4. コンソールで関数を試して期待通りに動作するか確認する
+5. 必要なバグ修正を行う
+6. 繰り返す
 
-Formal documentation for functions, written in separate `.Rd`
-files, gets turned into the documentation you see in help
-files. The [roxygen2] package allows R coders to write documentation
-alongside the function code and then process it into the appropriate `.Rd`
-files. You will want to switch to this more formal method of writing
-documentation when you start writing more complicated R projects. In fact,
-packages are, in essence, bundles of functions with this formal documentation.
-Loading your own functions through `source("functions.R")` is equivalent to
-loading someone else's functions (or your own one day!) through
-`library("package")`.
+関数の正式なドキュメントは、`.Rd` ファイルに記述され、ヘルプファイルで見ることができるドキュメントに変換されます。
+[roxygen2] パッケージを使用すると、関数コードに沿ってドキュメントを記述し、適切な `.Rd` ファイルに処理できます。
+より複雑なRプロジェクトを書くようになったら、この形式的なドキュメント作成方法に切り替えることを検討してください。
+実際、パッケージとは、形式的なドキュメント付きの関数の集合です。
+自分の関数を `source("functions.R")` を使用して読み込むのは、他人の関数（または将来的には自分のパッケージ！）を `library("package")` を通じて読み込むのと本質的に同じです。
 
-Formal automated tests can be written using the [testthat] package.
-
+正式な自動化テストは、[testthat] パッケージを使用して記述できます。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -588,13 +468,12 @@ Formal automated tests can be written using the [testthat] package.
 [roxygen2]: https://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html
 [testthat]: https://r-pkgs.had.co.nz/tests.html
 
-
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- Use `function` to define a new function in R.
-- Use parameters to pass values into functions.
-- Use `stopifnot()` to flexibly check function arguments in R.
-- Load functions into programs using `source()`.
+- Rで新しい関数を定義するには `function` を使用する。
+- 関数に値を渡すにはパラメータを使用する。
+- Rで `stopifnot()` を使って関数引数を柔軟にチェックする。
+- `source()` を使用してプログラムに関数を読み込む。
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
