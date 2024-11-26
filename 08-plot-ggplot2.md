@@ -1,5 +1,5 @@
 ---
-title: ggplot2 を使用した出版品質のグラフィック作成
+title: Creating Publication-Quality Graphics with ggplot2
 teaching: 60
 exercises: 20
 source: Rmd
@@ -7,43 +7,57 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- ggplot2 を使用して出版品質のグラフィックを作成できるようになる。
-- ggplot のプロットに幾何学（geometry）、美的要素（aesthetic）、統計レイヤー（statistics layers）を適用する。
-- 異なる色、形状、線を使用してプロットの美的要素を操作する。
-- スケールを変換したり、グループごとにパネル分けすることでデータ可視化を改善する。
-- ggplot を使用して作成したプロットをディスクに保存する。
+- To be able to use ggplot2 to generate publication-quality graphics.
+- To apply geometry, aesthetic, and statistics layers to a ggplot plot.
+- To manipulate the aesthetics of a plot using different colors, shapes, and lines.
+- To improve data visualization through transforming scales and paneling by group.
+- To save a plot created with ggplot to disk.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- R で出版品質のグラフィックを作成するにはどうすればよいですか？
+- How can I create publication-quality graphics in R?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-データをプロットすることは、データや変数間の関係を素早く探る最良の方法の一つです。
+Plotting our data is one of the best ways to
+quickly explore it and the various relationships
+between variables.
 
-R には 3 つの主なプロットシステムがあります。
-[基本プロットシステム][base]、[lattice] パッケージ、そして [ggplot2] パッケージです。
+There are three main plotting systems in R,
+the [base plotting system][base], the [lattice]
+package, and the [ggplot2] package.
 
-今回は ggplot2 パッケージを学びます。ggplot2 は、出版品質のグラフィックを作成するために最も効果的です。
+Today we'll be learning about the ggplot2 package, because
+it is the most effective for creating publication-quality
+graphics.
 
-ggplot2 は "グラフィックの文法 (grammar of graphics)" に基づいています。この概念は、任意のプロットが次のような同じ構成要素のセットから構築できるというものです：**データセット**、**美的要素のマッピング**、およびグラフィックの**レイヤー**。
+ggplot2 is built on the grammar of graphics, the idea that any plot can be
+built from the same set of components: a **data set**,
+**mapping aesthetics**, and graphical **layers**:
 
-- **データセット**は、ユーザーが提供するデータです。
+- **Data sets** are the data that you, the user, provide.
 
-- **美的要素のマッピング (Mapping aesthetics)** は、データをグラフィックに結びつけます。
-  これにより、X軸やY軸に何をプロットするか、データポイントのサイズや色をどうするかなど、グラフの見た目にデータを反映させます。
+- **Mapping aesthetics** are what connect the data to the graphics.
+  They tell ggplot2 how to use your data to affect how the graph looks,
+  such as changing what is plotted on the X or Y axis, or the size or
+  color of different data points.
 
-- **レイヤー**は、ggplot2 の実際のグラフィック出力です。
-  レイヤーはプロットの種類（散布図、ヒストグラムなど）、座標系（長方形、極座標など）、およびその他の重要なプロットの側面を決定します。
-  このようなグラフィックのレイヤーの概念は、Photoshop、Illustrator、Inkscape などの画像編集プログラムを使用した経験があれば馴染みがあるかもしれません。
+- **Layers** are the actual graphical output from ggplot2. Layers
+  determine what kinds of plot are shown (scatterplot, histogram, etc.),
+  the coordinate system used (rectangular, polar, others), and other
+  important aspects of the plot. The idea of layers of graphics may
+  be familiar to you if you have used image editing programs
+  like Photoshop, Illustrator, or Inkscape.
 
-では、以前使用した gapminder データを使って例を構築してみましょう。
-最も基本的な関数は `ggplot` で、これにより新しいプロットを作成していることを R に知らせます。
-`ggplot` 関数に渡した引数は、プロット全体に適用される「グローバル」オプションです。
+Let's start off building an example using the gapminder data from earlier.
+The most basic function is `ggplot`, which lets R know that we're
+creating a new plot. Any of the arguments we give the `ggplot`
+function are the *global* options for the plot: they apply to all
+layers on the plot.
 
 
 ``` r
@@ -51,25 +65,34 @@ library("ggplot2")
 ggplot(data = gapminder)
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-blank-ggplot-1.png" alt="何も描画されていない、ggplot() に美的マッピングを追加する前の空のプロット。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-blank-ggplot-1.png" alt="Blank plot, before adding any mapping aesthetics to ggplot()." style="display: block; margin: auto;" />
 
-ここでは `ggplot` を呼び出し、プロットに表示するデータを指定しました。
-これはプロットを実際に描画するのに十分な情報ではなく、他の要素を追加するための白紙の状態を作成するだけです。
+Here we called `ggplot` and told it what data we want to show on
+our figure. This is not enough information for `ggplot` to actually
+draw anything. It only creates a blank slate for other elements
+to be added to.
 
-次に、`aes` 関数を使用して**美的要素のマッピング**を追加します。
-`aes` は、**データ**内の変数が図の美的プロパティ（例：X軸やY軸の位置）にどのようにマップされるかを `ggplot` に伝えます。
+Now we're going to add in the **mapping aesthetics** using the
+`aes` function. `aes` tells `ggplot` how variables in the **data**
+map to *aesthetic* properties of the figure, such as which columns
+of the data should be used for the **x** and **y** locations.
 
 
 ``` r
 ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp))
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-ggplot-with-aes-1.png" alt="X軸に gdpPercap、Y軸に lifeExp を表示する散布図のための軸だけがあるプロットエリア。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-ggplot-with-aes-1.png" alt="Plotting area with axes for a scatter plot of life expectancy vs GDP, with no data points visible." style="display: block; margin: auto;" />
 
-ここでは、gapminder データフレームの "gdpPercap" 列を X 軸に、"lifeExp" 列を Y 軸にプロットするよう `ggplot` に指示しました。
-`aes` にこれらの列を明示的に渡す必要がないのは、`ggplot` が **data** から自動的に列を見つけるためです。
+Here we told `ggplot` we want to plot the "gdpPercap" column of the
+gapminder data frame on the x-axis, and the "lifeExp" column on the
+y-axis. Notice that we didn't need to explicitly pass `aes` these
+columns (e.g. `x = gapminder[, "gdpPercap"]`), this is because
+`ggplot` is smart enough to know to look in the **data** for that column!
 
-プロットを完成させる最後のステップは、**レイヤー**を追加してデータを視覚的に表現する方法を `ggplot` に指示することです。
+The final part of making our plot is to tell `ggplot` how we want to
+visually represent the data. We do this by adding a new **layer**
+to the plot using one of the **geom** functions.
 
 
 ``` r
@@ -77,28 +100,31 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
   geom_point()
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-lifeExp-vs-gdpPercap-scatter-1.png" alt="GDP と平均寿命の関係を示す散布図。データポイントが描画されている。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-lifeExp-vs-gdpPercap-scatter-1.png" alt="Scatter plot of life expectancy vs GDP per capita, now showing the data points." style="display: block; margin: auto;" />
 
-ここでは `geom_point` を使用して、**X** と **Y** の関係を散布図として視覚的に表現するように指示しました。
+Here we used `geom_point`, which tells `ggplot` we want to visually
+represent the relationship between **x** and **y** as a scatterplot of points.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 1
+## Challenge 1
 
-例を修正して、平均寿命が時間とともにどのように変化したかを示す図を作成してください：
+Modify the example so that the figure shows how life expectancy has
+changed over time:
 
 
 ``` r
 ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + geom_point()
 ```
 
-ヒント：gapminder データセットには "year" という列があり、これを X 軸に表示する必要があります。
+Hint: the gapminder dataset has a column called "year", which should appear
+on the x-axis.
 
 :::::::::::::::  solution
 
-## チャレンジ 1 の解答
+## Solution to challenge 1
 
-次のような解答例があります：
+Here is one possible solution:
 
 
 ``` r
@@ -106,18 +132,52 @@ ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp)) + geom_point()
 ```
 
 <div class="figure" style="text-align: center">
-<img src="fig/08-plot-ggplot2-rendered-ch1-sol-1.png" alt="平均寿命が時間とともに増加していることを示す、年と平均寿命の散布図。"  />
-<p class="caption">平均寿命が時間とともに増加していることを示す、年と平均寿命の散布図。</p>
+<img src="fig/08-plot-ggplot2-rendered-ch1-sol-1.png" alt="Binned scatterplot of life expectancy versus year showing how life expectancy has increased over time"  />
+<p class="caption">Binned scatterplot of life expectancy versus year showing how life expectancy has increased over time</p>
 </div>
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## レイヤー (Layers)
+:::::::::::::::::::::::::::::::::::::::  challenge
 
-散布図は、時間経過による変化を可視化するための最適な方法ではないかもしれません。
-代わりに、データを折れ線グラフとして視覚化してみましょう：
+## Challenge 2
+
+In the previous examples and challenge we've used the `aes` function to tell
+the scatterplot **geom** about the **x** and **y** locations of each point.
+Another *aesthetic* property we can modify is the point *color*. Modify the
+code from the previous challenge to **color** the points by the "continent"
+column. What trends do you see in the data? Are they what you expected?
+
+:::::::::::::::  solution
+
+## Solution to challenge 2
+
+The solution presented below adds `color=continent` to the call of the `aes`
+function. The general trend seems to indicate an increased life expectancy
+over the years. On continents with stronger economies we find a longer life
+expectancy.
+
+
+``` r
+ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp, color=continent)) +
+  geom_point()
+```
+
+<div class="figure" style="text-align: center">
+<img src="fig/08-plot-ggplot2-rendered-ch2-sol-1.png" alt="Binned scatterplot of life expectancy vs year with color-coded continents showing value of 'aes' function"  />
+<p class="caption">Binned scatterplot of life expectancy vs year with color-coded continents showing value of 'aes' function</p>
+</div>
+
+:::::::::::::::::::::::::
+
+::::::::::::::::::::::::::::::::::::::::::::::::::
+
+## Layers
+
+Using a scatterplot probably isn't the best for visualizing change over time.
+Instead, let's tell `ggplot` to visualize the data as a line plot:
 
 
 ``` r
@@ -127,34 +187,70 @@ ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, color=continent)) +
 
 <img src="fig/08-plot-ggplot2-rendered-lifeExp-line-1.png" style="display: block; margin: auto;" />
 
-`geom_point` レイヤーを追加する代わりに、`geom_line` レイヤーを追加しました。
+Instead of adding a `geom_point` layer, we've added a `geom_line` layer.
 
-...
+However, the result doesn't look quite as we might have expected: it seems to be jumping around a lot in each continent. Let's try to separate the data by country, plotting one line for each country:
+
+
+``` r
+ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, group=country, color=continent)) +
+  geom_line()
+```
+
+<img src="fig/08-plot-ggplot2-rendered-lifeExp-line-by-1.png" style="display: block; margin: auto;" />
+
+We've added the **group** *aesthetic*, which tells `ggplot` to draw a line for each
+country.
+
+But what if we want to visualize both lines and points on the plot? We can
+add another layer to the plot:
+
+
+``` r
+ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, group=country, color=continent)) +
+  geom_line() + geom_point()
+```
+
+<img src="fig/08-plot-ggplot2-rendered-lifeExp-line-point-1.png" style="display: block; margin: auto;" />
+
+It's important to note that each layer is drawn on top of the previous layer. In
+this example, the points have been drawn *on top of* the lines. Here's a
+demonstration:
+
+
+``` r
+ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, group=country)) +
+  geom_line(mapping = aes(color=continent)) + geom_point()
+```
+
+<img src="fig/08-plot-ggplot2-rendered-lifeExp-layer-example-1-1.png" style="display: block; margin: auto;" />
+
+In this example, the *aesthetic* mapping of **color** has been moved from the
+global plot options in `ggplot` to the `geom_line` layer so it no longer applies
+to the points. Now we can clearly see that the points are drawn on top of the
+lines.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## ヒント: 美的要素に値を設定する
+## Tip: Setting an aesthetic to a value instead of a mapping
 
-これまで、美的要素（例：**色**）をデータ内の変数にマッピングする方法を見てきました。
-たとえば、`geom_line(mapping = aes(color=continent))` を使用すると、各大陸に異なる色が割り当てられます。
-しかし、すべての線の色を青に変更したい場合はどうでしょう？
-`geom_line(mapping = aes(color="blue"))` が機能すると考えるかもしれませんが、そうではありません。
-特定の変数にマッピングしたくない場合は、`aes()` の外側で色を指定します：
-`geom_line(color="blue")` のように記述します。
+So far, we've seen how to use an aesthetic (such as **color**) as a *mapping* to a variable in the data. For example, when we use `geom_line(mapping = aes(color=continent))`, ggplot will give a different color to each continent. But what if we want to change the color of all lines to blue? You may think that `geom_line(mapping = aes(color="blue"))` should work, but it doesn't. Since we don't want to create a mapping to a specific variable, we can move the color specification outside of the `aes()` function, like this: `geom_line(color="blue")`.
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 3
+## Challenge 3
 
-前の例からポイントレイヤーとラインレイヤーの順序を入れ替えてみてください。何が起こるでしょうか？
+Switch the order of the point and line layers from the previous example. What
+happened?
 
 :::::::::::::::  solution
 
-## チャレンジ 3 の解答
+## Solution to challenge 3
 
-ラインがポイントの上に描画されるようになります！
+The lines now get drawn over the points!
 
 
 ``` r
@@ -162,16 +258,16 @@ ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, group=country)) +
  geom_point() + geom_line(mapping = aes(color=continent))
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-ch3-sol-1.png" alt="GDPと平均寿命の散布図で、変数間の関係を示すトレンドラインを追加したグラフ。データポイントが拡大され、オレンジ色で、透過性なしで表示されています。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-ch3-sol-1.png" alt="Scatter plot of life expectancy vs GDP per capita with a trend line summarising the relationship between variables. The plot illustrates the possibilities for styling visualisations in ggplot2 with data points enlarged, coloured orange, and displayed without transparency." style="display: block; margin: auto;" />
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## 変換と統計
+## Transformations and statistics
 
-ggplot2 を使用すると、データの上に統計モデルを簡単にオーバーレイできます。
-例を示すために、最初の例に戻ります：
+ggplot2 also makes it easy to overlay statistical models over the data. To
+demonstrate we'll go back to our first example:
 
 
 ``` r
@@ -181,9 +277,12 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
 
 <img src="fig/08-plot-ggplot2-rendered-lifeExp-vs-gdpPercap-scatter3-1.png" style="display: block; margin: auto;" />
 
-GDP の極端な値が原因で、ポイント間の関係を確認するのが難しいです。
-X軸の単位スケールを変更するには *scale* 関数を使用します。これにより、データ値と美的要素の視覚値の間のマッピングが制御されます。
-また、大量のクラスター化されたデータを扱う際に役立つ *alpha* 関数を使用してポイントの透過性を変更することもできます。
+Currently it's hard to see the relationship between the points due to some strong
+outliers in GDP per capita. We can change the scale of units on the x axis using
+the *scale* functions. These control the mapping between the data values and
+visual values of an aesthetic. We can also modify the transparency of the
+points, using the *alpha* function, which is especially helpful when you have
+a large amount of data which is very clustered.
 
 
 ``` r
@@ -192,25 +291,23 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="fig/08-plot-ggplot2-rendered-axis-scale-1.png" alt="X軸が対数スケールでデータが拡散したGDPと平均寿命の散布図"  />
-<p class="caption">X軸が対数スケールでデータが拡散したGDPと平均寿命の散布図</p>
+<img src="fig/08-plot-ggplot2-rendered-axis-scale-1.png" alt="Scatterplot of GDP vs life expectancy showing logarithmic x-axis data spread"  />
+<p class="caption">Scatterplot of GDP vs life expectancy showing logarithmic x-axis data spread</p>
 </div>
 
-`scale_x_log10` 関数はプロットの座標系に変換を適用します。
-これにより、10 の倍数が左から右に均等に配置されます。たとえば、1,000 の GDP は 10,000 の値から 100,000 の値までと同じ水平距離を持つようになります。
-これにより、X軸に沿ったデータの分布を視覚化しやすくなります。
+The `scale_x_log10` function applied a transformation to the coordinate system of the plot, so that each multiple of 10 is evenly spaced from left to right. For example, a GDP per capita of 1,000 is the same horizontal distance away from a value of 10,000 as the 10,000 value is from 100,000. This helps to visualize the spread of the data along the x-axis.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## ヒント：美的要素をマッピングではなく値に設定するリマインダー
+## Tip Reminder: Setting an aesthetic to a value instead of a mapping
 
-`geom_point(alpha = 0.5)` を使用したことに注意してください。前回のヒントで述べたように、`aes()` 関数の外側で設定を行うと、この値がすべてのポイントに適用されます。
-ただし、他の美的要素設定と同様に、*alpha* をデータ内の変数にマッピングすることも可能です。
-たとえば、`geom_point(mapping = aes(alpha = continent))` を使用すると、大陸ごとに異なる透過性を指定できます。
+Notice that we used `geom_point(alpha = 0.5)`. As the previous tip mentioned, using a setting outside of the `aes()` function will cause this value to be used for all points, which is what we want in this case. But just like any other aesthetic setting, *alpha* can also be mapped to a variable in the data. For example, we can give a different transparency to each continent with `geom_point(mapping = aes(alpha = continent))`.
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-データに簡単な関係を適合させるには、`geom_smooth` レイヤーを追加します：
+We can fit a simple relationship to the data by adding another layer,
+`geom_smooth`:
 
 
 ``` r
@@ -222,9 +319,10 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
 `geom_smooth()` using formula = 'y ~ x'
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-lm-fit-1.png" alt="GDPと平均寿命の散布図に、変数間の関係を要約する青いトレンドラインが追加されたグラフ。グレーの影は95%の信頼区間を示します。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-lm-fit-1.png" alt="Scatter plot of life expectancy vs GDP per capita with a blue trend line summarising the relationship between variables, and gray shaded area indicating 95% confidence intervals for that trend line." style="display: block; margin: auto;" />
 
-ラインを太くするには、`geom_smooth` レイヤー内で **linewidth** 美的要素を設定します：
+We can make the line thicker by *setting* the **linewidth** aesthetic in the
+`geom_smooth` layer:
 
 
 ``` r
@@ -236,28 +334,29 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
 `geom_smooth()` using formula = 'y ~ x'
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-lm-fit2-1.png" alt="GDPと平均寿命の散布図に、少し太めの青いトレンドラインが追加されたグラフ。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-lm-fit2-1.png" alt="Scatter plot of life expectancy vs GDP per capita with a trend line summarising the relationship between variables. The blue trend line is slightly thicker than in the previous figure." style="display: block; margin: auto;" />
 
-美的要素を指定する方法には2つあります。ここでは、`geom_smooth` に引数として **linewidth** を渡して美的要素を設定し、`geom` 全体に適用しました。
-以前のレッスンでは、データ変数とその視覚表現の間にマッピングを定義するために `aes` 関数を使用しました。
+There are two ways an *aesthetic* can be specified. Here we *set* the **linewidth** aesthetic by passing it as an argument to `geom_smooth` and it is applied the same to the whole `geom`. Previously in the lesson we've used the `aes` function to define a *mapping* between data variables and their visual representation.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 4a
+## Challenge 4a
 
-前の例のポイントレイヤーで、ポイントの色とサイズを変更してください。
+Modify the color and size of the points on the point layer in the previous
+example.
 
-ヒント：`aes` 関数を使用しないでください。
+Hint: do not use the `aes` function.
 
-ヒント：ポイントに対する `linewidth` に相当するものは `size` です。
+Hint: the equivalent of `linewidth` for points is `size`.
 
 :::::::::::::::  solution
 
-## チャレンジ 4a の解答
+## Solution to challenge 4a
 
-次のような解答例があります：
-`color` 引数が `aes()` 関数の外側で指定されていることに注意してください。
-これは、グラフ上のすべてのデータポイントに適用され、特定の変数に関連付けられていません。
+Here a possible solution:
+Notice that the `color` argument is supplied outside of the `aes()` function.
+This means that it applies to all data points on the graph and is not related to
+a specific variable.
 
 
 ``` r
@@ -270,7 +369,7 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
 `geom_smooth()` using formula = 'y ~ x'
 ```
 
-<img src="fig/08-plot-ggplot2-rendered-ch4a-sol-1.png" alt="GDPと平均寿命の散布図に、変数間の関係を要約するトレンドラインが追加されたグラフ。データポイントが拡大され、オレンジ色で、透過性なしで表示されています。" style="display: block; margin: auto;" />
+<img src="fig/08-plot-ggplot2-rendered-ch4a-sol-1.png" alt="Scatter plot of life expectancy vs GDP per capita with a trend line summarising the relationship between variables. The plot illustrates the possibilities for styling visualisations in ggplot2 with data points enlarged, coloured orange, and displayed without transparency." style="display: block; margin: auto;" />
 
 :::::::::::::::::::::::::
 
@@ -278,18 +377,21 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 4b
+## Challenge 4b
 
-チャレンジ 4a の解答を修正し、ポイントの形状を変更し、大陸ごとに異なる色と新しいトレンドラインを追加してください。
-ヒント：`color` 引数は美的マッピング内で使用できます。
+Modify your solution to Challenge 4a so that the
+points are now a different shape and are colored by continent with new
+trendlines.  Hint: The color argument can be used inside the aesthetic.
 
 :::::::::::::::  solution
 
-## チャレンジ 4b の解答
+## Solution to challenge 4b
 
-次のような解答例があります：
-`color` 引数を `aes()` 関数内で指定することで、特定の変数に接続できます。
-一方で、`shape` 引数は `aes()` 呼び出しの外側で指定されており、すべてのデータポイントを同じ形状に変更します。
+Here is a possible solution:
+Notice that supplying the `color` argument inside the `aes()` functions enables you to
+connect it to a certain variable. The `shape` argument, as you can see, modifies all
+data points the same way (it is outside the `aes()` call) while the `color` argument which
+is placed inside the `aes()` call modifies a point's color based on its continent value.
 
 
 ``` r
@@ -308,19 +410,22 @@ ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp, color = conti
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## マルチパネル図
+## Multi-panel figures
 
-以前、すべての国における時間経過による平均寿命の変化を1つのプロットで視覚化しました。
-代わりに、**facet** パネルのレイヤーを追加して、複数のパネルに分割することもできます。
+Earlier we visualized the change in life expectancy over time across all
+countries in one plot. Alternatively, we can split this out over multiple panels
+by adding a layer of **facet** panels.
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## ヒント
+## Tip
 
-アメリカ大陸にある国のみを含むデータのサブセットを作成します。
-これには25カ国が含まれますが、これにより図が煩雑になり始めます。
-X軸ラベルを回転させて読みやすさを維持するために「テーマ」定義を適用します。
-ggplot2ではほぼすべてがカスタマイズ可能です。
+We start by making a subset of data including only countries located
+in the Americas.  This includes 25 countries, which will begin to
+clutter the figure.  Note that we apply a "theme" definition to rotate
+the x-axis labels to maintain readability.  Nearly everything in
+ggplot2 is customizable.
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -335,41 +440,41 @@ ggplot(data = americas, mapping = aes(x = year, y = lifeExp)) +
 
 <img src="fig/08-plot-ggplot2-rendered-facet-1.png" style="display: block; margin: auto;" />
 
-`facet_wrap` レイヤーには、チルダ（~）で表される「式」が引数として渡されます。
-これにより、Rは gapminder データセットの country 列内のユニークな値ごとにパネルを描画します。
+The `facet_wrap` layer took a "formula" as its argument, denoted by the tilde
+(~). This tells R to draw a panel for each unique value in the country column
+of the gapminder dataset.
 
-## テキストの変更
+## Modifying text
 
-この図を出版用にクリーンアップするには、いくつかのテキスト要素を変更する必要があります。
-X軸は煩雑すぎ、Y軸にはデータフレーム内の列名ではなく「Life expectancy」と記載する必要があります。
+To clean this figure up for a publication we need to change some of the text
+elements. The x-axis is too cluttered, and the y axis should read
+"Life expectancy", rather than the column name in the data frame.
 
-これを行うには、いくつかの異なるレイヤーを追加します。**テーマ (theme)** レイヤーは軸テキストや全体的なテキストサイズを制御します。
-軸ラベル、プロットタイトル、および凡例のタイトルは `labs` 関数を使用して設定できます。
-凡例タイトルは、`aes` 仕様で使用した名前を使って設定します。
-以下では、色の凡例タイトルを `color = "Continent"` として設定しています。
-同様に、塗りつぶしの凡例タイトルは `fill = "MyTitle"` として設定します。
+We can do this by adding a couple of different layers. The **theme** layer
+controls the axis text, and overall text size. Labels for the axes, plot
+title and any legend can be set using the `labs` function. Legend titles
+are set using the same names we used in the `aes` specification. Thus below
+the color legend title is set using `color = "Continent"`, while the title
+of a fill legend would be set using `fill = "MyTitle"`.
 
 
 ``` r
 ggplot(data = americas, mapping = aes(x = year, y = lifeExp, color=continent)) +
   geom_line() + facet_wrap( ~ country) +
   labs(
-    x = "Year",              # X軸のタイトル
-    y = "Life expectancy",   # Y軸のタイトル
-    title = "Figure 1",      # 図のメインタイトル
-    color = "Continent"      # 凡例のタイトル
+    x = "Year",              # x axis title
+    y = "Life expectancy",   # y axis title
+    title = "Figure 1",      # main title of figure
+    color = "Continent"      # title of legend
   ) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 <img src="fig/08-plot-ggplot2-rendered-theme-1.png" style="display: block; margin: auto;" />
 
-## プロットのエクスポート
+## Exporting the plot
 
-`ggsave()` 関数を使用すると、ggplot で作成したプロットをエクスポートできます。
-`width`、`height`、および `dpi` 引数を調整することで、出版用の高品質グラフィックを作成できます。
-上記のプロットを保存するには、まずそれを `lifeExp_plot` という変数に割り当て、その後 `ggsave` を使用してプロットを `png` 形式で `results` ディレクトリに保存します。
-（作業ディレクトリ内に `results/` フォルダを作成してください。）
+The `ggsave()` function allows you to export a plot created with ggplot. You can specify the dimension and resolution of your plot by adjusting the appropriate arguments (`width`, `height` and `dpi`) to create high quality graphics for publication. In order to save the plot from above, we first assign it to a variable `lifeExp_plot`, then tell `ggsave` to save that plot in `png` format to a directory called `results`. (Make sure you have a `results/` folder in your working directory.)
 
 
 
@@ -378,44 +483,43 @@ ggplot(data = americas, mapping = aes(x = year, y = lifeExp, color=continent)) +
 lifeExp_plot <- ggplot(data = americas, mapping = aes(x = year, y = lifeExp, color=continent)) +
   geom_line() + facet_wrap( ~ country) +
   labs(
-    x = "Year",              # X軸のタイトル
-    y = "Life expectancy",   # Y軸のタイトル
-    title = "Figure 1",      # 図のメインタイトル
-    color = "Continent"      # 凡例のタイトル
+    x = "Year",              # x axis title
+    y = "Life expectancy",   # y axis title
+    title = "Figure 1",      # main title of figure
+    color = "Continent"      # title of legend
   ) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggsave(filename = "results/lifeExp.png", plot = lifeExp_plot, width = 12, height = 10, dpi = 300, units = "cm")
 ```
 
-`ggsave` の便利な点は2つあります。
-1つ目は、最後に作成したプロットをデフォルトとして保存することです。そのため、`plot` 引数を省略すると、自動的に最後に作成したプロットが保存されます。
-2つ目は、指定したファイル名の拡張子（例：`.png` や `.pdf`）から保存形式を自動的に判断することです。
-必要に応じて、`device` 引数で形式を明示的に指定することもできます。
+There are two nice things about `ggsave`. First, it defaults to the last plot, so if you omit the `plot` argument it will automatically save the last plot you created with `ggplot`. Secondly, it tries to determine the format you want to save your plot in from the file extension you provide for the filename (for example `.png` or `.pdf`). If you need to, you can specify the format explicitly in the `device` argument.
 
-これは ggplot2 でできることの一部です。RStudio は利用可能なさまざまなレイヤーの概要を示した非常に便利な[チートシート][cheat]を提供しています。
-また、[ggplot2 のウェブサイト][ggplot-doc] にはより詳細なドキュメントがあります。
-すべての RStudio チートシートは[RStudio のウェブサイト][cheat_all]から利用できます。
-最後に、変更方法がわからない場合、Google 検索を使用すると、Stack Overflow 上の関連する質問と再利用可能なコードが見つかることがよくあります。
+This is a taste of what you can do with ggplot2. RStudio provides a
+really useful [cheat sheet][cheat] of the different layers available, and more
+extensive documentation is available on the [ggplot2 website][ggplot-doc]. All RStudio cheat sheets are available from the [RStudio website][cheat_all].
+Finally, if you have no idea how to change something, a quick Google search will
+usually send you to a relevant question and answer on Stack Overflow with reusable
+code to modify!
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 5
+## Challenge 5
 
-異なる大陸間で利用可能な年における平均寿命を比較するボックスプロットを生成してください。
+Generate boxplots to compare life expectancy between the different continents during the available years.
 
-応用：
+Advanced:
 
-- Y軸の名前を「Life Expectancy」に変更する。
-- X軸のラベルを削除する。
+- Rename y axis as Life Expectancy.
+- Remove x axis labels.
 
 :::::::::::::::  solution
 
-## チャレンジ 5 の解答
+## Solution to Challenge 5
 
-次のような解答例があります：
-`xlab()` および `ylab()` はそれぞれ X軸と Y軸のラベルを設定します。
-軸タイトル、テキスト、目盛りは `theme()` 呼び出し内で変更する必要があります。
+Here a possible solution:
+`xlab()` and `ylab()` set labels for the x and y axes, respectively
+The axis title, text and ticks are attributes of the theme and must be modified within a `theme()` call.
 
 
 ``` r
@@ -443,8 +547,8 @@ ggplot(data = gapminder, mapping = aes(x = continent, y = lifeExp, fill = contin
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- `ggplot2` を使用してプロットを作成する。
-- グラフィックをレイヤーとして考える: 美的要素、幾何学、統計、スケール変換、グループ化。
+- Use `ggplot2` to create plots.
+- Think about graphics in layers: aesthetics, geometry, statistics, scale transformation, and grouping.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

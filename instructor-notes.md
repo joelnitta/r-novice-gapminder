@@ -1,75 +1,79 @@
 ---
-title: インストラクターノート
+title: Instructor Notes
 ---
 
-## タイミング
+## Timing
 
-各ワークショップの開始時に約30分、各セッションの開始時にさらに15分程度を、WiFiやソフトウェアのインストールなどの技術的な問題に費やせるようにしてください  
-（事前にインストールを依頼していても同様です。依頼していない場合はさらに時間が必要です）。
+Leave about 30 minutes at the start of each workshop and another 15 mins
+at the start of each session for technical difficulties like WiFi and
+installing things (even if you asked students to install in advance, longer if
+not).
 
-## レッスンプラン
+## Lesson Plans
 
-このレッスンには、1日で教えられる量を超える内容が含まれています。  
-インストラクターは、標準的な1日コースで使用するエピソードの適切なサブセットを選ぶ必要があります。
+The lesson contains much more material than can be taught in a day.
+Instructors will need to pick an appropriate subset of episodes to use
+in a standard one day course.
 
-いくつかの推奨ルートは以下の通りです：
+Some suggested paths through the material are:
 
-（[@liz-is](https://github.com/swcarpentry/r-novice-gapminder/issues/104#issuecomment-276529213) による提案）
+(suggested by [@liz-is](https://github.com/swcarpentry/r-novice-gapminder/issues/104#issuecomment-276529213))
 
-- 01 R と RStudio の概要
-- 04 データ構造
-- 05 データフレームの探索（「実践的な例」セクション以降）
-- 08 ggplot2 を使った出版品質のグラフィック作成
-- 10 関数の解説
-- 13 dplyr によるデータフレーム操作
-- 15 knitr を使用したレポート作成
+- 01 Introduction to R and RStudio
+- 04 Data Structures
+- 05 Exploring Data Frames ("Realistic example" section onwards)
+- 08 Creating Publication-Quality Graphics with ggplot2
+- 10 Functions Explained
+- 13 Dataframe Manipulation with dplyr
+- 15 Producing Reports With knitr
 
-（[@naupaka](https://github.com/swcarpentry/r-novice-gapminder/issues/104#issuecomment-312547509) による提案）
+(suggested by [@naupaka](https://github.com/swcarpentry/r-novice-gapminder/issues/104#issuecomment-312547509))
 
-- 01 R と RStudio の概要
-- 02 RStudio を使ったプロジェクト管理
-- 03 ヘルプの検索方法
-- 04 データ構造
-- 05 データフレームの探索
-- 06 データのサブセット化
-- 09 ベクトル化
-- 08 ggplot2 を使った出版品質のグラフィック作成 *または*  
-  13 dplyr によるデータフレーム操作
-- 15 knitr を使用したレポート作成
+- 01 Introduction to R and RStudio
+- 02 Project Management With RStudio
+- 03 Seeking Help
+- 04 Data Structures
+- 05 Exploring Data Frames
+- 06 Subsetting Data
+- 09 Vectorization
+- 08 Creating Publication-Quality Graphics with ggplot2 *OR*
+  13 Dataframe Manipulation with dplyr
+- 15 Producing Reports With knitr
 
-（[@karawoo](https://github.com/swcarpentry/r-novice-gapminder/issues/104#issuecomment-277599864) による半日コースの提案）
+A half day course could consist of (suggested by [@karawoo](https://github.com/swcarpentry/r-novice-gapminder/issues/104#issuecomment-277599864)):
 
-- 01 R と RStudio の概要
-- 04 データ構造（`c()` を使ったベクトルの作成のみ）
-- 05 データフレームの探索（「実践的な例」セクション以降）
-- 06 データのサブセット化（因子、行列、リストのサブセット化を除外）
-- 08 ggplot2 を使った出版品質のグラフィック作成
+- 01 Introduction to R and RStudio
+- 04 Data Structures (only creating vectors with `c()`)
+- 05 Exploring Data Frames ("Realistic example" section onwards)
+- 06 Subsetting Data (excluding factor, matrix and list subsetting)
+- 08 Creating Publication-Quality Graphics with ggplot2
 
-## RStudio での Git 設定
+## Setting up git in RStudio
 
-Git を RStudio にリンクさせる際には、オペレーティングシステムやそのバージョンによって問題が生じる場合があります。  
-Git が正しくインストールおよび設定されていることを確認するには、RStudio アプリケーションの「オプション」ウィンドウを開きます。
+There can be difficulties linking git to RStudio depending on the
+operating system and the version of the operating system. To make sure
+Git is properly installed and configured, the learners should go to
+the Options window in the RStudio application.
 
-- **Mac OS X:**  
-  - RStudio -> Preferences... -> Git/SVN に移動します。  
-  - 「Git 実行可能ファイル」ウィンドウにファイルへのパスが表示されているか確認します。表示されていない場合は、次のステップとして Git の場所を特定する必要があります。  
-  - ターミナルで `which git` と入力すると、Git 実行可能ファイルへのパスが表示されます。「Git 実行可能ファイル」ウィンドウでファイルを選択するのが難しい場合、OS X は多くのシステムファイルを非表示にしているためです。この場合、ファイル選択ウィンドウが開いている状態で「Command-Shift-G」を押すと、テキスト入力ボックスが表示され、Git 実行可能ファイルへのフルパス（例: /usr/bin/git）を入力または貼り付けることができます。
-- **Windows:**  
-  - Tools -> Global options... -> Git/SVN に移動します。  
-  - Software Carpentry Installer を使用した場合、'git.exe' は `C:/Program Files/Git/bin/git.exe` にインストールされているはずです。
+- **Mac OS X:**
+  - Go RStudio -> Preferences... -> Git/SVN
+  - Check and see whether there is a path to a file in the "Git executable" window. If not, the next challenge is figuring out where Git is located.
+  - In the terminal enter `which git` and you will get a path to the git executable. In the "Git executable" window you may have difficulties finding the directory since OS X hides many of the operating system files. While the file selection window is open, pressing "Command-Shift-G" will pop up a text entry box where you will be able to type or paste in the full path to your git executable: e.g. /usr/bin/git or whatever else it might be.
+- **Windows:**
+  - Go Tools -> Global options... -> Git/SVN
+  - If you use the Software Carpentry Installer, then 'git.exe' should be installed at `C:/Program Files/Git/bin/git.exe`.
 
-GitHub にコミットをプッシュするたびにパスワードを再入力しなくて済むようにするには、以下のコマンドを bash プロンプトで実行します。これにより、パスワードを一度だけ入力する設定になります：
+To prevent the learners from having to re-enter their password each time they push a commit to GitHub, this command (which can be run from a bash prompt) will make it so they only have to enter their password once:
 
 ```bash
 $ git config --global credential.helper 'cache --timeout=10000000'
 ```
 
-## RStudio カラープレビュー
+## RStudio Color Preview
 
-RStudio には、特定の名前付き色や16進数色のプレビューを表示する機能があります。  
-これにより、予期していない受講者（およびインストラクター）が混乱したり注意をそらされたりする可能性があります。
+RStudio has a feature to preview the color for certain named colors and hexadecimal colors. This may confuse or distract learners (and instructors) who are not expecting it.
 
-主に、次のコードブロックを含む「データ構造」エピソード中にこれが問題になることがあります：
+Mainly, this is likely to come up during the episode on "Data Structures" with the following code block:
 
 ```r
 cats <- data.frame(coat = c("calico", "black", "tabby"),
@@ -77,44 +81,52 @@ cats <- data.frame(coat = c("calico", "black", "tabby"),
                     likes_string = c(1, 0, 1))
 ```
 
-このオプションは、以下のメニュー設定でオン/オフを切り替えることができます：  
-Tools -> Global Options -> Code -> Display -> Enable preview of named and hexadecimal colors （「構文」セクション内）
+This option can be turned off and on in the following menu setting:
+Tools -> Global Options -> Code -> Display -> Enable preview of named and hexadecimal colors (under "Syntax") 
 
-## データの取り込み
+## Pulling in Data
 
-ワークショップ中に使用するデータを簡単に取得するには、参加者に [gapminder-data] と [gapminder-data-wide] から  
-生データをダウンロードしてもらうのが最も簡単です。
+The easiest way to get the data used in this lesson during a workshop is to have
+attendees download the raw data from [gapminder-data] and
+[gapminder-data-wide].
 
-参加者はブラウザの `File - Save As` ダイアログを使ってファイルを保存できます。
+Attendees can use the `File - Save As` dialog in their browser to save the file.
 
-## 全体的な注意点
+## Overall
 
-良いプラクティスを強調してください：コードをスクリプトに書き、バージョン管理されていることを確認してください。  
-チャレンジ用のスクリプトファイルを作成するよう学生に促してください。
+Make sure to emphasize good practices: put code in scripts, and make
+sure they're version controlled. Encourage students to create script
+files for challenges.
 
-クラウド環境で作業している場合、第2レッスンの後に Gapminder データをアップロードさせてください。
+If you're working in a cloud environment, get them to upload the
+gapminder data after the second lesson.
 
-行列は内部的にはベクトルであり、データフレームはリストであることを強調してください：  
-これにより、基本操作で遭遇する多くの特異な動作を説明できます。
+Make sure to emphasize that matrices are vectors underneath the hood
+and data frames are lists underneath the hood: this will explain a
+lot of the esoteric behaviour encountered in basic operations.
 
-ベクトルのリサイクルや関数スタックは、ホワイトボード上の図で説明するのが最適です。
+Vector recycling and function stacks are probably best explained
+with diagrams on a whiteboard.
 
-R のヘルプページの例を実際に紹介することを忘れないでください：ヘルプファイルは最初は威圧的に感じられますが、  
-それを読む方法を知ることは非常に役立ちます。
+Be sure to actually go through examples of an R help page: help files
+can be intimidating at first, but knowing how to read them is tremendously
+useful.
 
-CRAN タスクビューを見せ、その中の1つのトピックを確認してください。
+Be sure to show the CRAN task views, look at one of the topics.
 
-内容が多いため、初期のレッスンを迅速に進めてください。  
-これらの広範な内容は主に学習の浸透を目的としています：後で問題や特異な動作に遭遇したときに記憶が呼び起こされるようにするためです。
+There's a lot of content: move quickly through the earlier lessons. Their
+extensiveness is mostly for purposes of learning by osmosis: so that their
+memory will trigger later when they encounter a problem or some esoteric behaviour.
 
-じっくり時間をかけるべき重要なレッスン：
+Key lessons to take time on:
 
-- データのサブセット化 - 初心者には概念的に難しい
-- 関数 - 学習者が特に苦労するポイント
-- データ構造 - 徹底する価値がありますが、迅速に進めることができます。
+- Data subsetting - conceptually difficult for novices
+- Functions - learners especially struggle with this
+- Data structures - worth being thorough, but you can go through it quickly.
 
-正確であることや教材を完全に把握していることを気にする必要はありません。  
-ミスを指導の機会として活用してください：最も重要なスキルは、予期しないエラーからデバッグして回復する方法を伝えることです。
+Don't worry about being correct or knowing the material back-to-front. Use
+mistakes as teaching moments: the most vital skill you can impart is how to
+debug and recover from unexpected errors.
 
 [gapminder-data]: data/gapminder_data.csv
 [gapminder-data-wide]: data/gapminder_wide.csv

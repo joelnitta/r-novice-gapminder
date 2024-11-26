@@ -2,23 +2,35 @@
 site: sandpaper::sandpaper_site
 ---
 
-*非プログラマー向けの gapminder データを使用した R 入門*
+*an introduction to R for non-programmers using gapminder data*
 
-このレッスンの目標は、初心者のプログラマーにモジュール式コードの記述方法と、データ分析に R を使用するためのベストプラクティスを教えることです。R は統計解析やサードパーティパッケージの豊富さから、多くの科学分野で広く使用されています。ソフトウェアカーペントリーのワークショップに参加する多くの科学者が R を使用しており、さらに学びたいと考えていることがわかっています。本教材の重点は、参加者に R の基礎をしっかりと身につけてもらうことと、科学計算のベストプラクティスを教えることにあります。具体的には、分析をモジュール単位に分割すること、タスクの自動化、そしてカプセル化です。
+The goal of this lesson is to teach novice programmers to write modular code
+and best practices for using R for data analysis. R is commonly used in many
+scientific disciplines for statistical analysis and its array of third-party
+packages. We find that many scientists who come to Software Carpentry workshops
+use R and want to learn more. The emphasis of these materials is to give
+attendees a strong foundation in the fundamentals of R, and to teach best
+practices for scientific computing: breaking down analyses into modular units,
+task automation, and encapsulation.
 
-このワークショップでは、R プログラミング言語の基礎を教えることに焦点を当てており、統計解析そのものを教えるものではありません。
+Note that this workshop will focus on teaching the fundamentals of the
+programming language R, and will not teach statistical analysis.
 
-このレッスンには、1 日では教えきれない量の内容が含まれています。[インストラクターノートページ](instructors/instructor-notes.md) には、1 日または半日のワークショップに適したレッスンプランの提案が記載されています。
+The lesson contains more material than can be taught in a day.  The [instructor notes page](instructors/instructor-notes.md) has some suggested lesson plans suitable for a one or half day workshop.
 
-このワークショップではさまざまなサードパーティパッケージを使用します。これらは必ずしも最良であるわけでも、包括的であるわけでもありませんが、私たちが有用だと感じ、主に使いやすさを基準に選んだものです。
+A variety of third party packages are used throughout this workshop. These
+are not necessarily the best, nor are they comprehensive, but they are
+packages we find useful, and have been chosen primarily for their
+usability.
 
 ::::::::::::::::::::::::::::::::::::::::::  prereq
 
-## 前提条件
+## Prerequisites
 
-- コンピュータがデータや指示（プログラム、スクリプトなど）をファイルに保存することを理解している。
-- ファイルがディレクトリ（フォルダ）で整理されていることを理解している。
-- 作業ディレクトリ外にあるファイルにパスを指定してアクセスする方法を知っている。
+Understand that computers store data and instructions (programs, scripts etc.) in files.
+Files are organised in directories (folders).
+Know how to access files not in the working directory by specifying the path.
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

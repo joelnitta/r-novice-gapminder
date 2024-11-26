@@ -1164,17 +1164,18 @@ gapminder[3,]
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 8
+## Challenge 8
 
-1. なぜ `gapminder[1:20]` はエラーを返すのでしょうか？ `gapminder[1:20, ]` とはどう異なるのでしょうか？
+1. Why does `gapminder[1:20]` return an error? How does it differ from `gapminder[1:20, ]`?
 
-2. 行 1 から 9 と 19 から 23 のみを含む新しい `data.frame` を作成し、それを `gapminder_small` と名付けてください。この操作は 1 ステップまたは 2 ステップで行うことができます。
+2. Create a new `data.frame` called `gapminder_small` that only contains rows 1 through 9
+  and 19 through 23. You can do this in one or two steps.
 
 :::::::::::::::  solution
 
-## チャレンジ 8 の解答
+## Solution to challenge 8
 
-1. `gapminder` は data.frame なので、2 次元でサブセット化する必要があります。`gapminder[1:20, ]` は最初の 20 行とすべての列をサブセット化して返します。
+1. `gapminder` is a data.frame so needs to be subsetted on two dimensions. `gapminder[1:20, ]` subsets the data to give the first 20 rows and all columns.
 
 2. 
 
@@ -1188,11 +1189,11 @@ gapminder_small <- gapminder[c(1:9, 19:23),]
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- R のインデックスは 0 ではなく 1 から始まります。
-- `[]` を使用して位置による個々の値にアクセスします。
-- `[low:high]` を使用してデータのスライスにアクセスします。
-- `[c(...)]` を使用して任意のデータセットにアクセスします。
-- 論理演算や論理ベクトルを使用してデータのサブセットにアクセスします。
+- Indexing in R starts at 1, not 0.
+- Access individual values by location using `[]`.
+- Access slices of data using `[low:high]`.
+- Access arbitrary sets of data using `[c(...)]`.
+- Use logical operations and logical vectors to access subsets of data.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

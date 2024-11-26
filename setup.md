@@ -1,11 +1,10 @@
 ---
-title: セットアップ
+title: Setup
 ---
 
-このレッスンでは、コンピュータに R と RStudio がインストールされていることを前提としています。
+This lesson assumes you have R and RStudio installed on your computer.
 
-- [R の最新バージョンをダウンロードしてインストール](https://www.r-project.org/)してください。
-- [RStudio をダウンロードしてインストール](https://www.rstudio.com/products/rstudio/download/#download)してください。  
-  RStudio は R を利用するためのアプリケーション（統合開発環境または IDE）で、便利な追加機能を多数提供します。  
-  無料のデスクトップ版をコンピュータにインストールしてください。
+- [Download and install the latest version of R](https://www.r-project.org/).
+- [Download and install RStudio](https://www.rstudio.com/products/rstudio/download/#download). RStudio is an application (an integrated development environment or IDE) that facilitates the use of R and offers a number of nice additional features. You will need the free Desktop version for your computer.
+
 

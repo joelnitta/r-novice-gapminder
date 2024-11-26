@@ -1,5 +1,5 @@
 ---
-title: ベクトル化
+title: Vectorization
 teaching: 10
 exercises: 15
 source: Rmd
@@ -7,20 +7,22 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Rにおけるベクトル化された操作を理解する。
+- To understand vectorized operations in R.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- ベクトルのすべての要素に一度に操作を行うにはどうすればよいですか？
+- How can I operate on all the elements of a vector at once?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-Rの関数のほとんどはベクトル化されており、ループを使用して各要素に対して1つずつ処理を行う必要なく、ベクトルのすべての要素に対して操作を実行します。
-これにより、コードが簡潔で読みやすく、エラーが少なくなります。
+Most of R's functions are vectorized, meaning that the function will
+operate on all elements of a vector without needing to loop through
+and act on each element one at a time. This makes writing code more
+concise, easy to read, and less error prone.
 
 
 ``` r
@@ -32,9 +34,9 @@ x * 2
 [1] 2 4 6 8
 ```
 
-乗算がベクトルの各要素に対して行われました。
+The multiplication happened to each element of the vector.
 
-2つのベクトルを加えることもできます：
+We can also add two vectors together:
 
 
 ``` r
@@ -46,7 +48,7 @@ x + y
 [1]  7  9 11 13
 ```
 
-`x` の各要素が対応する `y` の要素と加算されました：
+Each element of `x` was added to its corresponding element of `y`:
 
 
 ``` r
@@ -57,7 +59,7 @@ y:  6  7  8  9
     7  9 11 13
 ```
 
-次に、ループを使用して2つのベクトルを加算する方法を示します：
+Here is how we would add two vectors together using a for loop:
 
 
 ``` r
@@ -72,7 +74,7 @@ output_vector
 [1]  7  9 11 13
 ```
 
-ベクトル化された操作を使用した出力と比較してください。
+Compare this to the output using vectorised operations.
 
 
 ``` r
@@ -86,23 +88,25 @@ sum_xy
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 1
+## Challenge 1
 
-`gapminder` データセットの `pop` 列を使用してみましょう。
+Let's try this on the `pop` column of the `gapminder` dataset.
 
-`gapminder` データフレームに新しい列を作成し、
-人口を100万人単位で表示してください。
-データフレームの先頭または末尾を確認して、正しく動作したか確認してください。
+Make a new column in the `gapminder` data frame that
+contains population in units of millions of people.
+Check the head or tail of the data frame to make sure
+it worked.
 
 :::::::::::::::  solution
 
-## チャレンジ 1 の解答
+## Solution to challenge 1
 
-`gapminder` データセットの `pop` 列を使用してみましょう。
+Let's try this on the `pop` column of the `gapminder` dataset.
 
-`gapminder` データフレームに新しい列を作成し、
-人口を100万人単位で表示してください。
-データフレームの先頭または末尾を確認して、正しく動作したか確認してください。
+Make a new column in the `gapminder` data frame that
+contains population in units of millions of people.
+Check the head or tail of the data frame to make sure
+it worked.
 
 
 ``` r
@@ -126,19 +130,20 @@ head(gapminder)
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 2
+## Challenge 2
 
-単一のグラフ上で、すべての国の人口（単位は100万人）を年に対してプロットしてください。
-どの国がどれかを識別する必要はありません。
+On a single graph, plot population, in
+millions, against year, for all countries. Do not worry about
+identifying which country is which.
 
-次に、中国、インド、インドネシアに対してのみグラフ化を行ってください。
-こちらもどの国がどれかを識別する必要はありません。
+Repeat the exercise, graphing only for China, India, and
+Indonesia. Again, do not worry about which is which.
 
 :::::::::::::::  solution
 
-## チャレンジ 2 の解答
+## Solution to challenge 2
 
-人口（単位は100万人）を年に対してプロットして、プロットスキルをリフレッシュしましょう。
+Refresh your plotting skills by plotting population in millions against year.
 
 
 ``` r
@@ -146,7 +151,7 @@ ggplot(gapminder, aes(x = year, y = pop_millions)) +
  geom_point()
 ```
 
-<img src="fig/09-vectorization-rendered-ch2-sol-1.png" alt="中国、インド、インドネシアの人口（単位は100万人）を年に対してプロットした散布図。国はラベル付けされていません。" style="display: block; margin: auto;" />
+<img src="fig/09-vectorization-rendered-ch2-sol-1.png" alt="Scatter plot showing populations in the millions against the year for China, India, and Indonesia, countries are not labeled." style="display: block; margin: auto;" />
 
 ``` r
 countryset <- c("China","India","Indonesia")
@@ -155,15 +160,16 @@ ggplot(gapminder[gapminder$country %in% countryset,],
   geom_point()
 ```
 
-<img src="fig/09-vectorization-rendered-ch2-sol-2.png" alt="中国、インド、インドネシアの人口（単位は100万人）を年に対してプロットした散布図。国はラベル付けされていません。" style="display: block; margin: auto;" />
+<img src="fig/09-vectorization-rendered-ch2-sol-2.png" alt="Scatter plot showing populations in the millions against the year for China, India, and Indonesia, countries are not labeled." style="display: block; margin: auto;" />
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-比較演算子、論理演算子、多くの関数もまたベクトル化されています：
+Comparison operators, logical operators, and many functions are also
+vectorized:
 
-**比較演算子**
+**Comparison operators**
 
 
 ``` r
@@ -174,11 +180,11 @@ x > 2
 [1] FALSE FALSE  TRUE  TRUE
 ```
 
-**論理演算子**
+**Logical operators**
 
 
 ``` r
-a <- x > 3  # または、明確にするために a <- (x > 3)
+a <- x > 3  # or, for clarity, a <- (x > 3)
 a
 ```
 
@@ -188,16 +194,17 @@ a
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## ヒント：論理ベクトルの便利な関数
+## Tip: some useful functions for logical vectors
 
-`any()` はベクトル内に1つでも `TRUE` が含まれていれば `TRUE` を返します。  
-`all()` はベクトル内のすべての要素が `TRUE` の場合にのみ `TRUE` を返します。
+`any()` will return `TRUE` if *any* element of a vector is `TRUE`.  
+`all()` will return `TRUE` if *all* elements of a vector are `TRUE`.
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-ほとんどの関数はベクトルに対して要素ごとに操作を行います：
+Most functions also operate element-wise on vectors:
 
-**関数**
+**Functions**
 
 
 ``` r
@@ -209,7 +216,7 @@ log(x)
 [1] 0.0000000 0.6931472 1.0986123 1.3862944
 ```
 
-ベクトル化された操作は行列の要素ごとにも動作します：
+Vectorized operations work element-wise on matrices:
 
 
 ``` r
@@ -226,10 +233,10 @@ m * -1
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## ヒント：要素ごとの積と行列積の違い
+## Tip: element-wise vs. matrix multiplication
 
-重要：`*` 演算子は要素ごとの積を行います！
-行列積を行うには、`%*%` 演算子を使用する必要があります：
+Very important: the operator `*` gives you element-wise multiplication!
+To do matrix multiplication, we need to use the `%*%` operator:
 
 
 ``` r
@@ -252,15 +259,17 @@ matrix(1:4, nrow=1) %*% matrix(1:4, ncol=1)
 [1,]   30
 ```
 
-行列代数についての詳細は、[Quick-R のリファレンスガイド](https://www.statmethods.net/advstats/matrix.html) を参照してください。
+For more on matrix algebra, see the [Quick-R reference
+guide](https://www.statmethods.net/advstats/matrix.html)
+
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 3
+## Challenge 3
 
-次の行列を使用して：
+Given the following matrix:
 
 
 ``` r
@@ -275,20 +284,20 @@ m
 [3,]    3    6    9   12
 ```
 
-以下を実行するとどうなるか予想してください：
+Write down what you think will happen when you run:
 
 1. `m ^ -1`
 2. `m * c(1, 0, -1)`
 3. `m > c(0, 20)`
 4. `m * c(1, 0, -1, 2)`
 
-出力が予想と違った場合は、ヘルパーに尋ねてください！
+Did you get the output you expected? If not, ask a helper!
 
 :::::::::::::::  solution
 
-## チャレンジ 3 の解答
+## Solution to challenge 3
 
-次の行列を使用して：
+Given the following matrix:
 
 
 ``` r
@@ -303,7 +312,7 @@ m
 [3,]    3    6    9   12
 ```
 
-以下を実行するとどうなるか予想してください：
+Write down what you think will happen when you run:
 
 1. `m ^ -1`
 
@@ -341,33 +350,36 @@ m
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 4
+## Challenge 4
 
-次の分数列の合計を計算したいとします：
+We're interested in looking at the sum of the
+following sequence of fractions:
 
 
 ``` r
  x = 1/(1^2) + 1/(2^2) + 1/(3^2) + ... + 1/(n^2)
 ```
 
-これを手で書き出すのは面倒で、高い値の n に対しては不可能です。
-ベクトル化を使用して、n=100 の場合の x を計算してください。
-n=10,000 の場合の合計はどうなりますか？
+This would be tedious to type out, and impossible for high values of
+n.  Use vectorisation to compute x when n=100. What is the sum when
+n=10,000?
 
 :::::::::::::::  solution
 
-## チャレンジ 4 の解答
+## Challenge 4
 
-次の分数列の合計を計算したいとします：
+We're interested in looking at the sum of the
+following sequence of fractions:
 
 
 ``` r
  x = 1/(1^2) + 1/(2^2) + 1/(3^2) + ... + 1/(n^2)
 ```
 
-これを手で書き出すのは面倒で、高い値の n に対しては不可能です。
-ベクトル化を使用して、n=100 の場合の x を計算してください。
-n=10,000 の場合はどうでしょうか？
+This would be tedious to type out, and impossible for
+high values of n.
+Can you use vectorisation to compute x, when n=100?
+How about when n=10,000?
 
 
 ``` r
@@ -395,7 +407,7 @@ sum(1/(1:n)^2)
 [1] 1.644834
 ```
 
-同じ結果を関数を使用して得ることもできます：
+We can also obtain the same results using a function:
 
 
 ``` r
@@ -432,12 +444,12 @@ inverse_sum_of_squares(n)
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-## ヒント：長さが異なるベクトルに対する操作
+## Tip: Operations on vectors of unequal length
 
-長さが異なるベクトルに対しても操作を実行できます。
-これは*リサイクル*と呼ばれるプロセスを通じて行われます。
-このプロセスでは、小さいベクトルが自動的に繰り返されて大きいベクトルの長さに一致します。
-大きいベクトルが小さいベクトルの倍数ではない場合、Rは警告を出します。
+Operations can also be performed on vectors of unequal length, through
+a process known as *recycling*. This process automatically repeats the smaller vector
+until it matches the length of the larger vector. R will provide a warning
+if the larger vector is not a multiple of the smaller vector.
 
 
 ``` r
@@ -455,7 +467,7 @@ length
 [1] 2 4 6 5 7 9 8
 ```
 
-ベクトル `x` はベクトル `y` の長さに一致するようにリサイクルされました：
+Vector `x` was recycled to match the length of vector `y`
 
 
 ``` r
@@ -470,7 +482,7 @@ y:  1  2  3  4  5  6  7
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- ループの代わりにベクトル化された操作を使用する。
+- Use vectorized operations instead of loops.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 

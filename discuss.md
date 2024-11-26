@@ -1,8 +1,8 @@
 ---
-title: ディスカッション
+title: Discussion
 ---
 
-これらの概念の別の説明については、[他の R レッスン][r-gap] をご覧ください。
+Please see [our other R lesson][r-gap] for a different presentation of these concepts.
 
 [r-gap]: https://swcarpentry.github.io/r-novice-gapminder/
 

@@ -1,320 +1,344 @@
 ---
-title: 'リファレンス'
+title: 'Reference'
 ---
 
-## リファレンス
+## Reference
 
-## [R と RStudio の概要](episodes/01-rstudio-intro.Rmd)
+## [Introduction to R and RStudio](episodes/01-rstudio-intro.Rmd)
 
-- 不完全なコマンドやコードの実行をキャンセルするには、エスケープキーまたは (Ctrl+C) を使用します（シェルで R を使っている場合）。
-- 基本的な算術演算は標準の優先順位に従います：
-  - 括弧: `(`, `)`
-  - 指数: `^` または `**`
-  - 割り算: `/`
-  - 掛け算: `*`
-  - 足し算: `+`
-  - 引き算: `-`
-- 科学表記が利用可能です。例: `2e-3`
-- `#` の右側はコメントとして扱われ、R によって無視されます。
-- 関数は `function_name()` の形式で記述します。括弧内の式は評価され、関数に渡されます。関数はネスト可能です。
-- 数学関数: `exp`, `sin`, `log`, `log10`, `log2` など。
-- 比較演算子: `<`, `<=`, `>`, `>=`, `==`, `!=`
-- 数値を比較するには `all.equal` を使用します。
-- `<-` は代入演算子です。右側の式を評価し、左側の変数に格納します。
-- `ls` は作成したすべての変数と関数を一覧表示します。
-- `rm` を使用してそれらを削除できます。
-- 関数の引数に値を割り当てる場合、`=` を使用する必要があります。
+- Use the escape key to cancel incomplete commands or running code
+  (Ctrl+C) if you're using R from the shell.
+- Basic arithmetic operations follow standard order of precedence:
+  - Brackets: `(`, `)`
+  - Exponents: `^` or `**`
+  - Divide: `/`
+  - Multiply: `*`
+  - Add: `+`
+  - Subtract: `-`
+- Scientific notation is available, e.g: `2e-3`
+- Anything to the right of a `#` is a comment, R will ignore this!
+- Functions are denoted by `function_name()`. Expressions inside the
+  brackets are evaluated before being passed to the function, and
+  functions can be nested.
+- Mathematical functions: `exp`, `sin`, `log`, `log10`, `log2` etc.
+- Comparison operators: `<`, `<=`, `>`, `>=`, `==`, `!=`
+- Use `all.equal` to compare numbers!
+- `<-` is the assignment operator. Anything to the right is evaluate, then
+  stored in a variable named to the left.
+- `ls` lists all variables and functions you've created
+- `rm` can be used to remove them
+- When assigning values to function arguments, you *must* use `=`.
 
-## [RStudio を使ったプロジェクト管理](episodes/02-project-intro.Rmd)
+## [Project management with RStudio](episodes/02-project-intro.Rmd)
 
-- 新しいプロジェクトを作成するには、File -> New Project を選択します。
-- `packrat` パッケージをインストールして自己完結型プロジェクトを作成します。
-- CRAN からパッケージをインストールするには `install.packages` を使用します。
-- パッケージを R に読み込むには `library` を使用します。
-- スクリプト内で参照されるすべてのパッケージがインストールされているか確認するには、`packrat::status` を使用します。
+- To create a new project, go to File -> New Project
+- Install the `packrat` package to create self-contained projects
+- `install.packages` to install packages from CRAN
+- `library` to load a package into R
+- `packrat::status` to check whether all packages referenced in your
+  scripts have been installed.
 
-## [ヘルプの検索方法](episodes/03-seeking-help.Rmd)
+## [Seeking help](episodes/03-seeking-help.Rmd)
 
-- 関数のヘルプにアクセスするには、`?function_name` または `help(function_name)` を入力します。
-- 特殊な演算子にはクォートを使用します。例: `?"+"`
-- 名前を覚えていない場合はファジー検索 `??search_term` を使用します。
-- [CRAN タスクビュー](https://cran.at.r-project.org/web/views) は良い出発点です。
-- [Stack Overflow](https://stackoverflow.com/) はコードに関するヘルプを得る良い場所です。
-  - `?dput` を使用すると、作業中のデータをダンプして他の人が簡単に読み込めるようにできます。
-  - `sessionInfo()` はデバッグに必要な設定情報を提供します。
+- To access help for a function type `?function_name` or `help(function_name)`
+- Use quotes for special operators e.g. `?"+"`
+- Use fuzzy search if you can't remember a name '??search\_term'
+- [CRAN task views](https://cran.at.r-project.org/web/views) are a good starting point.
+- [Stack Overflow](https://stackoverflow.com/) is a good place to get help with your code.
+  - `?dput` will dump data you are working from so others can load it easily.
+  - `sessionInfo()` will give details of your setup that others may need for debugging.
 
-## [データ構造](episodes/04-data-structures-part1.Rmd)
+## [Data structures](episodes/04-data-structures-part1.Rmd)
 
-R の個々の値は5つの**データ型**のいずれかでなければならず、複数の値は**データ構造**にグループ化できます。
+Individual values in R must be one of 5 **data types**, multiple values can be grouped in **data structures**.
 
-**データ型**
+**Data types**
 
-- `typeof(object)` はオブジェクトのデータ型を表示します。
+- `typeof(object)` gives information about an items data type.
 
-- 主な5つのデータ型：
-  - `?numeric` 実数（小数点を含む）
-  - `?integer` 整数のみ
-  - `?character` テキスト
-  - `?complex` 複素数
-  - `?logical` TRUE または FALSE の値
-
-  **特別な型:**
-  - `?NA` 欠損値
-  - `?NaN` "数ではない" 値（例: `0/0`）。
-  - `?Inf`, `-Inf` 無限大。
-  - `?NULL` 存在しないデータ構造。
-
-  `NA` は任意の原子ベクトルに含まれる可能性があります。`NaN` と `Inf` は複素数、整数、または数値型のベクトルのみに含まれる可能性があります。原子ベクトルはすべての他のデータ構造の構成要素です。`NULL` 値はデータ構造全体の代わりに発生します（ただしリスト要素として含まれる場合があります）。
-
-**R の基本データ構造:**
-
-- 原子 `?vector` （1種類のデータ型のみを含む）
-- `?list` （他のオブジェクトのコンテナ）
-- `?data.frame` 異なる型のデータを含むことができる2次元オブジェクト
-- `?matrix` 1種類のデータ型のみを含むことができる2次元オブジェクト
-- `?factor` あらかじめ定義されたカテゴリカルデータを含むベクトル
-- `?array` 1種類のデータ型のみを含む多次元オブジェクト
-
-行列は実際には内部的に原子ベクトルであり、データフレームは内部的にリストであることを忘れないでください。これにより、R の一部の奇妙な動作を説明できます。
-
-**[ベクトル](episodes/04-data-structures-part1.Rmd)**
-
-- `?vector()` ベクトル内のすべての要素は同じ型でなければなりません。
-- 要素は**型変換**を使用して別の型に変換できます。
-- 連結関数 `c()` はベクトルに要素を追加します。
-- `seq(from=0, to=1, by=1)` は数値のシーケンスを作成します。
-- ベクトル内の要素には `names()` 関数を使用して名前を付けることができます。
-
-**[ファクター](episodes/04-data-structures-part1.Rmd)**
-
-- `?factor()` ファクターはカテゴリカルデータを格納するためのデータ構造です。
-- `levels()` はファクター型のベクトルに格納可能な有効な値を表示します。
-
-**[リスト](episodes/04-data-structures-part1.Rmd)**
-
-- `?list()` リストは異なる型のデータを格納するためのデータ構造です。
-
-**[行列](episodes/04-data-structures-part1.Rmd)**
-
-- `?matrix()` 行列は2次元データを格納するためのデータ構造です。
-
-**[データフレーム](episodes/05-data-structures-part2.Rmd)**
-
-- `?data.frame` は重要なデータ構造で、`list` の `vectors` です。
-- `cbind()` はデータフレームに列（ベクトル）を追加します。
-- `rbind()` はデータフレームに行（リスト）を追加します。
-
-**データ構造を調べるための便利な関数：**
-
-- `?str` 構造を表示し、データ構造全体の概要を出力します。
-- `?typeof` 原子ベクトルの型を返します。
-- `?class` データ構造の種類を返します。
-- `?head` 最初の `n` 要素（2次元オブジェクトの場合は行）を表示します。
-- `?tail` 最後の `n` 要素（2次元オブジェクトの場合は行）を表示します。
-- `?rownames`, `?colnames`, `?dimnames` オブジェクトの行名や列名を取得または変更します。
-- `?names` 原子ベクトルやリスト（またはデータフレームの列）の名前を取得または変更します。
-- `?length` 原子ベクトル内の要素数を取得します。
-- `?nrow`, `?ncol`, `?dim` n次元オブジェクトの次元を取得します（原子ベクトルやリストには使用できません）。
-
-## [データフレームの探索](episodes/05-data-structures-part2.Rmd)
-
-- `read.csv` を使用して、規則的な構造を持つデータを読み込みます。
-  - `sep` 引数で区切り文字を指定します。
-    - "," はカンマ区切り
-    - "\\t" はタブ区切り
-  - その他の引数：
-    - `header=TRUE` ヘッダー行がある場合に指定します。
-
-## [データの抽出](episodes/06-data-subsetting.Rmd)
-
-- 要素へのアクセス方法：
+- There are 5 main data types:
   
-  - インデックス
-  - 名前
-  - 論理ベクトル
-
-- `[` シングルブラケット：
+  - `?numeric` real (decimal) numbers
+  - `?integer` whole numbers only
+  - `?character` text
+  - `?complex` complex numbers
+  - `?logical` TRUE or FALSE values
   
-  - 単一の要素を抽出するか、ベクトルを部分選択します。
-  - 例：`x[1]` はベクトル x の最初の項目を抽出します。
-  - リストの単一要素を抽出します。返される値は別の `list()` です。
-  - データフレームの列を抽出します。
-
-- `[` を2つの引数とともに使用すると：
+  **Special types:**
   
-  - 行および/または列を抽出します。
-    - 行列
-    - データフレーム
-    - 例：`x[1,2]` は1行2列目の値を抽出します。
-    - 例：`x[2,:]` は2行目全体の値を抽出します。
+  - `?NA` missing values
+  - `?NaN` "not a number" for undefined values (e.g. `0/0`).
+  - `?Inf`, `-Inf` infinity.
+  - `?NULL` a data structure that doesn't exist
+  
+  `NA` can occur in any atomic vector. `NaN`, and `Inf` can only
+  occur in complex, integer or numeric type vectors. Atomic vectors
+  are the building blocks for all other data structures. A `NULL` value
+  will occur in place of an entire data structure (but can occur as list
+  elements).
 
-- `[[` ダブルブラケットを使用してリストから項目を抽出します。
+**Basic data structures in R:**
 
-- `$` を使用して名前で列またはリスト要素にアクセスします。
+- atomic `?vector` (can only contain one type)
+- `?list` (containers for other objects)
+- `?data.frame` two dimensional objects whose columns can contain different types of data
+- `?matrix` two dimensional objects that can contain only one type of data.
+- `?factor` vectors that contain predefined categorical data.
+- `?array` multi-dimensional objects that can only contain one type of data
 
-- 負のインデックスで要素をスキップします。
+Remember that matrices are really atomic vectors underneath the hood, and that
+data.frames are really lists underneath the hood (this explains some of the weirder
+behaviour of R).
 
-## [制御フロー](episodes/07-control-flow.Rmd)
+**[Vectors](episodes/04-data-structures-part1.Rmd)**
 
-- `if` 条件を使用して条件分岐を開始し、`else if` 条件で追加のテストを行い、`else` でデフォルトを提供します。
-- 条件分岐のブロック本体はインデントする必要があります。
-- `==` を使用して等値をテストします。
-- `%in%` は要素がベクトル内に存在するかを `TRUE` / `FALSE` で返します。
-- `X && Y` は X と Y の両方が `TRUE` の場合にのみ `TRUE` になります。
-- `X || Y` は X または Y、または両方が `TRUE` の場合に `TRUE` になります。
-- 0 は `FALSE` と見なされ、その他の数値は `TRUE` と見なされます。
-- 多次元データに対してネストループを使用します。
+- `?vector()` All items in a vector must be the same type.
+- Items can be converted from one type to another using *coercion*.
+- The concatenate function 'c()' will append items to a vector.
+- `seq(from=0, to=1, by=1)` will create a sequence of numbers.
+- Items in a vector can be named using the `names()` function.
 
-## [出版品質のグラフィックス作成](episodes/08-plot-ggplot2.Rmd)
+**[Factors](episodes/04-data-structures-part1.Rmd)**
 
-- グラフィックスの文法を使用して図を作成します：
+- `?factor()` Factors are a data structure designed to store categorical data.
+- `levels()` shows the valid values that can be stored in a vector of type factor.
+
+**[Lists](episodes/04-data-structures-part1.Rmd)**
+
+- `?list()` Lists are a data structure designed to store data of different types.
+
+**[Matrices](episodes/04-data-structures-part1.Rmd)**
+
+- `?matrix()` Matrices are a data structure designed to store 2-dimensional data.
+
+**[Data Frames](episodes/05-data-structures-part2.Rmd)**
+
+- `?data.frame` is a key data structure. It is a `list` of `vectors`.
+- `cbind()` will add a column (vector) to a data.frame.
+- `rbind()` will add a row (list) to a data.frame.
+
+**Useful functions for querying data structures:**
+
+- `?str` structure, prints out a summary of the whole data structure
+- `?typeof` tells you the type inside an atomic vector
+- `?class` what is the data structure?
+- `?head` print the first `n` elements (rows for two-dimensional objects)
+- `?tail` print the last `n` elements (rows for two-dimensional objects)
+- `?rownames`, `?colnames`, `?dimnames` retrieve or modify the row names
+  and column names of an object.
+- `?names` retrieve or modify the names of an atomic vector or list (or
+  columns of a data.frame).
+- `?length` get the number of elements in an atomic vector
+- `?nrow`, `?ncol`, `?dim` get the dimensions of a n-dimensional object
+  (Won't work on atomic vectors or lists).
+
+## [Exploring Data Frames](episodes/05-data-structures-part2.Rmd)
+
+- `read.csv` to read in data in a regular structure
+  - `sep` argument to specify the separator
+    - "," for comma separated
+    - "\\t" for tab separated
+  - Other arguments:
+    - `header=TRUE` if there is a header row
+
+## [Subsetting data](episodes/06-data-subsetting.Rmd)
+
+- Elements can be accessed by:
+  
+  - Index
+  - Name
+  - Logical vectors
+
+- `[` single square brackets:
+  
+  - *extract* single elements or *subset* vectors
+  - e.g.`x[1]` extracts the first item from vector x.
+  - *extract* single elements of a list. The returned value will be another `list()`.
+  - *extract* columns from a data.frame
+
+- `[` with two arguments to:
+  
+  - *extract* rows and/or columns of
+    - matrices
+    - data.frames
+    - e.g. `x[1,2]` will extract the value in row 1, column 2.
+    - e.g. `x[2,:]` will extract the entire second column of values.
+
+- `[[` double square brackets to extract items from lists.
+
+- `$` to access columns or list elements by name
+
+- negative indices skip elements
+
+## [Control flow](episodes/07-control-flow.Rmd)
+
+- Use `if` condition to start a conditional statement, `else if` condition to provide
+  additional tests, and `else` to provide a default
+- The bodies of the branches of conditional statements must be indented.
+- Use `==` to test for equality.
+- `%in%` will return a `TRUE`/`FALSE` indicating if there is a match between an element and a vector.
+- `X && Y` is only true if both X and Y are `TRUE`.
+- `X || Y` is true if either X or Y, or both, are `TRUE`.
+- Zero is considered `FALSE`; all other numbers are considered `TRUE`
+- Nest loops to operate on multi-dimensional data.
+
+## [Creating publication quality graphics](episodes/08-plot-ggplot2.Rmd)
+
+- figures can be created with the grammar of graphics:
   - `library(ggplot2)`
-  - `ggplot` で基礎となる図を作成します。
-  - `aes`thetics を使用してデータ軸、形状、色、データサイズを指定します。
-  - `geom`etry 関数を使用してプロットの種類を指定します（例：`point`, `line`, `density`, `box`）。
-  - `geom`etry 関数は統計変換を追加することもできます（例：`geom_smooth`）。
-  - `scale` 関数でデータから美学へのマッピングを変更します。
-  - `facet` 関数で図をパネルに分割します。
-  - `aes`thetics は個々のレイヤーに適用するか、`ggplot` 内で図全体に設定できます。
-  - `theme` 関数で図の全体的な外観を変更します。
-  - レイヤーの順序は重要です！
-  - `ggsave` で図を保存します。
+  - `ggplot` to create the base figure
+  - `aes`thetics specify the data axes, shape, color, and data size
+  - `geom`etry functions specify the type of plot, e.g. `point`, `line`, `density`, `box`
+  - `geom`etry functions also add statistical transforms, e.g. `geom_smooth`
+  - `scale` functions change the mapping from data to aesthetics
+  - `facet` functions stratify the figure into panels
+  - `aes`thetics apply to individual layers, or can be set for the whole plot
+    inside `ggplot`.
+  - `theme` functions change the overall look of the plot
+  - order of layers matters!
+  - `ggsave` to save a figure.
 
-## [ベクトル化](episodes/09-vectorization.Rmd)
+## [Vectorization](episodes/09-vectorization.Rmd)
 
-- ほとんどの関数と操作はベクトルの各要素に適用されます。
-- `*` は行列に対して要素ごとに適用されます。
-- `%*%` は真の行列乗算を行います。
-- `any()` はベクトル内のいずれかの要素が `TRUE` なら `TRUE` を返します。
-- `all()` はベクトル内のすべての要素が `TRUE` の場合にのみ `TRUE` を返します。
+- Most functions and operations apply to each element of a vector
+- `*` applies element-wise to matrices
+- `%*%` for true matrix multiplication
+- `any()` will return `TRUE` if any element of a vector is `TRUE`
+- `all()` will return `TRUE` if *all* elements of a vector are `TRUE`
 
-## [関数の解説](episodes/10-functions.Rmd)
+## [Functions explained](episodes/10-functions.Rmd)
 
 - `?"function"`
-- 頻繁に変更するパラメータを含むコードを関数に入れ、異なるパラメータ値で呼び出してその動作をカスタマイズします。
-- 関数の最後の行は返されるか、明示的に `return` を使用することができます。
-- 関数の本体に記述されたコードは、優先的に関数内で定義された変数を参照します。
-- 「なぜ」を文書化し、その後に「何を」、最後に「どのように」を記述します（コードが自明でない場合）。
+- Put code whose parameters change frequently in a function, then call it with
+  different parameter values to customize its behavior.
+- The last line of a function is returned, or you can use `return` explicitly
+- Any code written in the body of the function will preferably look for variables defined inside the function.
+- Document Why, then What, then lastly How (if the code isn't self explanatory)
 
-## [データの書き出し](episodes/11-writing-data.Rmd)
+## [Writing data](episodes/11-writing-data.Rmd)
 
-- `write.table` を使用して、規則的な形式でオブジェクトを書き出します。
-- `quote=FALSE` を設定して、テキストが `"` で囲まれないようにします。
+- `write.table` to write out objects in regular format
+- set `quote=FALSE` so that text isn't wrapped in `"` marks
 
-## [dplyr を使用したデータフレーム操作](episodes/12-dplyr.Rmd)
+## [Dataframe manipulation with dplyr](episodes/12-dplyr.Rmd)
 
 - `library(dplyr)`
-- `?select` で名前による変数を抽出します。
-- `?filter` で条件に一致する行を返します。
-- `?group_by` で1つ以上の変数によってデータをグループ化します。
-- `?summarize` で複数の値を単一の値に集約します。
-- `?mutate` でデータフレームに新しい変数を追加します。
-- 操作を `?"%>%"` パイプ演算子を使用して組み合わせます。
+- `?select` to extract variables by name.
+- `?filter` return rows with matching conditions.
+- `?group_by` group data by one of more variables.
+- `?summarize` summarize multiple values to a single value.
+- `?mutate` add new variables to a data.frame.
+- Combine operations using the `?"%>%"` pipe operator.
 
-## [tidyr を使用したデータフレーム操作](episodes/13-tidyr.Rmd)
+## [Dataframe manipulation with tidyr](episodes/13-tidyr.Rmd)
 
 - `library(tidyr)`
-- `?pivot_longer` でデータを *wide* 形式から *long* 形式に変換します。
-- `?pivot_wider` でデータを *long* 形式から *wide* 形式に変換します。
-- `?separate` で単一の値を複数の値に分割します。
-- `?unite` で複数の値を単一の値に結合します。
+- `?pivot_longer` convert data from *wide* to *long* format.
+- `?pivot_wider` convert data from *long* to *wide* format.
+- `?separate` split a single value into multiple values.
+- `?unite` merge multiple values into a single value.
 
-## [knitr を使用したレポート作成](episodes/14-knitr-markdown.Rmd)
+## [Producing reports with knitr](episodes/14-knitr-markdown.Rmd)
 
-- 再現可能なレポートの重要性
-- Markdown の基本
-- R コードチャンク
-- チャンクオプション
-- インライン R コード
-- その他の出力形式
+- Value of reproducible reports
+- Basics of Markdown
+- R code chunks
+- Chunk options
+- Inline R code
+- Other output formats
 
-## [良いコードを書くためのベストプラクティス](episodes/15-wrap-up.Rmd)
+## [Best practices for writing good code](episodes/15-wrap-up.Rmd)
 
-- 防御的にプログラムを書く、つまりエラーが発生することを前提にし、エラーを検出するコードを記述します。
-- コード
+- Program defensively, i.e., assume that errors are going to arise, and write code to detect them when they do.
+- Write tests before writing code in order to help determine exactly what that code is supposed to do.
+- Know what code is supposed to do before trying to debug it.
+- Make it fail every time.
+- Make it fail fast.
+- Change one thing at a time, and for a reason.
+- Keep track of what you've done.
+- Be humble
 
-を書く前にテストを書くことで、そのコードが何をするべきかを正確に判断します。
-- デバッグする前にコードが何をするべきかを理解します。
-- 毎回失敗させます。
-- 素早く失敗させます。
-- 一度に1つの変更を行い、その理由を明確にします。
-- 自分が行ったことを記録します。
-- 謙虚であることを心がけます。
+## Glossary
 
-## 用語集
+[argument]{#argument}
+:   A value given to a function or program when it runs.
+The term is often used interchangeably (and inconsistently) with [parameter](#parameter).
 
-[引数]{#argument}
-:   関数やプログラムを実行する際に渡される値。
-[パラメータ](#parameter) と同義で使われることもあるが、一貫性がない場合もある。
+[assign]{#assign}
+:   To give a value a name by associating a variable with it.
 
-[代入]{#assign}
-:   変数に値を関連付けて名前を与えること。
+[body]{#body}
+:   (of a function): the statements that are executed when a function runs.
 
-[本体]{#body}
-:   （関数の）関数が実行される際に実行される文。
+[comment]{#comment}
+:   A remark in a program that is intended to help human readers understand what is going on,
+but is ignored by the computer.
+Comments in Python, R, and the Unix shell start with a `#` character and run to the end of the line;
+comments in SQL start with `--`,
+and other languages have other conventions.
 
-[コメント]{#comment}
-:   プログラム内で、人間が理解しやすいように意図された説明文。
-コンピュータには無視される。
-Python、R、Unix シェルでは `#` 文字から行末までがコメントとされる。
-SQL では `--` から始まり、他の言語では異なる記法がある。
+[comma-separated values]{#comma-separated-values}
+:   (CSV) A common textual representation for tables
+in which the values in each row are separated by commas.
 
-[カンマ区切り値]{#comma-separated-values}
-:   (CSV) テーブルを表す一般的なテキスト形式で、各行の値がカンマで区切られている。
+[delimiter]{#delimiter}
+:   A character or characters used to separate individual values,
+such as the commas between columns in a [CSV](#comma-separated-values) file.
 
-[区切り文字]{#delimiter}
-:   個々の値を区切るために使用される文字または文字列。
-[CSV](#comma-separated-values) ファイルの列間を区切るカンマなど。
+[documentation]{#documentation}
+:   Human-language text written to explain what software does,
+how it works, or how to use it.
 
-[ドキュメント]{#documentation}
-:   ソフトウェアが何をするか、どのように動作するか、またはどのように使用するかを説明する人間向けのテキスト。
+[floating-point number]{#floating-point-number}
+:   A number containing a fractional part and an exponent.
+See also: [integer](#integer).
 
-[浮動小数点数]{#floating-point-number}
-:   小数部と指数部を持つ数値。
-関連項目: [整数](#integer)。
+[for loop]{#for-loop}
+:   A loop that is executed once for each value in some kind of set, list, or range.
+See also: [while loop](#while-loop).
 
-[for ループ]{#for-loop}
-:   セット、リスト、または範囲内の各値について1回ずつ実行されるループ。
-関連項目: [while ループ](#while-loop)。
+[index]{#index}
+:   A subscript that specifies the location of a single value in a collection,
+such as a single pixel in an image.
 
-[インデックス]{#index}
-:   集合内の単一値（例: 画像の1ピクセル）の位置を指定する添え字。
+[integer]{#integer}
+:   A whole number, such as -12343. See also: [floating-point number](#floating-point-number).
 
-[整数]{#integer}
-:   整数値（例: -12343）。
-関連項目: [浮動小数点数](#floating-point-number)。
+[library]{#library}
+:   In R, the directory(ies) where [packages](#package) are stored.
 
-[ライブラリ]{#library}
-:   R において、[パッケージ](#package) が格納されているディレクトリ。
+[package]{#package}
+:   A collection of R functions, data and compiled code in a well-defined format. Packages are stored in a [library](#library) and loaded using the library() function.
 
-[パッケージ]{#package}
-:   明確に定義された形式で構成された R の関数、データ、コンパイル済みコードのコレクション。
-[ライブラリ](#library) に格納され、`library()` 関数を使用して読み込まれる。
+[parameter]{#parameter}
+:   A variable named in the function's declaration that is used to hold a value passed into the call.
+The term is often used interchangeably (and inconsistently) with [argument](#argument).
 
-[パラメータ]{#parameter}
-:   関数の宣言内で名前が付けられ、呼び出しで渡された値を保持するために使用される変数。
-[引数](#argument) と同義で使われることもあるが、一貫性がない場合もある。
+[return statement]{#return-statement}
+:   A statement that causes a function to stop executing and return a value to its caller immediately.
 
-[return 文]{#return-statement}
-:   関数の実行を即座に停止し、呼び出し元に値を返す文。
+[sequence]{#sequence}
+:   A collection of information that is presented in a specific order.
 
-[シーケンス]{#sequence}
-:   特定の順序で提示される情報の集合。
+[shape]{#shape}
+:   An array's dimensions, represented as a vector.
+For example, a 5×3 array's shape is `(5,3)`.
 
-[形状]{#shape}
-:   配列の次元をベクトルで表したもの。
-たとえば、5×3 の配列の形状は `(5,3)` と表される。
+[string]{#string}
+:   Short for "character string",
+a [sequence](#sequence) of zero or more characters.
 
-[文字列]{#string}
-:   "character string" の略で、0 個以上の文字の[シーケンス](#sequence)。
+[syntax error]{#syntax-error}
+:   A programming error that occurs when statements are in an order or contain characters
+not expected by the programming language.
 
-[構文エラー]{#syntax-error}
-:   文の順序や使用された文字がプログラミング言語で予期されていない場合に発生するエラー。
+[type]{#type}
+:   The classification of something in a program (for example, the contents of a variable)
+as a kind of number (e.g. [floating-point number](#floating-point-number), [integer](#integer)), [string](#string),
+or something else. In R the command typeof() is used to query a variables type.
 
-[型]{#type}
-:   プログラム内の変数の内容などの分類（例: [浮動小数点数](#floating-point-number)、[整数](#integer)、[文字列](#string) など）。
-R では `typeof()` コマンドで変数の型を確認できる。
+[while loop]{#while-loop}
+:   A loop that keeps executing as long as some condition is true.
+See also: [for loop](#for-loop).
 
-[while ループ]{#while-loop}
-:   条件が真である間、繰り返し実行されるループ。
-関連項目: [for ループ](#for-loop)。
+

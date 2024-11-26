@@ -1,5 +1,5 @@
 ---
-title: データの書き出し
+title: Writing Data
 teaching: 10
 exercises: 10
 source: Rmd
@@ -7,37 +7,42 @@ source: Rmd
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Rからプロットやデータを保存できるようになる。
+- To be able to write out plots and data from R.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: questions
 
-- Rで作成したプロットやデータをどのように保存できますか？
+- How can I save plots and data created in R?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
 
-## プロットの保存
+## Saving plots
 
-すでに `ggplot2` で作成した最新のプロットを `ggsave` コマンドを使って保存する方法を学びました。
-復習として：
+You have already seen how to save the most recent plot you create in `ggplot2`,
+using the command `ggsave`. As a refresher:
 
 
 ``` r
 ggsave("My_most_recent_plot.pdf")
 ```
 
-RStudio の「Plot」ウィンドウで「Export」ボタンを使用してプロットを保存することもできます。
-これにより、.pdf や .png、.jpg などの形式で保存するオプションが表示されます。
+You can save a plot from within RStudio using the 'Export' button
+in the 'Plot' window. This will give you the option of saving as a
+.pdf or as .png, .jpg or other image formats.
 
-プロットを事前に「Plot」ウィンドウに作成せずに保存したい場合もあります。
-たとえば、複数ページのPDFドキュメントを作成し、それぞれ異なるプロットを表示したい場合や、
-ループでファイルの複数のサブセットを処理して、各サブセットからデータをプロットし、それぞれのプロットを保存したい場合があります。
+Sometimes you will want to save plots without creating them in the
+'Plot' window first. Perhaps you want to make a pdf document with
+multiple pages: each one a different plot, for example. Or perhaps
+you're looping through multiple subsets of a file, plotting data from
+each subset, and you want to save each plot, but obviously can't stop
+the loop to click 'Export' for each one.
 
-この場合、より柔軟なアプローチを使用できます。
-`pdf` 関数を使用して新しいPDFデバイスを作成できます。この関数の引数を使用してサイズや解像度を制御できます。
+In this case you can use a more flexible approach. The function
+`pdf` creates a new pdf device. You can control the size and resolution
+using the arguments to this function.
 
 
 ``` r
@@ -46,22 +51,24 @@ ggplot(data=gapminder, aes(x=year, y=lifeExp, colour=country)) +
   geom_line() +
   theme(legend.position = "none")
 
-# PDFデバイスをオフにすることを忘れないでください！
+# You then have to make sure to turn off the pdf device!
+
 dev.off()
 ```
 
-このドキュメントを開いて確認してみてください。
+Open up this document and have a look.
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 1
+## Challenge 1
 
-'pdf' コマンドを変更して、PDFの2ページ目を作成し、
-同じデータを使って `facet_grid` を使用して大陸ごとに1つのパネルを表示するプロットを追加してください。
+Rewrite your 'pdf' command to print a second
+page in the pdf, showing a facet plot (hint: use `facet_grid`)
+of the same data with one panel per continent.
 
 :::::::::::::::  solution
 
-## チャレンジ 1 の解答
+## Solution to challenge 1
 
 
 ``` r
@@ -78,17 +85,18 @@ dev.off()
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-`jpeg` や `png` などのコマンドも同様に使用して、異なる形式のドキュメントを作成できます。
+The commands `jpeg`, `png` etc. are used similarly to produce
+documents in different formats.
 
-## データの書き出し
+## Writing data
 
-Rからデータを書き出したい場合があります。
+At some point, you'll also want to write out data from R.
 
-`write.table` 関数を使用してこれを行うことができます。
-この関数は以前学んだ `read.table` に非常に似ています。
+We can use the `write.table` function for this, which is
+very similar to `read.table` from before.
 
-データクリーニングスクリプトを作成しましょう。
-この分析では、オーストラリアの gapminder データに焦点を当てます：
+Let's create a data-cleaning script, for this analysis, we
+only want to focus on the gapminder data for Australia:
 
 
 ``` r
@@ -100,7 +108,8 @@ write.table(aust_subset,
 )
 ```
 
-シェルに戻り、データが正しく表示されるか確認しましょう：
+Let's switch back to the shell to take a look at the data to make sure it looks
+OK:
 
 
 ``` bash
@@ -120,20 +129,23 @@ head cleaned-data/gapminder-aus.csv
 "69","Australia",1992,17481977,"Oceania",77.56,23424.76683
 ```
 
-あれ、ちょっと想定と違いますね。なぜか引用符がついています。
-また、行番号が意味を持たないようです。
+Hmm, that's not quite what we wanted. Where did all these
+quotation marks come from? Also the row numbers are
+meaningless.
 
-ヘルプファイルを見て、この挙動を変更する方法を確認してみましょう。
+Let's look at the help file to work out how to change this
+behaviour.
 
 
 ``` r
 ?write.table
 ```
 
-デフォルトでは、Rは文字ベクトルをファイルに書き出す際に引用符で囲みます。
-また、行と列の名前も書き出します。
+By default R will wrap character vectors with quotation marks
+when writing out to file. It will also write out the row and
+column names.
 
-これを修正しましょう：
+Let's fix this:
 
 
 ``` r
@@ -144,7 +156,7 @@ write.table(
 )
 ```
 
-もう一度シェルスキルを使ってデータを確認しましょう：
+Now lets look at the data again using our shell skills:
 
 
 ``` bash
@@ -164,20 +176,21 @@ Australia,1987,16257249,Oceania,76.32,21888.88903
 Australia,1992,17481977,Oceania,77.56,23424.76683
 ```
 
-これでよさそうです！
+That looks better!
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## チャレンジ 2
+## Challenge 2
 
-gapminder データを1990年以降に収集されたデータポイントのみを含むようにサブセット化する
-データクリーニングスクリプトファイルを作成してください。
+Write a data-cleaning script file that subsets the gapminder
+data to include only data points collected since 1990.
 
-このスクリプトを使用して、新しいサブセットを `cleaned-data/` ディレクトリに保存してください。
+Use this script to write out the new subset to a file
+in the `cleaned-data/` directory.
 
 :::::::::::::::  solution
 
-## チャレンジ 2 の解答
+## Solution to challenge 2
 
 
 ``` r
@@ -196,8 +209,8 @@ write.table(
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
-- RStudioでプロットを保存するには「Export」ボタンを使用する。
-- タブ形式のデータを保存するには `write.table` を使用する。
+- Save plots from RStudio using the 'Export' button.
+- Use `write.table` to save tabular data.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
