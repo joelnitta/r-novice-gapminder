@@ -175,7 +175,7 @@ attached base packages:
 
 loaded via a namespace (and not attached):
 [1] compiler_4.4.2 tools_4.4.2    yaml_2.3.10    knitr_1.48     xfun_0.49     
-[6] renv_1.0.11    evaluate_1.0.1
+[6] renv_1.1.0     evaluate_1.0.1
 ```
 
 この関数は、R の現在のバージョンやロードしているパッケージを表示します。
