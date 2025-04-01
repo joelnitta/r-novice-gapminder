@@ -156,7 +156,7 @@ ls -lh data/gapminder_data.csv
 ```
 
 ``` output
--rw-r--r-- 1 runner docker 80K Mar 18 00:27 data/gapminder_data.csv
+-rw-r--r-- 1 runner docker 80K Apr  1 00:24 data/gapminder_data.csv
 ```
 
 ファイルサイズは 80K です。
